@@ -2,6 +2,7 @@ package calculator.operator;
 
 import calculator.Operand;
 import calculator.Term;
+import com.sun.istack.internal.Nullable;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -20,8 +21,11 @@ public class Operator implements Term {
         this.tokens = terms;
     }
 
-    public Operand compute() {
+    public Operand compute(@Nullable Function<Operand[], Operand> computer) {
         Operand sum = new Operand();
+        if (computer != null) {
+            return computer.apply(tokens);
+        }
         for (Operand term: this.tokens) {
             double nullAdjustedVal = Optional.of(term).orElse(new Operand()).doubleValue();
             sum.setValue(nullAdjustedVal + sum.doubleValue());
@@ -29,16 +33,12 @@ public class Operator implements Term {
         return sum;
     }
 
-    public String customCompute(Function<Operand[], Operand> computer) {
-        return String.valueOf(computer.apply(tokens));
-    }
-
     public OperatorType getOperatorType() {
         return type;
     }
 
     public enum OperatorType{
-        UNARY, Binary, TERNARY
+        UNARY, BINARY, TERNARY
     }
 
 }
