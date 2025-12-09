@@ -6,12 +6,12 @@ import com.sun.istack.internal.Nullable;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class Multiplication extends Operator {
+public class MultiplicationOperator extends Operator {
 
     public static final int IDENTITY = 1;
 
-    public Multiplication(OperatorType type) {
-        super(type);
+    public MultiplicationOperator() {
+        super(OperatorType.BINARY);
     }
 
     @Override

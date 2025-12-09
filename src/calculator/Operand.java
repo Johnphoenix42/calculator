@@ -12,6 +12,10 @@ public class Operand extends Number implements Term {
         val = Double.parseDouble(value);
     }
 
+    public Operand(Number value) {
+        val = value;
+    }
+
     @Override
     public int intValue() {
         return (int) val;

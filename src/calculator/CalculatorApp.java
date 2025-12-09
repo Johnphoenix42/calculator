@@ -1,14 +1,12 @@
 package calculator;
 
+import calculator.operator.DivisionOperator;
+import calculator.operator.ModulusOperator;
 import calculator.operator.Operator;
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
@@ -31,18 +29,20 @@ public class CalculatorApp extends Application {
 
     public CalculatorApp() {
         expressionScreen = new TextField();
+        expressionScreen.setDisable(true);
         operationQueue = new LinkedList<>();
     }
 
     LinkedList<CalculatorButton<? extends Term>> getCalcButtons(int col, int row) {
         LinkedList<CalculatorButton<?>> buttonList = new LinkedList<>();
-        buttonList.add(new CalculatorButton<>("xsupy", event -> {
+        buttonList.add(new CalculatorButton<>("xªy", event -> {
             operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
             computeScreen.setText("xy");
         }, new Operator(Operator.OperatorType.BINARY), col, row));
-        buttonList.add(new CalculatorButton<>("1/x", event -> {
+        buttonList.add(new CalculatorButton<>("⅟x", event -> {
             operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
-            computeScreen.setText("1/x");
+            expressionScreen.setText("1/(" + computeScreen.getText() + ")");
+            computeScreen.setText(evaluateQueue());
         }, new Operator(Operator.OperatorType.UNARY), col + 1, row));
         buttonList.add(new CalculatorButton<>("n!", event -> {
             operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
@@ -56,11 +56,40 @@ public class CalculatorApp extends Application {
             computeScreen.undo();
             operationQueue.removeLast();
         }, null, 4 + col, row));
+
+        buttonList.add(new CalculatorButton<>("x²", event -> {
+            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            computeScreen.setText("x²");
+        }, new Operator(Operator.OperatorType.UNARY), col, row + 1));
+        buttonList.add(new CalculatorButton<>("⫪", event -> {
+            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            computeScreen.setText("(⫪)");
+        }, new Operand(Math.PI), col + 1, row + 1));
+        buttonList.add(new CalculatorButton<>("e", event -> {
+            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            computeScreen.setText("(e)");
+        }, new Operand(Math.E), 2 + col, row + 1));
+        buttonList.add(new CalculatorButton<>("mod", event -> {
+            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            expressionScreen.setText(expressionScreen.getText() + "%");
+            computeScreen.setText("%");
+        }, new ModulusOperator(), 3 + col, row + 1));
+        buttonList.add(new CalculatorButton<>("÷", event -> {
+            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            expressionScreen.setText(expressionScreen.getText() + "÷");
+            computeScreen.setText("÷");
+        }, new DivisionOperator(), 4 + col, row + 1));
+
+        buttonList.add(new CalculatorButton<>("X₂", event -> {
+            computeScreen.undo();
+            operationQueue.removeLast();
+        }, null, 4 + col, row + 1));
+
         buttonList.add(new CalculatorButton<>("=", event -> {
             String answer = evaluateQueue();
             computeScreen.setText(answer);
             operationQueue.clear();
-        }, null, 4 + col, row + 5));
+        }, null, 4 + col, row + 3));
         return buttonList;
     }
 
@@ -148,59 +177,6 @@ public class CalculatorApp extends Application {
 
     public static void main(String[] args) {
         launch(args);
-    }
-
-    static class CalculatorButton<T extends Term> {
-        private final Button button;
-        private final String name;
-        private final int column;
-        private final int row;
-        private final int colSpan;
-        private final int rowSpan;
-        private final T t;
-
-        CalculatorButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row, int colSpan, int rowSpan){
-            this.name = name;
-            this.t = type;
-            this.column = column;
-            this.row = row;
-            this.colSpan = colSpan;
-            this.rowSpan = rowSpan;
-            this.button = new Button(name);
-            button.setOnAction(eHandler);
-        }
-
-        CalculatorButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row){
-            this(name, eHandler, type, column, row, 1, 1);
-        }
-
-        public Button getButton() {
-            return button;
-        }
-
-        public int getColumn() {
-            return column;
-        }
-
-        public int getRow() {
-            return row;
-        }
-
-        public int getColSpan() {
-            return colSpan;
-        }
-
-        public int getRowSpan() {
-            return rowSpan;
-        }
-
-        public T getTerm() throws NullPointerException {
-            try {
-                return t;
-            } catch (NullPointerException n) {
-                throw new NullPointerException(name + " has a NULL term.");
-            }
-        }
     }
 
 }
