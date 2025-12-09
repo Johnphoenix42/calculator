@@ -20,4 +20,9 @@ public class ModulusOperator extends Operator{
         modulus.setValue(nullAdjustedVal % nullAdjustedBase);
         return modulus;
     }
+
+    @Override
+    public String toString() {
+        return "%";
+    }
 }

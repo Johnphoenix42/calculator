@@ -5,22 +5,23 @@ import calculator.operator.ModulusOperator;
 import calculator.operator.Operator;
 import javafx.application.Application;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.effect.Effect;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.util.LinkedList;
 import java.util.function.Function;
 
-public class CalculatorApp extends Application {
+public class CalculatorApp<T> extends Application {
 
     public static final String APP_NAME = "Jounin Calculator";
     private TextField expressionScreen = null;
@@ -29,23 +30,24 @@ public class CalculatorApp extends Application {
 
     public CalculatorApp() {
         expressionScreen = new TextField();
-        expressionScreen.setDisable(true);
+        expressionScreen.setEditable(false);
+        expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
         operationQueue = new LinkedList<>();
     }
 
     LinkedList<CalculatorButton<? extends Term>> getCalcButtons(int col, int row) {
         LinkedList<CalculatorButton<?>> buttonList = new LinkedList<>();
         buttonList.add(new CalculatorButton<>("xªy", event -> {
-            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            operationQueue.addLast(((CalculatorButton<? extends Term>) event.getSource()));
             computeScreen.setText("xy");
         }, new Operator(Operator.OperatorType.BINARY), col, row));
         buttonList.add(new CalculatorButton<>("⅟x", event -> {
-            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            operationQueue.addLast(((CalculatorButton<? extends Term>) event.getSource()));
             expressionScreen.setText("1/(" + computeScreen.getText() + ")");
             computeScreen.setText(evaluateQueue());
         }, new Operator(Operator.OperatorType.UNARY), col + 1, row));
         buttonList.add(new CalculatorButton<>("n!", event -> {
-            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            operationQueue.addLast(((CalculatorButton<? extends Term>) event.getSource()));
             computeScreen.setText("n!");
         }, new Operator(Operator.OperatorType.UNARY), 2 + col, row));
         buttonList.add(new CalculatorButton<>("CE", event -> {
@@ -58,28 +60,36 @@ public class CalculatorApp extends Application {
         }, null, 4 + col, row));
 
         buttonList.add(new CalculatorButton<>("x²", event -> {
-            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            operationQueue.addLast(((CalculatorButton<? extends Term>) event.getSource()));
             computeScreen.setText("x²");
         }, new Operator(Operator.OperatorType.UNARY), col, row + 1));
         buttonList.add(new CalculatorButton<>("⫪", event -> {
-            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            operationQueue.addLast(((CalculatorButton<? extends Term>) event.getSource()));
             computeScreen.setText("(⫪)");
         }, new Operand(Math.PI), col + 1, row + 1));
         buttonList.add(new CalculatorButton<>("e", event -> {
-            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            operationQueue.addLast(((CalculatorButton<? extends Term>) event.getSource()));
             computeScreen.setText("(e)");
         }, new Operand(Math.E), 2 + col, row + 1));
         buttonList.add(new CalculatorButton<>("mod", event -> {
-            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            operationQueue.addLast(((CalculatorButton<? extends Term>) event.getSource()));
             expressionScreen.setText(expressionScreen.getText() + "%");
             computeScreen.setText("%");
         }, new ModulusOperator(), 3 + col, row + 1));
         buttonList.add(new CalculatorButton<>("÷", event -> {
-            operationQueue.addLast(((CalculatorButton<?>) event.getSource()));
+            operationQueue.addLast(((CalculatorButton<? extends Term>) event.getSource()));
             expressionScreen.setText(expressionScreen.getText() + "÷");
-            computeScreen.setText("÷");
+            expressionScreen.setText(printOperationQueue());
         }, new DivisionOperator(), 4 + col, row + 1));
 
+        buttonList.add(new CalculatorButton<>("√", event -> {
+            expressionScreen.setText("1/(" + computeScreen.getText() + ")");
+            computeScreen.setText(evaluateQueue());
+        }, null, 4 + col, row + 1));
+        buttonList.add(new CalculatorButton<>("7", event -> {
+            expressionScreen.setText("1/(" + computeScreen.getText() + ")");
+            computeScreen.setText(evaluateQueue());
+        }, null, 4 + col, row + 1));
         buttonList.add(new CalculatorButton<>("X₂", event -> {
             computeScreen.undo();
             operationQueue.removeLast();
@@ -130,10 +140,23 @@ public class CalculatorApp extends Application {
         return String.valueOf(operand);
     }
 
+    /**
+     * Prints an expression unto a String object from the operation queue.
+     * @return a String containing the expression
+     * @param <T> any Operator class, e.g. DivisionOperator, ModulusOperator
+     */
+    private <T extends Operator> String printOperationQueue() {
+        StringBuilder expressionString = new StringBuilder();
+        for (CalculatorButton<? extends Term> button : operationQueue){
+            T t = (T) button.getTerm();
+            expressionString.append(t.toString());
+        }
+        return expressionString.toString();
+    }
+
     public GridPane setupGrid() {
         GridPane gridPane = new GridPane();
         gridPane.setGridLinesVisible(true);
-        Label label = new Label("l");
         ColumnConstraints column1Constraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
         column1Constraints.setFillWidth(true);
         ColumnConstraints column5Constraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
@@ -142,11 +165,13 @@ public class CalculatorApp extends Application {
         gridPane.getColumnConstraints().add(new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.CENTER, false));
         gridPane.getColumnConstraints().add(new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.CENTER, false));
         gridPane.getColumnConstraints().add(column5Constraints);
-        //gridPane.add(label, 0, 0, 5, 1);
+
         expressionScreen.setMaxWidth(Double.MAX_VALUE);
         expressionScreen.setAlignment(Pos.CENTER_RIGHT);
         gridPane.add(expressionScreen, 0, 0, 5, 1);
         computeScreen = new TextField();
+        computeScreen.setEditable(false);
+        //computeScreen.setEffect(new Bl);
         computeScreen.setFont(new Font("Arial", 18));
         computeScreen.setPrefHeight(40);
         computeScreen.setMaxHeight(60);
@@ -156,7 +181,7 @@ public class CalculatorApp extends Application {
         gridPane.add(computeScreen, 0, 1, 5, 1);
 
         for (CalculatorButton<? extends Term> calculatorButton : getCalcButtons(0, 2)) {
-            gridPane.add(calculatorButton.getButton(), calculatorButton.getColumn(), calculatorButton.getRow(),
+            gridPane.add(calculatorButton, calculatorButton.getColumn(), calculatorButton.getRow(),
                     calculatorButton.getColSpan(), calculatorButton.getRowSpan());
         }
         gridPane.setGridLinesVisible(true);
@@ -165,8 +190,14 @@ public class CalculatorApp extends Application {
 
     public void start(Stage primaryStage) {
         VBox root = new VBox(5);
+        root.setBackground(new Background(new BackgroundFill(
+                new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
+                        new Stop(0, Color.DARKGRAY), new Stop(1, Color.BLACK)),
+                null, new Insets(10))
+        ));
         root.getChildren().add(setupGrid());
         Scene mainScene = new Scene(root, 400, 400, Color.GRAY);
+
         primaryStage.setScene(mainScene);
         primaryStage.setTitle(APP_NAME);
         primaryStage.setX(0);

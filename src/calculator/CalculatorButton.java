@@ -4,8 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 
-public class CalculatorButton<T extends Term> {
-    private final Button button;
+public class CalculatorButton<T extends Term> extends Button {
     private final String name;
     private final int column;
     private final int row;
@@ -20,16 +19,13 @@ public class CalculatorButton<T extends Term> {
         this.row = row;
         this.colSpan = colSpan;
         this.rowSpan = rowSpan;
-        this.button = new Button(name);
-        button.setOnAction(eHandler);
+        setText(name);
+        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        setOnAction(eHandler);
     }
 
     CalculatorButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row){
         this(name, eHandler, type, column, row, 1, 1);
-    }
-
-    public Button getButton() {
-        return button;
     }
 
     public int getColumn() {

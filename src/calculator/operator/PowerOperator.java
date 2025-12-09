@@ -21,4 +21,9 @@ public class PowerOperator extends Operator {
         power.setValue(Math.pow(nullAdjustedBase, nullAdjustedExp));
         return power;
     }
+
+    @Override
+    public String toString() {
+        return "ª";
+    }
 }

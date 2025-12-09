@@ -23,4 +23,9 @@ public class MultiplicationOperator extends Operator {
         }
         return multiplication;
     }
+
+    @Override
+    public String toString() {
+        return "⨉";
+    }
 }

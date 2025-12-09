@@ -19,4 +19,9 @@ public class DivisionOperator extends Operator {
         division.setValue(nullAdjustedNumerator / nullAdjustedDenominator);
         return division;
     }
+
+    @Override
+    public String toString() {
+        return "÷";
+    }
 }

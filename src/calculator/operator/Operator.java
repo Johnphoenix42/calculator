@@ -37,6 +37,11 @@ public class Operator implements Term {
         return type;
     }
 
+    @Override
+    public String toString() {
+        return "GEN";
+    }
+
     public enum OperatorType{
         UNARY, BINARY, TERNARY
     }
