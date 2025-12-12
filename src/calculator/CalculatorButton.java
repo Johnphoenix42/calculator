@@ -3,6 +3,10 @@ package calculator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.effect.Glow;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class CalculatorButton<T extends Term> extends Button {
@@ -21,8 +25,18 @@ public class CalculatorButton<T extends Term> extends Button {
         this.colSpan = colSpan;
         this.rowSpan = rowSpan;
         setText(name);
-        setFont(Font.font(10));
+        setTextFill(Color.GRAY);
+        setFont(Font.font(15));
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        setBackground(new Background(
+                new BackgroundFill(Color.BLACK, null, null)
+        ));
+        setOnMouseEntered(e -> {
+            setEffect(new Glow(0.8));
+        });
+        setOnMouseExited(e -> {
+            setEffect(new Glow(0));
+        });
         setOnAction(eHandler);
     }
 
