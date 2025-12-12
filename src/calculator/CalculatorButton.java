@@ -29,10 +29,10 @@ public class CalculatorButton<T extends Term> extends Button {
         setFont(Font.font(15));
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         setBackground(new Background(
-                new BackgroundFill(Color.BLACK, null, null)
+                new BackgroundFill(Color.web("0f0f0f"), null, null)
         ));
         setOnMouseEntered(e -> {
-            setEffect(new Glow(0.8));
+            setEffect(new Glow(1));
         });
         setOnMouseExited(e -> {
             setEffect(new Glow(0));

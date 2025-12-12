@@ -10,8 +10,8 @@ public class PartialOperand extends Operand {
         numString = partValue;
     }
 
-    public static String addPart(PartialOperand op){
-        return wholeVal += op.numString;
+    public static void addPart(PartialOperand op){
+        wholeVal += op.numString;
     }
 
     public static String getStringValue() {
@@ -20,5 +20,10 @@ public class PartialOperand extends Operand {
 
     public static void setStringValue(String s) {
         wholeVal = s;
+    }
+
+    @Override
+    public String toString() {
+        return getStringValue();
     }
 }

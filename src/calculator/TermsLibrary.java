@@ -1,44 +1,45 @@
 package calculator;
 
-import calculator.operator.DivisionOperator;
-import calculator.operator.ModulusOperator;
-import calculator.operator.Operator;
+import calculator.operator.*;
 
 import java.util.HashMap;
 
 public class TermsLibrary<T extends Term> {
 
-    private final HashMap<String, T> termsLibrary;
+    private final HashMap<ButtonName, T> termsLibrary;
 
     public TermsLibrary() {
         termsLibrary = new HashMap<>();
         addLibrary(termsLibrary);
     }
 
-    public void addLibrary(HashMap<String, T> tl) {
-        tl.put("xy", (T) new Operator(Operator.OperatorType.BINARY));
-        tl.put("⅟x", (T) new Operator(Operator.OperatorType.UNARY));
-        tl.put("n!", (T) new Operator(Operator.OperatorType.UNARY));
-        tl.put("x²", (T) new Operator(Operator.OperatorType.UNARY));
-        tl.put("⫪", (T) new Operand(Math.PI));
-        tl.put("e", (T) new Operand(Math.E));
-        tl.put("mod", (T) new ModulusOperator());
-        tl.put("÷", (T) new DivisionOperator());
-        tl.put("+", (T) new Operator(Operator.OperatorType.BINARY));
+    public void addLibrary(HashMap<ButtonName, T> tl) {
+        tl.put(ButtonName.XPOWERY, (T) new Operator(Operator.OperatorType.BINARY));
+        tl.put(ButtonName.INVERSE, (T) new Operator(Operator.OperatorType.UNARY));
+        tl.put(ButtonName.FACTORIAL, (T) new Operator(Operator.OperatorType.UNARY));
+        tl.put(ButtonName.SQUARE, (T) new Operator(Operator.OperatorType.UNARY));
+        tl.put(ButtonName.SQUARE_ROOT, (T) new Operator(Operator.OperatorType.UNARY));
+        tl.put(ButtonName.PI, (T) new Operand(Math.PI));
+        tl.put(ButtonName.EULER, (T) new Operand(Math.E));
+        tl.put(ButtonName.MODULO, (T) new ModulusOperator());
+        tl.put(ButtonName.MULTIPLICATION, (T) new MultiplicationOperator());
+        tl.put(ButtonName.DIVISION, (T) new DivisionOperator());
+        tl.put(ButtonName.ADDITION, (T) new Operator(Operator.OperatorType.BINARY));
 
-        tl.put("7", (T) new PartialOperand("7"));
-        tl.put("8", (T) new PartialOperand("8"));
-        tl.put("9", (T) new PartialOperand("9"));
-        tl.put("4", (T) new PartialOperand("4"));
-        tl.put("5", (T) new PartialOperand("5"));
-        tl.put("6", (T) new PartialOperand("6"));
-        tl.put("1", (T) new PartialOperand("1"));
-        tl.put("2", (T) new PartialOperand("2"));
-        tl.put("3", (T) new PartialOperand("3"));
-        tl.put("0", (T) new PartialOperand("0"));
+        tl.put(ButtonName.SEVEN, (T) new PartialOperand("7"));
+        tl.put(ButtonName.EIGHT, (T) new PartialOperand("8"));
+        tl.put(ButtonName.NINE, (T) new PartialOperand("9"));
+        tl.put(ButtonName.FOUR, (T) new PartialOperand("4"));
+        tl.put(ButtonName.FIVE, (T) new PartialOperand("5"));
+        tl.put(ButtonName.SIX, (T) new PartialOperand("6"));
+        tl.put(ButtonName.ONE, (T) new PartialOperand("1"));
+        tl.put(ButtonName.TWO, (T) new PartialOperand("2"));
+        tl.put(ButtonName.THREE, (T) new PartialOperand("3"));
+        tl.put(ButtonName.ZERO, (T) new PartialOperand("0"));
+        tl.put(ButtonName.POINT, (T) new DecimalPointOperator());
     }
 
-    public HashMap<String, T> getTL() {
+    public HashMap<ButtonName, T> getTL() {
         return termsLibrary;
     }
 }

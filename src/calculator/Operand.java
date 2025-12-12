@@ -39,4 +39,9 @@ public class Operand extends Number implements Term {
     public void setValue(double v) {
         this.val = v;
     }
+
+    @Override
+    public String toString() {
+        return val.toString();
+    }
 }
