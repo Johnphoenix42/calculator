@@ -9,7 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.Effect;
+import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -86,10 +86,58 @@ public class CalculatorApp<T> extends Application {
             expressionScreen.setText("1/(" + computeScreen.getText() + ")");
             computeScreen.setText(evaluateQueue());
         }, null, 4 + col, row + 1));
+
+
         buttonList.add(new CalculatorButton<>("7", event -> {
-            expressionScreen.setText("1/(" + computeScreen.getText() + ")");
-            computeScreen.setText(evaluateQueue());
-        }, null, 4 + col, row + 1));
+            computeScreen.setText(PartialOperand.getStringValue());
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+        }, new PartialOperand("7"), 1 + col, row + 2));
+        buttonList.add(new CalculatorButton<>("8", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new PartialOperand("8"), 2 + col, row + 2));
+        buttonList.add(new CalculatorButton<>("9", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new PartialOperand("9"), 3 + col, row + 2));
+        buttonList.add(new CalculatorButton<>("4", event -> {
+            computeScreen.setText(PartialOperand.getStringValue());
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+        }, new PartialOperand("4"), 1 + col, row + 3));
+        buttonList.add(new CalculatorButton<>("5", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new PartialOperand("5"), 2 + col, row + 3));
+        buttonList.add(new CalculatorButton<>("6", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new PartialOperand("6"), 3 + col, row + 3));
+        buttonList.add(new CalculatorButton<>("1", event -> {
+            computeScreen.setText(PartialOperand.getStringValue());
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+        }, new PartialOperand("1"), 1 + col, row + 4));
+        buttonList.add(new CalculatorButton<>("2", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new PartialOperand("2"), 2 + col, row + 4));
+        buttonList.add(new CalculatorButton<>("3", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new PartialOperand("3"), 3 + col, row + 4));
+        buttonList.add(new CalculatorButton<>(".", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new PartialOperand("."), 1 + col, row + 5));
+        buttonList.add(new CalculatorButton<>("0", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new PartialOperand("0"), 2 + col, row + 5));
+        buttonList.add(new CalculatorButton<>(".", event -> {
+            operationQueue.addLast((CalculatorButton<? extends Term>) event.getSource());
+            computeScreen.setText(PartialOperand.getStringValue());
+        }, new Operand("Ans"), 3 + col, row + 5));
+
+
         buttonList.add(new CalculatorButton<>("X₂", event -> {
             computeScreen.undo();
             operationQueue.removeLast();
@@ -99,7 +147,7 @@ public class CalculatorApp<T> extends Application {
             String answer = evaluateQueue();
             computeScreen.setText(answer);
             operationQueue.clear();
-        }, null, 4 + col, row + 3));
+        }, null, 4 + col, row + 5));
         return buttonList;
     }
 
@@ -161,17 +209,27 @@ public class CalculatorApp<T> extends Application {
         column1Constraints.setFillWidth(true);
         ColumnConstraints column5Constraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
         gridPane.getColumnConstraints().add(column1Constraints);
-        gridPane.getColumnConstraints().add(new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.CENTER, false));
-        gridPane.getColumnConstraints().add(new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.CENTER, false));
-        gridPane.getColumnConstraints().add(new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.CENTER, false));
-        gridPane.getColumnConstraints().add(column5Constraints);
+        for (int i = 0; i < 5; i++) {
+            ColumnConstraints columnConstraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
+            columnConstraints.setFillWidth(true);
+            gridPane.getColumnConstraints().add(columnConstraints);
+            //gridPane.getColumnConstraints().add(new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.CENTER, false));
+            //gridPane.getColumnConstraints().add(new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.CENTER, false));
+            //gridPane.getColumnConstraints().add(column5Constraints);
+        }
+
+        for(int i = 0; i < 5; i++) {
+            RowConstraints rowConstraints = new RowConstraints(25, 35, 45);
+            rowConstraints.setFillHeight(true);
+            gridPane.getRowConstraints().add(rowConstraints);
+        }
 
         expressionScreen.setMaxWidth(Double.MAX_VALUE);
         expressionScreen.setAlignment(Pos.CENTER_RIGHT);
         gridPane.add(expressionScreen, 0, 0, 5, 1);
         computeScreen = new TextField();
         computeScreen.setEditable(false);
-        //computeScreen.setEffect(new Bl);
+        computeScreen.setEffect(new Glow(0));
         computeScreen.setFont(new Font("Arial", 18));
         computeScreen.setPrefHeight(40);
         computeScreen.setMaxHeight(60);

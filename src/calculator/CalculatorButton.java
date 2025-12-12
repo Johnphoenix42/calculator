@@ -3,6 +3,7 @@ package calculator;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.text.Font;
 
 public class CalculatorButton<T extends Term> extends Button {
     private final String name;
@@ -20,6 +21,7 @@ public class CalculatorButton<T extends Term> extends Button {
         this.colSpan = colSpan;
         this.rowSpan = rowSpan;
         setText(name);
+        setFont(Font.font(10));
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         setOnAction(eHandler);
     }
