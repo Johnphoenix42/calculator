@@ -1,7 +1,7 @@
 package calculator;
 
 public enum ButtonName {
-    XPOWERY("xªy"),
+    X_POWER_Y("xªy"),
     INVERSE("⅟x"),
     FACTORIAL("n!"),
     SQUARE("x²"),
@@ -10,6 +10,7 @@ public enum ButtonName {
     MODULO("mod"),
     DIVISION("÷"),
     ADDITION("+"),
+    SUBTRACTION("-"),
 
     SEVEN("7"),
     EIGHT("8"),

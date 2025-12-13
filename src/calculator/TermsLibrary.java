@@ -14,10 +14,10 @@ public class TermsLibrary<T extends Term> {
     }
 
     public void addLibrary(HashMap<ButtonName, T> tl) {
-        tl.put(ButtonName.XPOWERY, (T) new Operator(Operator.OperatorType.BINARY));
+        tl.put(ButtonName.X_POWER_Y, (T) new ExponentOperator());
         tl.put(ButtonName.INVERSE, (T) new Operator(Operator.OperatorType.UNARY));
-        tl.put(ButtonName.FACTORIAL, (T) new Operator(Operator.OperatorType.UNARY));
-        tl.put(ButtonName.SQUARE, (T) new Operator(Operator.OperatorType.UNARY));
+        tl.put(ButtonName.FACTORIAL, (T) new FactorialOperator());
+        tl.put(ButtonName.SQUARE, (T) new SquareOperator());
         tl.put(ButtonName.SQUARE_ROOT, (T) new Operator(Operator.OperatorType.UNARY));
         tl.put(ButtonName.PI, (T) new Operand(Math.PI));
         tl.put(ButtonName.EULER, (T) new Operand(Math.E));

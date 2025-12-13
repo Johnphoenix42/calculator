@@ -12,9 +12,16 @@ public class Operator implements Term {
 
     private final OperatorType type;
     protected Operand[] tokens;
+    private final AppendPosition appendPosition;
 
     public Operator(OperatorType type) {
         this.type = type;
+        appendPosition = AppendPosition.END;
+    }
+
+    public Operator(OperatorType type, AppendPosition appendPosition) {
+        this.type = type;
+        this.appendPosition = appendPosition;
     }
 
     public void setParameters(Operand[] terms) {
@@ -37,6 +44,10 @@ public class Operator implements Term {
         return type;
     }
 
+    public AppendPosition getAppendPosition() {
+        return appendPosition;
+    }
+
     @Override
     public String toString() {
         return "GEN";
@@ -44,6 +55,10 @@ public class Operator implements Term {
 
     public enum OperatorType{
         UNARY, BINARY, TERNARY
+    }
+
+    public enum AppendPosition {
+        START, END
     }
 
 }

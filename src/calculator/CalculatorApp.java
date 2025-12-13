@@ -1,7 +1,6 @@
 package calculator;
 
-import calculator.operator.DecimalPointOperator;
-import calculator.operator.Operator;
+import calculator.operator.*;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -22,7 +21,7 @@ import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CalculatorApp<T> extends Application {
+public class CalculatorApp extends Application {
 
     public static final String APP_NAME = "Jounin Calculator";
     private TextField expressionScreen = null;
@@ -30,6 +29,7 @@ public class CalculatorApp<T> extends Application {
     private final LinkedList<Term> operationQueue;
     private final TermsLibrary<Term> termsLibrary;
     private final LinkedList<String> executionMemory;
+    private Logger logger;
 
     public CalculatorApp() {
         expressionScreen = new TextField();
@@ -38,24 +38,31 @@ public class CalculatorApp<T> extends Application {
         operationQueue = new LinkedList<>();
         termsLibrary = new TermsLibrary<>();
         executionMemory = new LinkedList<>();
+
+        logger = Logger.getLogger(getClass().getSimpleName());
     }
 
     LinkedList<CalculatorButton<? extends Term>> getCalcButtons(int col, int row) {
         LinkedList<CalculatorButton<?>> buttonList = new LinkedList<>();
-        buttonList.add(new CalculatorButton<>("xªy", event -> {
-            operationQueue.addLast(termsLibrary.getTL().get(ButtonName.XPOWERY));
-            computeScreen.setText("xy");
-        }, termsLibrary.getTL().get("xy"), col, row));
-        buttonList.add(new CalculatorButton<>("⅟x", event -> {
+        buttonList.add(new CalculatorButton<>(ButtonName.X_POWER_Y.getName(), event -> {
+            ExponentOperator xPowerY = (ExponentOperator) termsLibrary.getTL().get(ButtonName.X_POWER_Y);
+            operationQueue.addLast(xPowerY);
+            expressionScreen.setText(printOperationQueue());
+            //computeScreen.setText("xy");
+        }, termsLibrary.getTL().get(ButtonName.X_POWER_Y), col, row));
+        buttonList.add(new CalculatorButton<>(ButtonName.INVERSE.getName(), event -> {
             operationQueue.addLast(termsLibrary.getTL().get(ButtonName.INVERSE));
-            expressionScreen.setText("1/(" + computeScreen.getText() + ")");
-            computeScreen.setText(evaluateQueue());
-        }, termsLibrary.getTL().get("⅟x"), col + 1, row));
-        buttonList.add(new CalculatorButton<>("n!", event -> {
-            operationQueue.addLast(termsLibrary.getTL().get(ButtonName.FACTORIAL));
-            computeScreen.setText("n!");
-        }, termsLibrary.getTL().get("⅟x"), 2 + col, row));
+            expressionScreen.setText(printOperationQueue());
+            //computeScreen.setText(evaluateQueue());
+        }, termsLibrary.getTL().get(ButtonName.INVERSE), col + 1, row));
+        buttonList.add(new CalculatorButton<>(ButtonName.FACTORIAL.getName(), event -> {
+            FactorialOperator factorial = (FactorialOperator) termsLibrary.getTL().get(ButtonName.FACTORIAL);
+            operationQueue.addLast(factorial);
+            //computeScreen.setText(factorial.toString());
+        }, termsLibrary.getTL().get(ButtonName.FACTORIAL), 2 + col, row));
         buttonList.add(new CalculatorButton<>("CE", event -> {
+            PartialOperand.setStringValue("");
+            expressionScreen.setText("");
             computeScreen.setText("0");
             operationQueue.clear();
         }, null, 3 + col, row));
@@ -67,7 +74,8 @@ public class CalculatorApp<T> extends Application {
         buttonList.add(new CalculatorButton<>(ButtonName.SQUARE.getName(), event -> {
             Operator square = (Operator) termsLibrary.getTL().get(ButtonName.SQUARE);
             operationQueue.addLast(square);
-            computeScreen.setText(square.toString());
+            logger.log(Level.INFO, operationQueue.toString());
+            expressionScreen.setText(printOperationQueue());
         }, termsLibrary.getTL().get(ButtonName.SQUARE), col, row + 1));
         buttonList.add(new CalculatorButton<>(ButtonName.PI.getName(), event -> {
             Operand pi = (Operand) termsLibrary.getTL().get(ButtonName.PI);
@@ -83,7 +91,6 @@ public class CalculatorApp<T> extends Application {
             Operator mod = (Operator) termsLibrary.getTL().get(ButtonName.MODULO);
             operationQueue.addLast(mod);
             expressionScreen.setText(printOperationQueue() + mod.toString());
-            computeScreen.setText("");
         }, termsLibrary.getTL().get(ButtonName.MODULO), 3 + col, row + 1));
         buttonList.add(new CalculatorButton<>(ButtonName.DIVISION.getName(), event -> {
             Operator division = (Operator) termsLibrary.getTL().get(ButtonName.DIVISION);
@@ -94,56 +101,48 @@ public class CalculatorApp<T> extends Application {
         buttonList.add(new CalculatorButton<>(ButtonName.SQUARE_ROOT.getName(), event -> {
             Operator sqrt = (Operator) termsLibrary.getTL().get(ButtonName.SQUARE_ROOT);
             expressionScreen.setText(sqrt.toString());
-            computeScreen.setText(evaluateQueue());
+            computeScreen.setText(printOperationQueue());
         }, null, 4 + col, row + 1));
 
 
         buttonList.add(new CalculatorButton<>(ButtonName.SEVEN.getName(), event -> {
             PartialOperand seven = (PartialOperand) termsLibrary.getTL().get(ButtonName.SEVEN);
             PartialOperand.addPart(seven);
-            operationQueue.addLast(seven);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.SEVEN), 1 + col, row + 2));
         buttonList.add(new CalculatorButton<>(ButtonName.EIGHT.getName(), event -> {
             PartialOperand eight = (PartialOperand) termsLibrary.getTL().get(ButtonName.EIGHT);
             PartialOperand.addPart(eight);
-            operationQueue.addLast(eight);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.EIGHT), 2 + col, row + 2));
         buttonList.add(new CalculatorButton<>(ButtonName.NINE.getName(), event -> {
             PartialOperand nine = (PartialOperand) termsLibrary.getTL().get(ButtonName.NINE);
             PartialOperand.addPart(nine);
-            operationQueue.addLast(nine);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.NINE), 3 + col, row + 2));
         buttonList.add(new CalculatorButton<>(ButtonName.FOUR.getName(), event -> {
             PartialOperand four = (PartialOperand) termsLibrary.getTL().get(ButtonName.FOUR);
             PartialOperand.addPart(four);
-            operationQueue.addLast(four);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.FOUR), 1 + col, row + 3));
         buttonList.add(new CalculatorButton<>(ButtonName.FIVE.getName(), event -> {
             PartialOperand five = (PartialOperand) termsLibrary.getTL().get(ButtonName.FIVE);
             PartialOperand.addPart(five);
-            operationQueue.addLast(five);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.FIVE), 2 + col, row + 3));
         buttonList.add(new CalculatorButton<>(ButtonName.SIX.getName(), event -> {
             PartialOperand six = (PartialOperand) termsLibrary.getTL().get(ButtonName.SIX);
             PartialOperand.addPart(six);
-            operationQueue.addLast(six);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.SIX), 3 + col, row + 3));
         buttonList.add(new CalculatorButton<>(ButtonName.ONE.getName(), event -> {
             PartialOperand one = (PartialOperand) termsLibrary.getTL().get(ButtonName.ONE);
             PartialOperand.addPart(one);
-            operationQueue.addLast(one);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.ONE), 1 + col, row + 4));
         buttonList.add(new CalculatorButton<>(ButtonName.TWO.getName(), event -> {
             PartialOperand two = (PartialOperand) termsLibrary.getTL().get(ButtonName.TWO);
             PartialOperand.addPart(two);
-            operationQueue.addLast(two);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.TWO), 2 + col, row + 4));
         buttonList.add(new CalculatorButton<>(ButtonName.THREE.getName(), event -> {
@@ -155,15 +154,13 @@ public class CalculatorApp<T> extends Application {
         buttonList.add(new CalculatorButton<>(ButtonName.POINT.getName(), event -> {
             DecimalPointOperator point = (DecimalPointOperator) termsLibrary.getTL().get(ButtonName.POINT);
             String decimalValue = PartialOperand.getStringValue() + point.toString();
-            Logger.getLogger(getClass().getName()).log(Level.INFO, decimalValue);
+            logger.log(Level.INFO, decimalValue);
             PartialOperand.setStringValue(decimalValue);
-            operationQueue.addLast(point);
             computeScreen.setText(decimalValue);
         }, termsLibrary.getTL().get(ButtonName.POINT), 1 + col, row + 5));
         buttonList.add(new CalculatorButton<>(ButtonName.ZERO.getName(), event -> {
             PartialOperand zero = (PartialOperand) termsLibrary.getTL().get(ButtonName.ZERO);
             PartialOperand.addPart(zero);
-            operationQueue.addLast(zero);
             computeScreen.setText(PartialOperand.getStringValue());
         }, termsLibrary.getTL().get(ButtonName.ZERO), 2 + col, row + 5));
         buttonList.add(new CalculatorButton<>(ButtonName.ANS.getName(), event -> {
@@ -178,15 +175,26 @@ public class CalculatorApp<T> extends Application {
         }, termsLibrary.getTL().get(ButtonName.ADDITION), 4 + col, row + 5));
 
 
-        buttonList.add(new CalculatorButton<>("X₂", event -> {
-            computeScreen.undo();
-            operationQueue.removeLast();
-        }, null, 4 + col, row + 1));
+        buttonList.add(new CalculatorButton<>(ButtonName.MULTIPLICATION.getName(), event -> {
+            MultiplicationOperator product = (MultiplicationOperator) termsLibrary.getTL().get(ButtonName.MULTIPLICATION);
+            operationQueue.addLast(product);
+            expressionScreen.setText(printOperationQueue());
+        }, termsLibrary.getTL().get(ButtonName.MULTIPLICATION), 4 + col, row + 2));
+        buttonList.add(new CalculatorButton<>(ButtonName.SUBTRACTION.getName(), event -> {
+            SubtractionOperator minus = (SubtractionOperator) termsLibrary.getTL().get(ButtonName.MULTIPLICATION);
+            operationQueue.addLast(minus);
+            expressionScreen.setText(printOperationQueue());
+        }, termsLibrary.getTL().get(ButtonName.SUBTRACTION), 4 + col, row + 3));
+        buttonList.add(new CalculatorButton<>(ButtonName.ADDITION.getName(), event -> {
+            AdditionOperator minus = (AdditionOperator) termsLibrary.getTL().get(ButtonName.ADDITION);
+            operationQueue.addLast(minus);
+            expressionScreen.setText(printOperationQueue());
+        }, termsLibrary.getTL().get(ButtonName.ADDITION), 4 + col, row + 4));
 
         buttonList.add(new CalculatorButton<>("=", event -> {
             String answer = evaluateQueue();
             computeScreen.setText(answer);
-            printOperationQueue();
+            expressionScreen.setText(printOperationQueue());
         }, null, 4 + col, row + 5));
         return buttonList;
     }
@@ -234,6 +242,10 @@ public class CalculatorApp<T> extends Application {
      */
     private String printOperationQueue() {
         StringBuilder expressionString = new StringBuilder();
+        if (!PartialOperand.getStringValue().isEmpty()) {
+            operationQueue.add(operationQueue.size() - 1, new Operand(PartialOperand.getStringValue()));
+            //expressionString.append("(").append(PartialOperand.getStringValue()).append(")");
+        }
         for (Term term : operationQueue){
             expressionString.append(term.toString());
         }
