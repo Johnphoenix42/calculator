@@ -19,13 +19,15 @@ public class TermsLibrary<T extends Term> {
         tl.put(ButtonName.FACTORIAL, (T) new FactorialOperator());
         tl.put(ButtonName.SQUARE, (T) new SquareOperator());
         tl.put(ButtonName.SQUARE_ROOT, (T) new Operator(Operator.OperatorType.UNARY));
-        tl.put(ButtonName.PI, (T) new Operand(Math.PI));
-        tl.put(ButtonName.EULER, (T) new Operand(Math.E));
+        tl.put(ButtonName.TEN_POWER_X, (T) new ExponentOperator(Operator.OperatorType.UNARY));
         tl.put(ButtonName.MODULO, (T) new ModulusOperator());
         tl.put(ButtonName.MULTIPLICATION, (T) new MultiplicationOperator());
         tl.put(ButtonName.DIVISION, (T) new DivisionOperator());
-        tl.put(ButtonName.ADDITION, (T) new Operator(Operator.OperatorType.BINARY));
+        tl.put(ButtonName.ADDITION, (T) new AdditionOperator());
+        tl.put(ButtonName.SUBTRACTION, (T) new SubtractionOperator());
 
+        tl.put(ButtonName.PI, (T) new PiOperand());
+        tl.put(ButtonName.EULER, (T) new EOperand());
         tl.put(ButtonName.SEVEN, (T) new PartialOperand("7"));
         tl.put(ButtonName.EIGHT, (T) new PartialOperand("8"));
         tl.put(ButtonName.NINE, (T) new PartialOperand("9"));

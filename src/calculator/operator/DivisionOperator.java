@@ -12,10 +12,10 @@ public class DivisionOperator extends Operator {
     }
 
     @Override
-    public Operand compute(Function<Operand[], Operand> computer) {
+    public Operand compute(Function<Operand[], Operand> computer, Operand... param) {
         Operand division = new Operand();
-        double nullAdjustedNumerator = Optional.of(tokens[0]).orElse(new Operand()).doubleValue();
-        double nullAdjustedDenominator = Optional.of(tokens[1]).orElse(new Operand()).doubleValue();
+        double nullAdjustedNumerator = Optional.of(param[0]).orElse(new Operand()).doubleValue();
+        double nullAdjustedDenominator = Optional.of(param[1]).orElse(new Operand()).doubleValue();
         division.setValue(nullAdjustedNumerator / nullAdjustedDenominator);
         return division;
     }

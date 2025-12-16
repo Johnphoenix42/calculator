@@ -11,7 +11,7 @@ public class FactorialOperator extends MultiplicationOperator{
     }
 
     @Override
-    public Operand compute(Function<Operand[], Operand> computer) {
+    public Operand compute(Function<Operand[], Operand> computer, Operand... param) {
         return super.compute(null);
     }
 

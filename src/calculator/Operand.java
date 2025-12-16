@@ -1,5 +1,9 @@
 package calculator;
 
+import javafx.scene.control.TextField;
+
+import java.util.function.Function;
+
 public class Operand extends Number implements Term {
 
     private Number val;
@@ -9,7 +13,9 @@ public class Operand extends Number implements Term {
     }
 
     public Operand(String value) {
-        val = Double.parseDouble(value);
+        if (value.contains("."))
+            val = Double.parseDouble(value);
+        else val = Integer.parseInt(value);
     }
 
     public Operand(Number value) {
@@ -41,7 +47,17 @@ public class Operand extends Number implements Term {
     }
 
     @Override
+    public Operand compute(Function<Operand[], Operand> computer, Operand... parameter) {
+        return this;
+    }
+
+    @Override
+    public void onHostClickAction(TextField computeScreen) {
+
+    }
+
+    @Override
     public String toString() {
-        return val.toString();
+        return "(" + val.toString() + ")";
     }
 }

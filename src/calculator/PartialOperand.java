@@ -1,9 +1,11 @@
 package calculator;
 
+import javafx.scene.control.TextField;
+
 public class PartialOperand extends Operand {
 
     private static String wholeVal = "";
-    private String numString;
+    private final String numString;
 
     public PartialOperand(String partValue) {
         super(partValue);
@@ -20,6 +22,11 @@ public class PartialOperand extends Operand {
 
     public static void setStringValue(String s) {
         wholeVal = s;
+    }
+
+    public void onHostClickAction(TextField computeScreen) {
+        PartialOperand.addPart(this);
+        computeScreen.setText(getStringValue());
     }
 
     @Override

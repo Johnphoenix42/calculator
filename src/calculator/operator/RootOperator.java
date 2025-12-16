@@ -12,10 +12,10 @@ public class RootOperator extends ExponentOperator{
     }
 
     @Override
-    public Operand compute(Function<Operand[], Operand> computer) {
+    public Operand compute(Function<Operand[], Operand> computer, Operand... param) {
         Operand root = new Operand();
-        double nullAdjustedDegree = Optional.of(tokens[0]).orElse(new Operand()).doubleValue();
-        double nullAdjustedVal = Optional.of(tokens[1]).orElse(new Operand()).doubleValue();
+        double nullAdjustedDegree = Optional.of(param[0]).orElse(new Operand()).doubleValue();
+        double nullAdjustedVal = Optional.of(param[1]).orElse(new Operand()).doubleValue();
         root.setValue(nthRootOf(nullAdjustedDegree, nullAdjustedVal));
         return root;
     }

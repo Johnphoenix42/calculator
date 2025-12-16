@@ -13,13 +13,13 @@ public class SubtractionOperator extends Operator{
     }
 
     @Override
-    public Operand compute(@Nullable Function<Operand[], Operand> computer) {
-        Operand multiplication = new Operand();
-        for (Operand term: this.tokens) {
+    public Operand compute(@Nullable Function<Operand[], Operand> computer, Operand... param) {
+        Operand subtraction = new Operand();
+        for (Operand term: param) {
             double nullAdjustedVal = Optional.of(term).orElse(new Operand()).doubleValue();
-            multiplication.setValue(nullAdjustedVal - multiplication.doubleValue());
+            subtraction.setValue(nullAdjustedVal - subtraction.doubleValue());
         }
-        return multiplication;
+        return subtraction;
     }
 
     @Override

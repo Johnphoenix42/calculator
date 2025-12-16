@@ -15,10 +15,10 @@ public class ExponentOperator extends Operator {
     }
 
     @Override
-    public Operand compute(Function<Operand[], Operand> computer) {
+    public Operand compute(Function<Operand[], Operand> computer, Operand... param) {
         Operand exponent = new Operand();
-        double nullAdjustedBase = Optional.of(tokens[0]).orElse(new Operand()).doubleValue();
-        double nullAdjustedExponent = Optional.of(tokens[1]).orElse(new Operand()).doubleValue();
+        double nullAdjustedBase = Optional.of(param[0]).orElse(new Operand()).doubleValue();
+        double nullAdjustedExponent = Optional.of(param[1]).orElse(new Operand()).doubleValue();
         exponent.setValue(Math.pow(nullAdjustedBase, nullAdjustedExponent));
         return exponent;
     }
