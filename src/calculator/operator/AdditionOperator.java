@@ -20,8 +20,8 @@ public class AdditionOperator extends Operator{
             return computer.apply(param);
         }
         for (Operand term: param) {
-            double nullAdjustedVal = Optional.of(term).orElse(new Operand()).doubleValue();
-            sum.setValue(nullAdjustedVal + sum.doubleValue());
+            double nullAdjustedVal = Optional.of(term).orElse(new Operand()).getValue();
+            sum.setValue(nullAdjustedVal + sum.getValue());
         }
         return sum;
     }

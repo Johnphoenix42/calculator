@@ -21,10 +21,9 @@ public class MultiplicationOperator extends Operator {
     @Override
     public Operand compute(@Nullable Function<Operand[], Operand> computer, Operand... param) {
         Operand multiplication = new Operand();
-        for (Operand term: param) {
-            double nullAdjustedVal = Optional.of(term).orElse(new Operand()).doubleValue();
-            multiplication.setValue(nullAdjustedVal * multiplication.doubleValue());
-        }
+        double nullAdjustedParam1 = Optional.of(param[0]).orElse(new Operand(IDENTITY)).getValue();
+        double nullAdjustedParam2 = Optional.of(param[1]).orElse(new Operand(IDENTITY)).getValue();
+            multiplication.setValue(nullAdjustedParam1 * nullAdjustedParam2);
         return multiplication;
     }
 

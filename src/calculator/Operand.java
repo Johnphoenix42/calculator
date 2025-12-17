@@ -4,46 +4,28 @@ import javafx.scene.control.TextField;
 
 import java.util.function.Function;
 
-public class Operand extends Number implements Term {
+public class Operand implements Term {
 
-    private Number val;
+    private double dVal;
 
     public Operand() {
-        val = 0;
+        dVal = 0;
+    }
+
+    public Operand(double val) {
+        dVal = val;
     }
 
     public Operand(String value) {
-        if (value.contains("."))
-            val = Double.parseDouble(value);
-        else val = Integer.parseInt(value);
-    }
-
-    public Operand(Number value) {
-        val = value;
-    }
-
-    @Override
-    public int intValue() {
-        return (int) val;
-    }
-
-    @Override
-    public long longValue() {
-        return (long) val;
-    }
-
-    @Override
-    public float floatValue() {
-        return (float) val;
-    }
-
-    @Override
-    public double doubleValue() {
-        return (double) val;
+        dVal = Double.parseDouble(value);
     }
 
     public void setValue(double v) {
-        this.val = v;
+        this.dVal = v;
+    }
+
+    public double getValue() {
+        return dVal;
     }
 
     @Override
@@ -58,6 +40,8 @@ public class Operand extends Number implements Term {
 
     @Override
     public String toString() {
-        return "(" + val.toString() + ")";
+        int iVal = (int) dVal;
+        if (iVal == dVal) return String.valueOf(iVal);
+        return String.valueOf(dVal);
     }
 }

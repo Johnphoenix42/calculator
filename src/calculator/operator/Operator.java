@@ -28,8 +28,8 @@ public class Operator implements Term {
             return computer.apply(parameter);
         }
         for (Operand term: parameter) {
-            double nullAdjustedVal = Optional.of(term).orElse(new Operand()).doubleValue();
-            sum.setValue(nullAdjustedVal + sum.doubleValue());
+            double nullAdjustedVal = Optional.of(term).orElse(new Operand()).getValue();
+            sum.setValue(nullAdjustedVal + sum.getValue());
         }
         return sum;
     }

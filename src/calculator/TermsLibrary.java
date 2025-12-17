@@ -15,16 +15,20 @@ public class TermsLibrary<T extends Term> {
 
     public void addLibrary(HashMap<ButtonName, T> tl) {
         tl.put(ButtonName.X_POWER_Y, (T) new ExponentOperator());
-        tl.put(ButtonName.INVERSE, (T) new Operator(Operator.OperatorType.UNARY));
+        tl.put(ButtonName.INVERSE, (T) new InverseOperator());
         tl.put(ButtonName.FACTORIAL, (T) new FactorialOperator());
         tl.put(ButtonName.SQUARE, (T) new SquareOperator());
-        tl.put(ButtonName.SQUARE_ROOT, (T) new Operator(Operator.OperatorType.UNARY));
+        tl.put(ButtonName.SQUARE_ROOT, (T) new RootOperator(Operator.OperatorType.UNARY, 2));
         tl.put(ButtonName.TEN_POWER_X, (T) new ExponentOperator(Operator.OperatorType.UNARY));
         tl.put(ButtonName.MODULO, (T) new ModulusOperator());
         tl.put(ButtonName.MULTIPLICATION, (T) new MultiplicationOperator());
         tl.put(ButtonName.DIVISION, (T) new DivisionOperator());
         tl.put(ButtonName.ADDITION, (T) new AdditionOperator());
         tl.put(ButtonName.SUBTRACTION, (T) new SubtractionOperator());
+        tl.put(ButtonName.LOG, (T) new LogarithmOperator(10));
+        tl.put(ButtonName.LN, (T) new NaturalLogOperator());
+        tl.put(ButtonName.OPEN_PARENTHESIS, (T) new ParenthesisOperator(true));
+        tl.put(ButtonName.CLOSE_PARENTHESIS, (T) new ParenthesisOperator(false));
 
         tl.put(ButtonName.PI, (T) new PiOperand());
         tl.put(ButtonName.EULER, (T) new EOperand());

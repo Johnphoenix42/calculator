@@ -7,16 +7,23 @@ import java.util.function.Function;
 
 public class RootOperator extends ExponentOperator{
 
+    private double param;
+
     public RootOperator() {
         super(OperatorType.BINARY);
+    }
+
+    public RootOperator(OperatorType type, double param) {
+        super(type);
+        this.param = param;
     }
 
     @Override
     public Operand compute(Function<Operand[], Operand> computer, Operand... param) {
         Operand root = new Operand();
-        double nullAdjustedDegree = Optional.of(param[0]).orElse(new Operand()).doubleValue();
-        double nullAdjustedVal = Optional.of(param[1]).orElse(new Operand()).doubleValue();
-        root.setValue(nthRootOf(nullAdjustedDegree, nullAdjustedVal));
+        double nullAdjustedDegree = Optional.of(param[1]).orElse(new Operand(this.param)).getValue();
+        double nullAdjustedVal = Optional.of(param[0]).orElse(new Operand()).getValue();
+        root.setValue(StrictMath.pow(1/nullAdjustedDegree, nullAdjustedVal));
         return root;
     }
 

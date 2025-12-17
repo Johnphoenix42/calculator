@@ -26,7 +26,12 @@ public enum ButtonName {
     ANS("Ans"),
     SQUARE_ROOT("√"),
     X_ROOT("ª√"),
-    MULTIPLICATION("⨉"), TEN_POWER_X("10^x");
+    MULTIPLICATION("⨉"),
+    TEN_POWER_X("10^x"),
+    LOG("log"),
+    LN("ln"),
+    OPEN_PARENTHESIS("("),
+    CLOSE_PARENTHESIS(")");
 
 
     private String name;
