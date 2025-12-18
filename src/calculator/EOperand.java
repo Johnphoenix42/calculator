@@ -8,6 +8,6 @@ public class EOperand extends Operand{
 
     @Override
     public String toString() {
-        return "(e)";
+        return "e";
     }
 }

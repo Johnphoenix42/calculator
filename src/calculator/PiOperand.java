@@ -8,6 +8,6 @@ public class PiOperand extends Operand{
 
     @Override
     public String toString() {
-        return "(⫪)";
+        return "⫪";
     }
 }

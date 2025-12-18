@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.ListIterator;
-import java.util.function.Function;
 import java.util.logging.Logger;
 
 public class CalculatorApp extends Application {
@@ -30,7 +29,6 @@ public class CalculatorApp extends Application {
     private final LinkedList<Term> operationQueue;
     private final TermsLibrary<Term> termsLibrary;
     private final LinkedList<String> executionMemory;
-    private final LinkedList<Operand> resultStack;
     private Logger logger = null;
 
     public CalculatorApp() {
@@ -41,7 +39,6 @@ public class CalculatorApp extends Application {
         operationQueue = new LinkedList<>();
         termsLibrary = new TermsLibrary<>();
         executionMemory = new LinkedList<>();
-        resultStack = new LinkedList<>();
         CalculatorButton.setComputeScreen(computeScreen);
         CalculatorButton.setExpressionScreen(expressionScreen);
 
@@ -170,7 +167,7 @@ public class CalculatorApp extends Application {
 
         buttonList.add(new CalculatorButton<>("=", event -> {
             expressionScreen.setText(printOperationQueue(null));
-            Operand answer = evaluateQueue(0);
+            Operand answer = evaluateQueue();
             String answerString = answer.toString();
             executionMemory.add(answerString);
             computeScreen.setText(answerString);
@@ -180,11 +177,10 @@ public class CalculatorApp extends Application {
         return buttonList;
     }
 
-    private Operand evaluateQueue(int bracketLevelsDeep) {
+    private Operand evaluateQueue() {
         ListIterator<Term> queueIterator = operationQueue.listIterator();
 
         String lastAnswer = executionMemory.peek();
-        //resultStack.push();
         Operand result = new Operand(lastAnswer == null ? "0" : lastAnswer);
 
         while(queueIterator.hasNext()) {
@@ -218,6 +214,10 @@ public class CalculatorApp extends Application {
         if (!PartialOperand.getStringValue().isEmpty()) {
             operationQueue.addLast(new Operand(PartialOperand.getStringValue()));
         }
+        boolean shouldAppendProductOperator = (token instanceof Operator &&
+                ((Operator) token).getOperatorType() == Operator.OperatorType.UNARY) || token instanceof Operand;
+        if (shouldAppendProductOperator)  operationQueue.addLast(new MultiplicationOperator());
+
         if (token != null) {
             operationQueue.addLast(token);
             /*if (token instanceof Operator) {
