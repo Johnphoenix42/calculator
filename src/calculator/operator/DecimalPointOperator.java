@@ -1,20 +1,19 @@
 package calculator.operator;
 
-import calculator.ButtonName;
 import calculator.Operand;
+import calculator.OperationType;
 import calculator.PartialOperand;
 import com.sun.istack.internal.Nullable;
 import javafx.scene.control.TextField;
 
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.logging.Level;
 
 public class DecimalPointOperator extends Operator{
 
 
     public DecimalPointOperator() {
-        super(OperatorType.UNARY);
+        super(OperationType.UNARY);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package calculator.operator;
 
-import calculator.ButtonName;
 import calculator.Operand;
+import calculator.OperationType;
 import javafx.scene.control.TextField;
 
 import java.util.Optional;
@@ -10,7 +10,7 @@ import java.util.function.Function;
 public class AdditionOperator extends Operator{
 
     public AdditionOperator() {
-        super(OperatorType.BINARY);
+        super(OperationType.BINARY);
     }
 
     @Override

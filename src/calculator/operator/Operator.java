@@ -1,6 +1,7 @@
 package calculator.operator;
 
 import calculator.Operand;
+import calculator.OperationType;
 import calculator.Term;
 import com.sun.istack.internal.Nullable;
 import javafx.scene.control.TextField;
@@ -10,10 +11,10 @@ import java.util.function.Function;
 
 public class Operator implements Term {
 
-    private final OperatorType type;
+    private final OperationType type;
     protected Operand[] tokens;
 
-    public Operator(OperatorType type) {
+    public Operator(OperationType type) {
         this.type = type;
     }
 
@@ -34,22 +35,19 @@ public class Operator implements Term {
         return sum;
     }
 
-    public OperatorType getOperatorType() {
-        return type;
-    }
-
     @Override
     public void onHostClickAction(TextField computeScreen) {
 
     }
 
     @Override
-    public String toString() {
-        return "GEN";
+    public OperationType getOperationType() {
+        return type;
     }
 
-    public enum OperatorType{
-        UNARY, BINARY, TERNARY
+    @Override
+    public String toString() {
+        return "GEN";
     }
 
 }

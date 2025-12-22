@@ -9,6 +9,7 @@ public interface Term {
 
     Operand compute(@Nullable Function<Operand[], Operand> computer, Operand... parameter);
     void onHostClickAction(TextField computeScreen);
+    OperationType getOperationType();
     String toString();
 
 }

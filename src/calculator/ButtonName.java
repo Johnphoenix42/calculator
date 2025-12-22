@@ -1,7 +1,10 @@
 package calculator;
 
 public enum ButtonName {
-    X_POWER_Y("xªy"),
+    SIN("Sin"),
+    COS("Cos"),
+    TAN("Tan"),
+    X_POWER_Y("xª"),
     INVERSE("⅟x"),
     FACTORIAL("n!"),
     SQUARE("x²"),

@@ -1,6 +1,7 @@
 package calculator.operator;
 
 import calculator.Operand;
+import calculator.OperationType;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -8,7 +9,7 @@ import java.util.function.Function;
 public class InverseOperator extends DivisionOperator{
 
     public InverseOperator(){
-        super(OperatorType.UNARY);
+        super(OperationType.UNARY);
     }
 
     @Override

@@ -1,13 +1,14 @@
 package calculator.operator;
 
 import calculator.Operand;
+import calculator.OperationType;
 
 import java.util.function.Function;
 
 public class SquareOperator extends MultiplicationOperator{
 
     public SquareOperator(){
-        super(OperatorType.UNARY);
+        super(OperationType.UNARY);
     }
 
     @Override

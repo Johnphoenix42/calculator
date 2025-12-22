@@ -1,6 +1,7 @@
 package calculator.operator;
 
 import calculator.Operand;
+import calculator.OperationType;
 import com.sun.istack.internal.Nullable;
 
 import java.util.Optional;
@@ -9,7 +10,7 @@ import java.util.function.Function;
 public class SubtractionOperator extends Operator {
 
     public SubtractionOperator() {
-        super(OperatorType.BINARY);
+        super(OperationType.BINARY);
     }
 
     @Override

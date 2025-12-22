@@ -1,4 +1,4 @@
-package calculator.operator;
+package calculator;
 
 public enum OperationType {
     NONE,

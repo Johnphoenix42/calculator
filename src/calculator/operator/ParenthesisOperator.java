@@ -1,7 +1,7 @@
 package calculator.operator;
 
 import calculator.Operand;
-import javafx.scene.control.TextField;
+import calculator.OperationType;
 
 import java.util.function.Function;
 
@@ -10,7 +10,7 @@ public class ParenthesisOperator extends Operator{
     private final boolean isOpen;
 
     public ParenthesisOperator(boolean isOpen) {
-        super(OperatorType.BINARY);
+        super(OperationType.BINARY);
         this.isOpen = isOpen;
     }
 

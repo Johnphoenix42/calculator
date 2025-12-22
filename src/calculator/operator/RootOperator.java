@@ -1,6 +1,7 @@
 package calculator.operator;
 
 import calculator.Operand;
+import calculator.OperationType;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -10,25 +11,21 @@ public class RootOperator extends ExponentOperator{
     private double param;
 
     public RootOperator() {
-        super(OperatorType.BINARY);
+        super();
     }
 
-    public RootOperator(OperatorType type, double param) {
-        super(type);
-        this.param = param;
+    public RootOperator(double base) {
+        super(base);
     }
 
     @Override
     public Operand compute(Function<Operand[], Operand> computer, Operand... param) {
         Operand root = new Operand();
-        double nullAdjustedDegree = Optional.of(param[1]).orElse(new Operand(this.param)).getValue();
-        double nullAdjustedVal = Optional.of(param[0]).orElse(new Operand()).getValue();
-        root.setValue(StrictMath.pow(1/nullAdjustedDegree, nullAdjustedVal));
+        double nullAdjustedDegree = Optional.of(param[0]).orElse(new Operand(base)).getValue();
+        if (getOperationType() == OperationType.UNARY) nullAdjustedDegree = base;
+        double nullAdjustedVal = Optional.of(param[1]).orElse(new Operand()).getValue();
+        root.setValue(StrictMath.pow(nullAdjustedVal, 1/nullAdjustedDegree));
         return root;
-    }
-
-    private double nthRootOf(double n, double val) {
-        return StrictMath.pow(val, 1/n);
     }
 
     @Override

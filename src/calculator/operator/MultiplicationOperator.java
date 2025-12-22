@@ -1,6 +1,7 @@
 package calculator.operator;
 
 import calculator.Operand;
+import calculator.OperationType;
 import com.sun.istack.internal.Nullable;
 
 import java.util.Optional;
@@ -11,10 +12,10 @@ public class MultiplicationOperator extends Operator {
     public static final int IDENTITY = 1;
 
     public MultiplicationOperator() {
-        super(OperatorType.BINARY);
+        super(OperationType.BINARY);
     }
 
-    public MultiplicationOperator(OperatorType opType) {
+    public MultiplicationOperator(OperationType opType) {
         super(opType);
     }
 

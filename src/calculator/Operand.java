@@ -39,6 +39,11 @@ public class Operand implements Term {
     }
 
     @Override
+    public OperationType getOperationType() {
+        return OperationType.NONE;
+    }
+
+    @Override
     public String toString() {
         int iVal = (int) dVal;
         if (iVal == dVal) return String.valueOf(iVal);

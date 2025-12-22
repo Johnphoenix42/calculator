@@ -16,8 +16,19 @@ salt–I'm still learning), there are basically two ways to design the evaluatio
 in calculator apps. You could store all the expressions, evaluating only when the "equal" 
 button is pressed, or you could evaluate as the user provides you with the next token or term,
 before things get complex. Most developers would go for the latter. It's easy and uncomplicated. 
-It can also be limiting (for the user), they might have to rewrite some expression where the 
-rules of BODMAS is to be followed.
+But it can also be limiting (for the user), they might have to rewrite some expression where the 
+rules of BODMAS is to be followed. That time, I went for the former without an inkling of what 
+I was getting myself into. So I ended up writing code that works sometimes and could even give 
+the wrong answer.
+
+I went into this project thinking with my years of experience coding and theoretical computer 
+science knowledge, I should not be making those mistakes again. I think it's working because I'm 
+starting to appreciate the complexity that could go into developing a capable, well-done and 
+correct calculator. I'm enjoying the process, playing around with recursion, studying the use 
+binary trees queues for creating expression and evaluation trees, It's been fun.
+
+But, why did I consider making it again considering I've attempted it before? I boasted about it 
+being child's play
 
 
 ## Thought Pattern involved in the problem-solving done in this project.

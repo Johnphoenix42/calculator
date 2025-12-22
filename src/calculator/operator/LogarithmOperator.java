@@ -1,6 +1,7 @@
 package calculator.operator;
 
 import calculator.Operand;
+import calculator.OperationType;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -10,11 +11,11 @@ public class LogarithmOperator extends Operator {
     private double param;
 
     public LogarithmOperator() {
-        super(OperatorType.BINARY);
+        super(OperationType.BINARY);
     }
 
     public LogarithmOperator(double param) {
-        super(OperatorType.UNARY);
+        super(OperationType.UNARY);
         this.param = param;
     }
 
@@ -23,7 +24,7 @@ public class LogarithmOperator extends Operator {
         Operand log = new Operand();
         double nullAdjustedBase = Optional.ofNullable(parameter[1]).orElse(new Operand(this.param)).getValue();
         double nullAdjustedVal = Optional.ofNullable(parameter[0]).orElse(new Operand()).getValue();
-        if (getOperatorType() == OperatorType.UNARY) log.setValue(Math.log10(nullAdjustedBase));
+        if (getOperationType() == OperationType.UNARY) log.setValue(Math.log10(nullAdjustedBase));
         else {
             log.setValue(Math.log(nullAdjustedVal) / Math.log(nullAdjustedBase));
         }
@@ -32,6 +33,6 @@ public class LogarithmOperator extends Operator {
 
     @Override
     public String toString() {
-        return getOperatorType() == OperatorType.UNARY ? "log_10" : "log";
+        return getOperationType() == OperationType.UNARY ? "log₁₀" : "log";
     }
 }
