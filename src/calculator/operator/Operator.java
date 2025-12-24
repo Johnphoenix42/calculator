@@ -6,6 +6,7 @@ import calculator.Term;
 import com.sun.istack.internal.Nullable;
 import javafx.scene.control.TextField;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -30,8 +31,9 @@ public class Operator implements Term {
         }
         for (Operand term: parameter) {
             double nullAdjustedVal = Optional.of(term).orElse(new Operand()).getValue();
-            sum.setValue(nullAdjustedVal + sum.getValue());
+            sum.setValue(BigDecimal.valueOf(nullAdjustedVal).add(BigDecimal.valueOf(sum.getValue())).doubleValue());
         }
+
         return sum;
     }
 

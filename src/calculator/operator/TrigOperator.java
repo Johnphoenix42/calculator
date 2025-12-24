@@ -1,5 +1,6 @@
 package calculator.operator;
 
+import calculator.GlobalModes;
 import calculator.Operand;
 import calculator.OperationType;
 
@@ -21,15 +22,33 @@ public class TrigOperator extends Operator {
         double nullAdjustedVal = Optional.of(param[1]).orElse(new Operand()).getValue();
         switch (trigOperatorType) {
             case SIN: {
-                trig.setValue(Math.sin(nullAdjustedVal));
+                trig.setValue(Math.sin(GlobalModes.getAngleMode() == GlobalModes.TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
                 break;
             }
             case COS: {
-                trig.setValue(Math.cos(nullAdjustedVal));
+                trig.setValue(Math.cos(GlobalModes.getAngleMode() == GlobalModes.TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
                 break;
             }
             case TAN: {
-                trig.setValue(Math.tan(nullAdjustedVal));
+                trig.setValue(Math.tan(GlobalModes.getAngleMode() == GlobalModes.TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                break;
+            }
+            case ASIN: {
+                trig.setValue(Math.asin(GlobalModes.getAngleMode() == GlobalModes.TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                break;
+            }
+            case ACOS: {
+                trig.setValue(Math.acos(GlobalModes.getAngleMode() == GlobalModes.TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                break;
+            }
+            case ATAN: {
+                trig.setValue(Math.atan(GlobalModes.getAngleMode() == GlobalModes.TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
                 break;
             }
             default: trig.setValue(Double.parseDouble(Double.toHexString(nullAdjustedVal)));
@@ -48,11 +67,14 @@ public class TrigOperator extends Operator {
             case SIN: return "Sin";
             case COS: return "Cos";
             case TAN: return "Tan";
+            case ASIN: return "Sin^-1";
+            case ACOS: return "Cos^-1";
+            case ATAN: return "Tan^-1";
             default: return "Trig";
         }
     }
 
     public enum TrigOperatorType {
-        SIN, COS, TAN
+        SIN, COS, TAN, ASIN, ACOS, ATAN
     }
 }

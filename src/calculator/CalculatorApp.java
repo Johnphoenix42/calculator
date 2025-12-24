@@ -6,6 +6,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
@@ -246,6 +247,21 @@ public class CalculatorApp extends Application {
         }
     }
 
+    private LinkedList<Button> createControlButton() {
+        LinkedList<Button> controlButtons = new LinkedList<>();
+
+        Button modeButton = new Button("Modes");
+        Button memoryStoreButton = new Button("MS");
+        Button memoryRecallButton = new Button("MR");
+        Button memoryListButton = new Button("M⋁");
+
+        controlButtons.add(modeButton);
+        controlButtons.add(memoryStoreButton);
+        controlButtons.add(memoryRecallButton);
+        controlButtons.add(memoryListButton);
+        return controlButtons;
+    }
+
     public GridPane setupGrid() {
         GridPane gridPane = new GridPane();
         gridPane.setGridLinesVisible(true);
@@ -259,7 +275,7 @@ public class CalculatorApp extends Application {
             gridPane.getColumnConstraints().add(columnConstraints);
         }
 
-        for(int i = 0; i < 9; ++i) {
+        for(int i = 0; i < 10; ++i) {
             RowConstraints rowConstraints = new RowConstraints(30, 40, 50);
             rowConstraints.setFillHeight(true);
             gridPane.getRowConstraints().add(rowConstraints);
@@ -279,7 +295,12 @@ public class CalculatorApp extends Application {
         computeScreen.setAlignment(Pos.CENTER_RIGHT);
         gridPane.add(computeScreen, 0, 1, 5, 1);
 
-        for (CalculatorButton<? extends Term> calculatorButton : getCalcButtons(0, 3)) {
+        LinkedList<Button> controlButtons = createControlButton();
+        for (int i = 0; i < controlButtons.size(); ++i){
+            gridPane.add(controlButtons.get(i), (i+10)%5, (i+10)/5);
+        }
+
+        for (CalculatorButton<? extends Term> calculatorButton : getCalcButtons(0, 4)) {
             gridPane.add(calculatorButton, calculatorButton.getColumn(), calculatorButton.getRow(),
                     calculatorButton.getColSpan(), calculatorButton.getRowSpan());
         }
@@ -300,7 +321,7 @@ public class CalculatorApp extends Application {
         ));
         root.setAlignment(Pos.CENTER);
         root.getChildren().add(setupGrid());
-        Scene mainScene = new Scene(root, 400, 400, Color.GRAY);
+        Scene mainScene = new Scene(root, 350, 450, Color.GRAY);
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle(APP_NAME);

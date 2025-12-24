@@ -2,6 +2,7 @@ package calculator;
 
 import javafx.scene.control.TextField;
 
+import java.math.BigDecimal;
 import java.util.function.Function;
 
 public class Operand implements Term {
