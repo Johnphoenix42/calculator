@@ -247,13 +247,21 @@ public class CalculatorApp extends Application {
         }
     }
 
-    private LinkedList<Button> createControlButton() {
-        LinkedList<Button> controlButtons = new LinkedList<>();
+    private LinkedList<CalculatorButton<?>> createControlButton() {
+        LinkedList<CalculatorButton<?>> controlButtons = new LinkedList<>();
 
-        Button modeButton = new Button("Modes");
-        Button memoryStoreButton = new Button("MS");
-        Button memoryRecallButton = new Button("MR");
-        Button memoryListButton = new Button("M⋁");
+        CalculatorButton<?> modeButton = new CalculatorButton<>("Mode", e -> {
+
+        }, null, 0, 3);
+        CalculatorButton<?> memoryStoreButton = new CalculatorButton<>("MS", e -> {
+
+        }, null, 0, 3);
+        CalculatorButton<?> memoryRecallButton = new CalculatorButton<>("MR", e -> {
+
+        }, null, 0, 3);
+        CalculatorButton<?> memoryListButton = new CalculatorButton<>("M⋁", e -> {
+
+        }, null, 0, 3);
 
         controlButtons.add(modeButton);
         controlButtons.add(memoryStoreButton);
@@ -295,7 +303,7 @@ public class CalculatorApp extends Application {
         computeScreen.setAlignment(Pos.CENTER_RIGHT);
         gridPane.add(computeScreen, 0, 1, 5, 1);
 
-        LinkedList<Button> controlButtons = createControlButton();
+        LinkedList<CalculatorButton<?>> controlButtons = createControlButton();
         for (int i = 0; i < controlButtons.size(); ++i){
             gridPane.add(controlButtons.get(i), (i+10)%5, (i+10)/5);
         }
