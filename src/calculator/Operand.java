@@ -1,5 +1,6 @@
 package calculator;
 
+import calculator.mode.ModeModel;
 import javafx.scene.control.TextField;
 
 import java.math.BigDecimal;
@@ -8,6 +9,7 @@ import java.util.function.Function;
 public class Operand implements Term {
 
     private double dVal;
+    protected ModeModel modeData;
 
     public Operand() {
         dVal = 0;
@@ -32,6 +34,11 @@ public class Operand implements Term {
     @Override
     public Operand compute(Function<Operand[], Operand> computer, Operand... parameter) {
         return this;
+    }
+
+    @Override
+    public void setModeData(ModeModel modeData) {
+        this.modeData = modeData;
     }
 
     @Override

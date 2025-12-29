@@ -1,5 +1,6 @@
 package calculator;
 
+import calculator.mode.ModeModel;
 import com.sun.istack.internal.Nullable;
 import javafx.scene.control.TextField;
 
@@ -11,5 +12,6 @@ public interface Term {
     void onHostClickAction(TextField computeScreen);
     OperationType getOperationType();
     String toString();
+    void setModeData(ModeModel modeData);
 
 }

@@ -3,6 +3,7 @@ package calculator.operator;
 import calculator.Operand;
 import calculator.OperationType;
 import calculator.Term;
+import calculator.mode.ModeModel;
 import com.sun.istack.internal.Nullable;
 import javafx.scene.control.TextField;
 
@@ -14,6 +15,7 @@ public class Operator implements Term {
 
     private final OperationType type;
     protected Operand[] tokens;
+    protected ModeModel modeData;
 
     public Operator(OperationType type) {
         this.type = type;
@@ -35,6 +37,10 @@ public class Operator implements Term {
         }
 
         return sum;
+    }
+
+    public void setModeData(ModeModel mode) {
+        this.modeData = mode;
     }
 
     @Override

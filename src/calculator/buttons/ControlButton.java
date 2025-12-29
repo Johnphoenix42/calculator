@@ -1,35 +1,30 @@
-package calculator;
+package calculator.buttons;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class CalculatorButton<T extends Term> extends Button {
+public class ControlButton extends ToggleButton {
 
-    private static TextField computeScreen;
-    private static TextField expressionScreen;
     private final String name;
     private final int column;
     private final int row;
     private final int colSpan;
     private final int rowSpan;
-    private final T t;
 
-    CalculatorButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row, int colSpan, int rowSpan){
+    public ControlButton(String name, EventHandler<ActionEvent> eHandler, int column, int row, int colSpan, int rowSpan){
         this.name = name;
-        this.t = type;
         this.column = column;
         this.row = row;
         this.colSpan = colSpan;
         this.rowSpan = rowSpan;
         setText(name);
-        setTextFill(Color.GRAY);
+        setTextFill(Color.color(1, 1, 1));
         setFont(Font.font(15));
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         setBackground(new Background(
@@ -48,18 +43,11 @@ public class CalculatorButton<T extends Term> extends Button {
      * This variant leaves out onActionEventHandler function for the user, defaulting to what
      * is specified in onHostClickAction implemented by SubTypes of Term interface
      * @param name
-     * @param type
      * @param column
      * @param row
      */
-    CalculatorButton(String name, T type, int column, int row) {
-        this(name, e -> {
-            type.onHostClickAction(computeScreen);
-        }, type, column, row, 1, 1);
-    }
-
-    CalculatorButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row){
-        this(name, eHandler, type, column, row, 1, 1);
+    public ControlButton(String name, int column, int row) {
+        this(name, e -> {}, column, row, 1, 1);
     }
 
     public int getColumn() {
@@ -78,20 +66,4 @@ public class CalculatorButton<T extends Term> extends Button {
         return rowSpan;
     }
 
-    public static void setComputeScreen(TextField screen) {
-        computeScreen = screen;
-    }
-
-    public static void setExpressionScreen(TextField screen){
-        expressionScreen = screen;
-    }
-
-    public T getTerm() throws NullPointerException {
-        try {
-            return t;
-        } catch (NullPointerException n) {
-            throw new NullPointerException(name + " has a NULL term.");
-        }
-    }
 }
-

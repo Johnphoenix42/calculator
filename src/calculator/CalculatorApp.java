@@ -1,12 +1,17 @@
 package calculator;
 
+import calculator.buttons.CalculatorButton;
+import calculator.buttons.ControlButton;
+import calculator.mode.ModeModel;
+import calculator.mode.ModeView;
 import calculator.operator.*;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
@@ -25,20 +30,31 @@ import java.util.NoSuchElementException;
 public class CalculatorApp extends Application {
 
     public static final String APP_NAME = "Jounin Calculator";
+
+    private StackPane rootPane;
     private final TextField expressionScreen;
     private final TextField computeScreen;
+    private GridPane overlayPane;
+
     private final LinkedList<Term> operationQueue;
     private final TermsLibrary<Term> termsLibrary;
     private final LinkedList<String> executionMemory;
 
+    ModeModel modeData;
+
     public CalculatorApp() {
+        rootPane = new StackPane();
         computeScreen = new TextField();
         expressionScreen = new TextField();
         expressionScreen.setEditable(false);
         expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
+        overlayPane = new GridPane();
         operationQueue = new LinkedList<>();
         termsLibrary = new TermsLibrary<>();
         executionMemory = new LinkedList<>();
+
+        modeData = new ModeModel();
+
         CalculatorButton.setComputeScreen(computeScreen);
         CalculatorButton.setExpressionScreen(expressionScreen);
     }
@@ -249,9 +265,13 @@ public class CalculatorApp extends Application {
 
     private LinkedList<CalculatorButton<?>> createControlButton() {
         LinkedList<CalculatorButton<?>> controlButtons = new LinkedList<>();
+        ModeView modeView = new ModeView(overlayPane, modeData);
 
         CalculatorButton<?> modeButton = new CalculatorButton<>("Mode", e -> {
-
+            ObservableList<Node> children = rootPane.getChildren();
+            children.remove(overlayPane);
+            modeView.show();
+            children.add(overlayPane);
         }, null, 0, 3);
         CalculatorButton<?> memoryStoreButton = new CalculatorButton<>("MS", e -> {
 
@@ -320,16 +340,15 @@ public class CalculatorApp extends Application {
     }
 
     public void start(Stage primaryStage) {
-        VBox root = new VBox(5);
-        root.setBackground(new Background(new BackgroundFill(
+        rootPane.setBackground(new Background(new BackgroundFill(
                 new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                         new Stop(0, Color.color(0.1,0.1, 0.1)),
                         new Stop(1, Color.color(0.18, 0.2, 0.18))),
                 null, new Insets(10))
         ));
-        root.setAlignment(Pos.CENTER);
-        root.getChildren().add(setupGrid());
-        Scene mainScene = new Scene(root, 350, 450, Color.GRAY);
+        rootPane.setAlignment(Pos.CENTER);
+        rootPane.getChildren().add(setupGrid());
+        Scene mainScene = new Scene(rootPane, 350, 450, Color.GRAY);
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle(APP_NAME);
