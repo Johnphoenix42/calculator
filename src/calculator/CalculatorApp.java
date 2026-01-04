@@ -1,7 +1,6 @@
 package calculator;
 
 import calculator.buttons.CalculatorButton;
-import calculator.buttons.ControlButton;
 import calculator.mode.ModeModel;
 import calculator.mode.ModeView;
 import calculator.operator.*;
@@ -30,11 +29,17 @@ import java.util.NoSuchElementException;
 public class CalculatorApp extends Application {
 
     public static final String APP_NAME = "Jounin Calculator";
+    public static final Background ROOT_BACKGROUND = new Background(new BackgroundFill(
+            new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
+                    new Stop(0, Color.color(0.1,0.1, 0.1)),
+                    new Stop(1, Color.color(0.18, 0.2, 0.18))),
+                null, null)
+            );
 
-    private StackPane rootPane;
+    private final StackPane rootPane;
     private final TextField expressionScreen;
     private final TextField computeScreen;
-    private GridPane overlayPane;
+    private final OverlayPane overlayPane;
 
     private final LinkedList<Term> operationQueue;
     private final TermsLibrary<Term> termsLibrary;
@@ -48,7 +53,7 @@ public class CalculatorApp extends Application {
         expressionScreen = new TextField();
         expressionScreen.setEditable(false);
         expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
-        overlayPane = new GridPane();
+        overlayPane = new OverlayPane();
         operationQueue = new LinkedList<>();
         termsLibrary = new TermsLibrary<>();
         executionMemory = new LinkedList<>();
@@ -189,7 +194,7 @@ public class CalculatorApp extends Application {
 
         buttonList.add(new CalculatorButton<>("=", event -> {
             expressionScreen.setText(printOperationQueue(null));
-            Operand answer = evaluateQueue();
+            Operand answer = evaluateExpressionQueue();
             String answerString = answer.toString();
             executionMemory.add(answerString);
             computeScreen.setText(answerString);
@@ -199,31 +204,31 @@ public class CalculatorApp extends Application {
         return buttonList;
     }
 
-    private Operand evaluateQueue() {
+    private Operand evaluateExpressionQueue() {
         ListIterator<Term> queueIterator = operationQueue.listIterator();
 
         String lastAnswer = executionMemory.peek();
         Operand result = new Operand(lastAnswer == null ? "0" : lastAnswer);
 
         while(queueIterator.hasNext()) {
-            result = createTree(queueIterator.next(), queueIterator, result);
+            result = computeExpression(queueIterator.next(), queueIterator, result);
         }
         return result;
     }
 
-    private Operand createTree(Term op, Iterator<Term> queueIterator, Operand result) {
+    private Operand computeExpression(Term op, Iterator<Term> queueIterator, Operand result) {
         if (op instanceof Operand) return (Operand) op;
         if (op instanceof ParenthesisOperator) {
             ParenthesisOperator pop = (ParenthesisOperator) op;
             if (pop.isOpen()) return evaluateParenthesis(queueIterator.next(), queueIterator, result);
         }
-        Operand param = createTree(queueIterator.next(), queueIterator, result);
+        Operand param = computeExpression(queueIterator.next(), queueIterator, result);
         return op.compute(null, result, param);
     }
 
     private Operand evaluateParenthesis(Term op, Iterator<Term> queueIterator, Operand result) {
         if (op instanceof ParenthesisOperator && !((ParenthesisOperator)op).isOpen()) return result;
-        Operand param = createTree(op, queueIterator, result);
+        Operand param = computeExpression(op, queueIterator, result);
         return evaluateParenthesis(queueIterator.next(), queueIterator, param);
     }
 
@@ -271,6 +276,7 @@ public class CalculatorApp extends Application {
             ObservableList<Node> children = rootPane.getChildren();
             children.remove(overlayPane);
             modeView.show();
+            overlayPane.addCloseButton();
             children.add(overlayPane);
         }, null, 0, 3);
         CalculatorButton<?> memoryStoreButton = new CalculatorButton<>("MS", e -> {
@@ -340,12 +346,7 @@ public class CalculatorApp extends Application {
     }
 
     public void start(Stage primaryStage) {
-        rootPane.setBackground(new Background(new BackgroundFill(
-                new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
-                        new Stop(0, Color.color(0.1,0.1, 0.1)),
-                        new Stop(1, Color.color(0.18, 0.2, 0.18))),
-                null, new Insets(10))
-        ));
+        rootPane.setBackground(ROOT_BACKGROUND);
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().add(setupGrid());
         Scene mainScene = new Scene(rootPane, 350, 450, Color.GRAY);
