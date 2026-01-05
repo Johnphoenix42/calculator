@@ -9,8 +9,6 @@ public class ModeModel {
     public ModeModel() {
         angleMode = TrigMode.RADIANS;
         notationType = AnswerNotationType.STANDARD;
-        System.out.println(">>Quick test - What are enum declarations initialized to automatically? \n"+
-                "answerRadix is initialized to BINARY?: " + answerRadix);
         answerRadix = AnswerRadix.BINARY;
     }
 
