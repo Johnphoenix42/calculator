@@ -26,7 +26,8 @@ public class ControlButton extends ToggleButton {
         setText(name);
         setTextFill(Color.color(1, 1, 1));
         setFont(Font.font(15));
-        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        setMinSize(60, 30);
+        setMaxSize(100, Double.MAX_VALUE);
         setBackground(new Background(
                 new BackgroundFill(Color.web("0f0f0f"), null, null)
         ));

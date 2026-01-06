@@ -8,12 +8,12 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.LinkedList;
 
-public class ModeView {
+public class ModeView implements OverlayView {
 
     private final GridPane parentPane;
     private final LinkedList<ControlButton> modeButtons;
@@ -22,8 +22,6 @@ public class ModeView {
     private final ControlButton standardNotationToggle, scientificNotationToggle;
     private final ControlButton radix2Toggle, radix8Toggle, radix10Toggle, radix16Toggle;
 
-    private final FadeTransition fadeTransition;
-
     private final ModeModel modeData;
 
     public ModeView(GridPane pane, ModeModel modeData) {
@@ -31,8 +29,11 @@ public class ModeView {
         this.modeData = modeData;
         modeButtons = new LinkedList<>();
         angleLabel = new Label("angle");
+        angleLabel.setTextFill(Color.web("#bbb"));
         notationLabel = new Label("notation");
+        notationLabel.setTextFill(Color.web("#bbb"));
         radixLabel = new Label("radix");
+        radixLabel.setTextFill(Color.web("#bbb"));
         angleToggleDegrees = new ControlButton("Degrees", 0, 1);
         angleToggleRadians = new ControlButton("Radians", 1, 1);
         standardNotationToggle = new ControlButton("Dec", 3, 1);
@@ -46,18 +47,13 @@ public class ModeView {
         modeButtons.add(angleToggleRadians);
         modeButtons.add(standardNotationToggle);
         modeButtons.add(scientificNotationToggle);
-
-        fadeTransition = new FadeTransition(Duration.millis(1000), pane);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-        fadeTransition.setCycleCount(1);
-        fadeTransition.setAutoReverse(false);
     }
 
+    @Override
     public void show() {
         parentPane.getChildren().clear();
 
-        ColumnConstraints colConstraints = new ColumnConstraints(40, 50, 60, Priority.SOMETIMES, HPos.LEFT, true);
+        ColumnConstraints colConstraints = new ColumnConstraints(40, 50, 60, Priority.ALWAYS, HPos.LEFT, false);
         parentPane.getColumnConstraints().add(colConstraints);
 
         parentPane.add(angleLabel, 0, 0);
@@ -76,15 +72,17 @@ public class ModeView {
         angleToggleGroup.getToggles().addAll(angleToggleDegrees, angleToggleRadians);
         angleToggleGroup.selectToggle(angleToggleRadians);
 
-        ToggleGroup notaionsToggleGroup = new ToggleGroup();
-        notaionsToggleGroup.getToggles().addAll(standardNotationToggle, scientificNotationToggle);
-        notaionsToggleGroup.selectToggle(scientificNotationToggle);
+        ToggleGroup notationsToggleGroup = new ToggleGroup();
+        notationsToggleGroup.getToggles().addAll(standardNotationToggle, scientificNotationToggle);
+        notationsToggleGroup.selectToggle(scientificNotationToggle);
 
         ToggleGroup radixToggleGroup = new ToggleGroup();
         radixToggleGroup.getToggles().addAll(radix2Toggle, radix8Toggle, radix10Toggle, radix16Toggle);
         radixToggleGroup.selectToggle(radix10Toggle);
+    }
 
-        fadeTransition.play();
+    @Override
+    public void close() {
     }
 
     public LinkedList<ControlButton> getModeButtons() {

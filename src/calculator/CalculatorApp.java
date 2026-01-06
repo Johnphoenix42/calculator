@@ -3,11 +3,11 @@ package calculator;
 import calculator.buttons.CalculatorButton;
 import calculator.mode.ModeModel;
 import calculator.mode.ModeView;
+import calculator.mode.OverlayView;
 import calculator.operator.*;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -271,13 +271,12 @@ public class CalculatorApp extends Application {
     private LinkedList<CalculatorButton<?>> createControlButton() {
         LinkedList<CalculatorButton<?>> controlButtons = new LinkedList<>();
         ModeView modeView = new ModeView(overlayPane, modeData);
+        overlayPane.setView(modeView);
 
         CalculatorButton<?> modeButton = new CalculatorButton<>("Mode", e -> {
-            ObservableList<Node> children = rootPane.getChildren();
-            children.remove(overlayPane);
-            modeView.show();
+            overlayPane.show();
             overlayPane.addCloseButton();
-            children.add(overlayPane);
+            rootPane.getChildren().add(overlayPane);
         }, null, 0, 3);
         CalculatorButton<?> memoryStoreButton = new CalculatorButton<>("MS", e -> {
 
@@ -301,8 +300,6 @@ public class CalculatorApp extends Application {
         gridPane.setGridLinesVisible(true);
         ColumnConstraints column1Constraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
         column1Constraints.setFillWidth(true);
-        ColumnConstraints column5Constraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
-        //gridPane.getColumnConstraints().add(column1Constraints);
         for (int i = 0; i < 5; ++i) {
             ColumnConstraints columnConstraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
             columnConstraints.setFillWidth(true);
