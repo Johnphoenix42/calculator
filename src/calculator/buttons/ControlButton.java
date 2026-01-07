@@ -14,7 +14,7 @@ public class ControlButton extends ToggleButton {
     private static final Background NORMAL_BACKGROUND = new Background(
             new BackgroundFill(Color.web("0f0f0f"), null, null));
     private static final Background ACCENT_BACKGROUND = new Background(
-            new BackgroundFill(Color.GRAY, null, null));
+            new BackgroundFill(Color.color(0.3, .3, .3), null, null));
 
     private final String name;
     private final EventHandler<ActionEvent> eHandler;
@@ -22,6 +22,8 @@ public class ControlButton extends ToggleButton {
     private final int row;
     private final int colSpan;
     private final int rowSpan;
+
+    private ControlButton prevSelectedBtn;
 
     public ControlButton(String name, EventHandler<ActionEvent> eHandler, int column, int row, int colSpan, int rowSpan){
         this.name = name;
@@ -43,8 +45,9 @@ public class ControlButton extends ToggleButton {
             setEffect(new Glow(0));
         });
         setOnAction(e -> {
-            ((ToggleButton) getToggleGroup().getSelectedToggle()).setBackground(NORMAL_BACKGROUND);
-            setBackground(ACCENT_BACKGROUND);
+            //((ToggleButton) getToggleGroup().getSelectedToggle()).setBackground(NORMAL_BACKGROUND);
+            getStyleClass().add(":selected");
+            //setBackground(ACCENT_BACKGROUND);
         });
     }
 

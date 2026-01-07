@@ -3,6 +3,7 @@ package calculator.operator;
 import calculator.CalculatorApp;
 import calculator.mode.OverlayView;
 import javafx.animation.FadeTransition;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,13 +20,14 @@ public class OverlayPane extends GridPane {
     private final Button closeButton;
 
     private final FadeTransition fadeInTransition, fadeOutTransition;
+    private final TranslateTransition translateInTransition, translateOutTransition;
 
     public OverlayPane(Pane parentPane){
         super();
         this.parentPane = parentPane;
         setBackground(CalculatorApp.ROOT_BACKGROUND);
         setPadding(new Insets(10));
-        setMaxHeight(200);
+        setMaxHeight(150);
         setHgap(5);
         setVgap(5);
         StackPane.setAlignment(this, Pos.BOTTOM_CENTER);
@@ -43,6 +45,17 @@ public class OverlayPane extends GridPane {
         fadeOutTransition.setToValue(0);
         fadeOutTransition.setCycleCount(1);
         fadeOutTransition.setAutoReverse(false);
+
+        translateInTransition = new TranslateTransition(Duration.millis(500), this);
+        translateInTransition.setFromY(100);
+        translateInTransition.setByY(-100);
+        translateInTransition.setCycleCount(1);
+
+        translateOutTransition = new TranslateTransition(Duration.millis(500), this);
+        translateOutTransition.setFromY(0);
+        translateOutTransition.setByY(100);
+        translateOutTransition.setCycleCount(1);
+
     }
 
     public void addCloseButton() {
@@ -62,12 +75,14 @@ public class OverlayPane extends GridPane {
         if (overlayView == null) throw new NullPointerException("Call setView(T t) first before this");
         overlayView.show();
         fadeInTransition.play();
+        translateInTransition.play();
     }
 
     public void onClose() {
         if (overlayView == null) throw new NullPointerException("Call setView(T t) first before this");
         overlayView.close();
         fadeOutTransition.play();
+        translateOutTransition.play();
         fadeOutTransition.setOnFinished(e -> {
             getChildren().clear();
             parentPane.getChildren().remove(this);
