@@ -53,7 +53,7 @@ public class CalculatorApp extends Application {
         expressionScreen = new TextField();
         expressionScreen.setEditable(false);
         expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
-        overlayPane = new OverlayPane();
+        overlayPane = new OverlayPane(rootPane);
         operationQueue = new LinkedList<>();
         termsLibrary = new TermsLibrary<>();
         executionMemory = new LinkedList<>();

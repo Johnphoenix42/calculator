@@ -14,13 +14,15 @@ import javafx.util.Duration;
 
 public class OverlayPane extends GridPane {
 
+    private final Pane parentPane;
     private OverlayView overlayView;
     private final Button closeButton;
 
-    private final FadeTransition fadeTransition;
+    private final FadeTransition fadeInTransition, fadeOutTransition;
 
-    public OverlayPane(){
+    public OverlayPane(Pane parentPane){
         super();
+        this.parentPane = parentPane;
         setBackground(CalculatorApp.ROOT_BACKGROUND);
         setPadding(new Insets(10));
         setMaxHeight(200);
@@ -31,11 +33,16 @@ public class OverlayPane extends GridPane {
         closeButton.setMaxSize(30, 30);
         closeButton.setOnAction(e -> onClose());
 
-        fadeTransition = new FadeTransition(Duration.millis(500), this);
-        fadeTransition.setFromValue(0);
-        fadeTransition.setToValue(1);
-        fadeTransition.setCycleCount(1);
-        fadeTransition.setAutoReverse(false);
+        fadeInTransition = new FadeTransition(Duration.millis(500), this);
+        fadeInTransition.setFromValue(0);
+        fadeInTransition.setToValue(1);
+        fadeInTransition.setCycleCount(1);
+        fadeInTransition.setAutoReverse(false);
+        fadeOutTransition = new FadeTransition(Duration.millis(500), this);
+        fadeOutTransition.setFromValue(1);
+        fadeOutTransition.setToValue(0);
+        fadeOutTransition.setCycleCount(1);
+        fadeOutTransition.setAutoReverse(false);
     }
 
     public void addCloseButton() {
@@ -54,15 +61,17 @@ public class OverlayPane extends GridPane {
     public void show() throws NullPointerException {
         if (overlayView == null) throw new NullPointerException("Call setView(T t) first before this");
         overlayView.show();
-        fadeTransition.play();
+        fadeInTransition.play();
     }
 
     public void onClose() {
         if (overlayView == null) throw new NullPointerException("Call setView(T t) first before this");
         overlayView.close();
-        fadeTransition.play();
-        //fadeTransition.setOnFinished(t.);
-        getChildren().clear();
+        fadeOutTransition.play();
+        fadeOutTransition.setOnFinished(e -> {
+            getChildren().clear();
+            parentPane.getChildren().remove(this);
+        });
     }
 
 }

@@ -28,9 +28,42 @@ public class ModeModel {
         this.notationType = notationType;
     }
 
-    public enum TrigMode { DEGREES, RADIANS }
+    public enum TrigMode { DEGREES("trig_deg"), RADIANS("trig_rad");
 
-    public enum AnswerNotationType { STANDARD, SCIENTIFIC }
+        private final String id;
 
-    public enum AnswerRadix { BINARY, DECIMAL, OCTAL, HEXADECIMAL }
+        TrigMode(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+    }
+
+    public enum AnswerNotationType { STANDARD("notation_standard"), SCIENTIFIC("notation_scientific");
+
+        private final String id;
+
+        AnswerNotationType(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+    }
+
+    public enum AnswerRadix { BINARY("radix_bin"), DECIMAL("radix_dec"), OCTAL("radix_oct"), HEXADECIMAL("radix_hex");
+
+        private final String id;
+
+        AnswerRadix(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+    }
 }

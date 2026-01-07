@@ -2,15 +2,15 @@ package calculator.mode;
 
 import calculator.buttons.ControlButton;
 import javafx.animation.FadeTransition;
+import javafx.css.PseudoClass;
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.util.EnumMap;
 import java.util.LinkedList;
 
 public class ModeView implements OverlayView {
@@ -23,6 +23,12 @@ public class ModeView implements OverlayView {
     private final ControlButton radix2Toggle, radix8Toggle, radix10Toggle, radix16Toggle;
 
     private final ModeModel modeData;
+
+    //todo How do you make an EnumMap whose key must match 3 different enum classes
+
+    private EnumMap<ModeModel.TrigMode, ControlButton> trigModeControlButtonEnumMap;
+    private EnumMap<ModeModel.AnswerNotationType, ControlButton> notationTypeControlButtonEnumMap;
+    private EnumMap<ModeModel.AnswerRadix, ControlButton> radixTypeControlButtonEnumMap;
 
     public ModeView(GridPane pane, ModeModel modeData) {
         this.parentPane = pane;
@@ -70,7 +76,7 @@ public class ModeView implements OverlayView {
 
         ToggleGroup angleToggleGroup = new ToggleGroup();
         angleToggleGroup.getToggles().addAll(angleToggleDegrees, angleToggleRadians);
-        angleToggleGroup.selectToggle(angleToggleRadians);
+        //angleToggleGroup.selectToggle(trigModeControlButtonEnumMap.get(modeData.getAngleMode()));
 
         ToggleGroup notationsToggleGroup = new ToggleGroup();
         notationsToggleGroup.getToggles().addAll(standardNotationToggle, scientificNotationToggle);
