@@ -3,13 +3,10 @@ package calculator;
 import calculator.buttons.CalculatorButton;
 import calculator.mode.ModeModel;
 import calculator.mode.ModeView;
-import calculator.mode.OverlayView;
 import calculator.operator.*;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
@@ -271,6 +268,7 @@ public class CalculatorApp extends Application {
     private LinkedList<CalculatorButton<?>> createControlButton() {
         LinkedList<CalculatorButton<?>> controlButtons = new LinkedList<>();
         ModeView modeView = new ModeView(overlayPane, modeData);
+        ModeView.setModeData(modeData);
         overlayPane.setView(modeView);
 
         CalculatorButton<?> modeButton = new CalculatorButton<>("Mode", e -> {

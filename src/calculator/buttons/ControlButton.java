@@ -1,5 +1,6 @@
 package calculator.buttons;
 
+import calculator.mode.ModeModel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.ToggleButton;
@@ -22,8 +23,9 @@ public class ControlButton extends ToggleButton {
     private final int row;
     private final int colSpan;
     private final int rowSpan;
+    private ModeModel.ModeConstant modeConstant;
 
-    private ControlButton prevSelectedBtn;
+    private static ModeModel modeModel;
 
     public ControlButton(String name, EventHandler<ActionEvent> eHandler, int column, int row, int colSpan, int rowSpan){
         this.name = name;
@@ -44,10 +46,15 @@ public class ControlButton extends ToggleButton {
         setOnMouseExited(e -> {
             setEffect(new Glow(0));
         });
-        setOnAction(e -> {
-            //((ToggleButton) getToggleGroup().getSelectedToggle()).setBackground(NORMAL_BACKGROUND);
-            getStyleClass().add(":selected");
-            //setBackground(ACCENT_BACKGROUND);
+        selectedProperty().addListener((obs, wasSelected, isSelected) -> {
+            if (isSelected) {
+                setBackground(ACCENT_BACKGROUND);
+                if (modeConstant instanceof ModeModel.TrigMode) modeModel.setAngleMode((ModeModel.TrigMode) modeConstant);
+                else if (modeConstant instanceof ModeModel.AnswerNotationType) modeModel.setNotationType((ModeModel.AnswerNotationType) modeConstant);
+                else if (modeConstant instanceof ModeModel.AnswerRadix) modeModel.setAnswerRadix((ModeModel.AnswerRadix) modeConstant);
+            } else {
+                setBackground(NORMAL_BACKGROUND);
+            }
         });
     }
 
@@ -55,11 +62,13 @@ public class ControlButton extends ToggleButton {
      * This variant leaves out onActionEventHandler function for the user, defaulting to what
      * is specified in onHostClickAction implemented by SubTypes of Term interface
      * @param name
+     * @param constant
      * @param column
      * @param row
      */
-    public ControlButton(String name, int column, int row) {
+    public ControlButton(String name, ModeModel.ModeConstant constant, int column, int row) {
         this(name, e -> {}, column, row, 1, 1);
+        this.modeConstant = constant;
     }
 
     public int getColumn() {
@@ -78,4 +87,19 @@ public class ControlButton extends ToggleButton {
         return rowSpan;
     }
 
+    public ModeModel.ModeConstant getModeConstant() {
+        return modeConstant;
+    }
+
+    public EventHandler<ActionEvent> geteHandler() {
+        return eHandler;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public static void setModeData(ModeModel modeData) {
+        modeModel = modeData;
+    }
 }

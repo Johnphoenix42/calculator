@@ -4,6 +4,7 @@ import calculator.Operand;
 import calculator.OperationType;
 import javafx.scene.control.TextField;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -21,7 +22,7 @@ public class AdditionOperator extends Operator{
         }
         for (Operand term: param) {
             double nullAdjustedVal = Optional.of(term).orElse(new Operand()).getValue();
-            sum.setValue(nullAdjustedVal + sum.getValue());
+            sum.setValue(BigDecimal.valueOf(nullAdjustedVal).add(BigDecimal.valueOf(sum.getValue())).doubleValue());
         }
         return sum;
     }

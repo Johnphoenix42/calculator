@@ -22,17 +22,10 @@ public class ModeView implements OverlayView {
     private final ControlButton standardNotationToggle, scientificNotationToggle;
     private final ControlButton radix2Toggle, radix8Toggle, radix10Toggle, radix16Toggle;
 
-    private final ModeModel modeData;
-
-    //todo How do you make an EnumMap whose key must match 3 different enum classes
-
-    private EnumMap<ModeModel.TrigMode, ControlButton> trigModeControlButtonEnumMap;
-    private EnumMap<ModeModel.AnswerNotationType, ControlButton> notationTypeControlButtonEnumMap;
-    private EnumMap<ModeModel.AnswerRadix, ControlButton> radixTypeControlButtonEnumMap;
+    private static ModeModel modeData;
 
     public ModeView(GridPane pane, ModeModel modeData) {
         this.parentPane = pane;
-        this.modeData = modeData;
         modeButtons = new LinkedList<>();
         angleLabel = new Label("angle");
         angleLabel.setTextFill(Color.web("#bbb"));
@@ -40,19 +33,25 @@ public class ModeView implements OverlayView {
         notationLabel.setTextFill(Color.web("#bbb"));
         radixLabel = new Label("radix");
         radixLabel.setTextFill(Color.web("#bbb"));
-        angleToggleDegrees = new ControlButton("Degrees", 0, 1);
-        angleToggleRadians = new ControlButton("Radians", 1, 1);
-        standardNotationToggle = new ControlButton("Dec", 3, 1);
-        scientificNotationToggle = new ControlButton("E10", 4, 1);
-        radix2Toggle = new ControlButton("2", 1, 2);
-        radix8Toggle = new ControlButton("8", 2, 2);
-        radix10Toggle = new ControlButton("10", 3, 2);
-        radix16Toggle = new ControlButton("16", 4, 2);
+        angleToggleDegrees = new ControlButton("Degrees", ModeModel.TrigMode.DEGREES, 0, 1);
+        angleToggleRadians = new ControlButton("Radians", ModeModel.TrigMode.RADIANS, 1, 1);
+        standardNotationToggle = new ControlButton("Dec", ModeModel.AnswerNotationType.STANDARD, 3, 1);
+        scientificNotationToggle = new ControlButton("E10", ModeModel.AnswerNotationType.SCIENTIFIC, 4, 1);
+        radix2Toggle = new ControlButton("2", ModeModel.AnswerRadix.BINARY, 1, 2);
+        radix8Toggle = new ControlButton("8", ModeModel.AnswerRadix.OCTAL, 2, 2);
+        radix10Toggle = new ControlButton("10", ModeModel.AnswerRadix.DECIMAL, 3, 2);
+        radix16Toggle = new ControlButton("16", ModeModel.AnswerRadix.HEXADECIMAL, 4, 2);
 
         modeButtons.add(angleToggleDegrees);
         modeButtons.add(angleToggleRadians);
         modeButtons.add(standardNotationToggle);
         modeButtons.add(scientificNotationToggle);
+
+        ControlButton.setModeData(modeData);
+    }
+
+    public static void setModeData(ModeModel modeData) {
+        ModeView.modeData = modeData;
     }
 
     @Override
@@ -76,7 +75,7 @@ public class ModeView implements OverlayView {
 
         ToggleGroup angleToggleGroup = new ToggleGroup();
         angleToggleGroup.getToggles().addAll(angleToggleDegrees, angleToggleRadians);
-        //angleToggleGroup.selectToggle(trigModeControlButtonEnumMap.get(modeData.getAngleMode()));
+        angleToggleGroup.selectToggle(angleToggleDegrees);
 
         ToggleGroup notationsToggleGroup = new ToggleGroup();
         notationsToggleGroup.getToggles().addAll(standardNotationToggle, scientificNotationToggle);
@@ -94,4 +93,5 @@ public class ModeView implements OverlayView {
     public LinkedList<ControlButton> getModeButtons() {
         return modeButtons;
     }
+
 }
