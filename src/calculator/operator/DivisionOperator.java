@@ -3,6 +3,8 @@ package calculator.operator;
 import calculator.Operand;
 import calculator.OperationType;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -23,7 +25,7 @@ public class DivisionOperator extends Operator {
         Operand division = new Operand();
         double nullAdjustedNumerator = Optional.of(param[0]).orElse(new Operand(IDENTITY)).getValue();
         double nullAdjustedDenominator = Optional.of(param[1]).orElse(new Operand(IDENTITY)).getValue();
-        division.setValue(nullAdjustedNumerator / nullAdjustedDenominator);
+        division.setValue(BigDecimal.valueOf(nullAdjustedNumerator).divide(BigDecimal.valueOf(nullAdjustedDenominator), RoundingMode.HALF_EVEN).doubleValue());
         return division;
     }
 
