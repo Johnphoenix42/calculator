@@ -9,7 +9,7 @@ public class ModeModel {
     public ModeModel() {
         angleMode = TrigMode.RADIANS;
         notationType = AnswerNotationType.STANDARD;
-        answerRadix = AnswerRadix.BINARY;
+        answerRadix = AnswerRadix.DECIMAL;
     }
 
     public void setAngleMode(TrigMode mode) {

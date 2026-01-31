@@ -192,9 +192,18 @@ public class CalculatorApp extends Application {
         buttonList.add(new CalculatorButton<>("=", event -> {
             expressionScreen.setText(printOperationQueue(null));
             Operand answer = evaluateExpressionQueue();
+            ModeModel.AnswerRadix radixMode = modeData.getAnswerRadix();
             String answerString = answer.toString();
             executionMemory.add(answerString);
-            computeScreen.setText(answerString);
+            switch (radixMode) {
+                case BINARY: computeScreen.setText(Operand.convertToBinary(answer.getValue(), 6));
+                break;
+                case OCTAL: computeScreen.setText(Operand.convertToOctal(answer.getValue(), 6));
+                    break;
+                case HEXADECIMAL: computeScreen.setText(Operand.convertToHexadecimal(answer.getValue(), 6));
+                break;
+                default: computeScreen.setText(answerString);
+            }
             operationQueue.clear();
             executionMemory.push(answerString);
         }, null, 4 + col, row + 5));
@@ -219,8 +228,13 @@ public class CalculatorApp extends Application {
             ParenthesisOperator pop = (ParenthesisOperator) op;
             if (pop.isOpen()) return evaluateParenthesis(queueIterator.next(), queueIterator, result);
         }
-        Operand param = computeExpression(queueIterator.next(), queueIterator, result);
-        return op.compute(null, result, param);
+        try {
+            Operand param = computeExpression(queueIterator.next(), queueIterator, result);
+            return op.compute(null, result, param);
+        } catch (NoSuchElementException e) {
+            System.out.println(e.getMessage());
+            return new Operand(Double.NaN);
+        }
     }
 
     private Operand evaluateParenthesis(Term op, Iterator<Term> queueIterator, Operand result) {
