@@ -4,6 +4,7 @@ import calculator.Operand;
 import calculator.OperationType;
 import com.sun.istack.internal.Nullable;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -24,7 +25,7 @@ public class MultiplicationOperator extends Operator {
         Operand multiplication = new Operand();
         double nullAdjustedParam1 = Optional.of(param[0]).orElse(new Operand(IDENTITY)).getValue();
         double nullAdjustedParam2 = Optional.of(param[1]).orElse(new Operand(IDENTITY)).getValue();
-            multiplication.setValue(nullAdjustedParam1 * nullAdjustedParam2);
+        multiplication.setValue(BigDecimal.valueOf(nullAdjustedParam1).multiply(BigDecimal.valueOf(nullAdjustedParam2)).doubleValue());
         return multiplication;
     }
 

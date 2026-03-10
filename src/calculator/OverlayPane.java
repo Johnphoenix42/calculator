@@ -1,6 +1,5 @@
-package calculator.operator;
+package calculator;
 
-import calculator.CalculatorApp;
 import calculator.mode.OverlayView;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
