@@ -15,7 +15,7 @@ public class FactorialOperator extends MultiplicationOperator{
     @Override
     public Operand compute(Function<Operand[], Operand> computer, Operand... param) {
         Operand factorial = new Operand();
-        double nullAdjustedVal = Optional.of(param[1]).orElse(new Operand()).getValue();
+        double nullAdjustedVal = Optional.of(param[1]).orElse(new Operand(1)).getValue();
         factorial.setValue(factorial(nullAdjustedVal));
         return factorial;
     }

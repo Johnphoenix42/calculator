@@ -231,8 +231,8 @@ public class CalculatorApp extends Application {
         try {
             Operand param = computeExpression(queueIterator.next(), queueIterator, result);
             return op.compute(null, result, param);
-        } catch (NoSuchElementException e) {
-            System.out.println(e.getMessage());
+        } catch (NoSuchElementException | NumberFormatException e) {
+            expressionScreen.setText(e.getMessage());;
             return new Operand(Double.NaN);
         }
     }
