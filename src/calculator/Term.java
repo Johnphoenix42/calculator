@@ -12,6 +12,5 @@ public interface Term {
     void onHostClickAction(TextField computeScreen);
     OperationType getOperationType();
     String toString();
-    void setModeData(ModeModel modeData);
 
 }

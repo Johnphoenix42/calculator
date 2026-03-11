@@ -36,7 +36,6 @@ public class Operand implements Term {
         return this;
     }
 
-    @Override
     public void setModeData(ModeModel modeData) {
         this.modeData = modeData;
     }

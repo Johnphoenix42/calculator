@@ -77,14 +77,17 @@ public class CalculatorApp extends Application {
         }, termsLibrary.getTL().get(ButtonName.FACTORIAL), 2 + col, row - 1));
         buttonList.add(new CalculatorButton<>(ButtonName.SIN.getName(), event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.SIN);
+            trigOperator.setModeData(modeData);
             expressionScreen.setText(printOperationQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.SIN), col + 2, row));
         buttonList.add(new CalculatorButton<>(ButtonName.COS.getName(), event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.COS);
+            trigOperator.setModeData(modeData);
             expressionScreen.setText(printOperationQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.COS), col + 3, row));
         buttonList.add(new CalculatorButton<>(ButtonName.TAN.getName(), event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.TAN);
+            trigOperator.setModeData(modeData);
             expressionScreen.setText(printOperationQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.TAN), col + 4, row));
 
@@ -290,7 +293,7 @@ public class CalculatorApp extends Application {
             overlayPane.addCloseButton();
             rootPane.getChildren().add(overlayPane);
         }, null, 0, 3);
-        CalculatorButton<?> memoryStoreButton = new CalculatorButton<>("MS", e -> {
+        /*CalculatorButton<?> memoryStoreButton = new CalculatorButton<>("MS", e -> {
 
         }, null, 0, 3);
         CalculatorButton<?> memoryRecallButton = new CalculatorButton<>("MR", e -> {
@@ -298,18 +301,17 @@ public class CalculatorApp extends Application {
         }, null, 0, 3);
         CalculatorButton<?> memoryListButton = new CalculatorButton<>("M⋁", e -> {
 
-        }, null, 0, 3);
+        }, null, 0, 3);*/
 
         controlButtons.add(modeButton);
-        controlButtons.add(memoryStoreButton);
+        /*controlButtons.add(memoryStoreButton);
         controlButtons.add(memoryRecallButton);
-        controlButtons.add(memoryListButton);
+        controlButtons.add(memoryListButton);*/
         return controlButtons;
     }
 
     public GridPane setupGrid() {
         GridPane gridPane = new GridPane();
-        gridPane.setGridLinesVisible(true);
         ColumnConstraints column1Constraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
         column1Constraints.setFillWidth(true);
         for (int i = 0; i < 5; ++i) {
@@ -347,7 +349,6 @@ public class CalculatorApp extends Application {
             gridPane.add(calculatorButton, calculatorButton.getColumn(), calculatorButton.getRow(),
                     calculatorButton.getColSpan(), calculatorButton.getRowSpan());
         }
-        gridPane.setGridLinesVisible(true);
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setVgap(2);
         gridPane.setHgap(2);
