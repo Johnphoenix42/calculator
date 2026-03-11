@@ -14,7 +14,7 @@ public class ControlButton extends ToggleButton {
 
     private static final Background NORMAL_BACKGROUND = new Background(
             new BackgroundFill(Color.web("0f0f0f"), null, null));
-    private static final Background ACCENT_BACKGROUND = new Background(
+    public static final Background ACCENT_BACKGROUND = new Background(
             new BackgroundFill(Color.color(0.3, .3, .3), null, null));
 
     private final String name;
@@ -49,9 +49,18 @@ public class ControlButton extends ToggleButton {
         selectedProperty().addListener((obs, wasSelected, isSelected) -> {
             if (isSelected) {
                 setBackground(ACCENT_BACKGROUND);
-                if (modeConstant instanceof ModeModel.TrigMode) modeModel.setAngleMode((ModeModel.TrigMode) modeConstant);
-                else if (modeConstant instanceof ModeModel.AnswerNotationType) modeModel.setNotationType((ModeModel.AnswerNotationType) modeConstant);
-                else if (modeConstant instanceof ModeModel.AnswerRadix) modeModel.setAnswerRadix((ModeModel.AnswerRadix) modeConstant);
+                if (modeConstant instanceof ModeModel.TrigMode) {
+                    modeModel.setAngleMode((ModeModel.TrigMode) modeConstant);
+                    modeConstant.setButton(this);
+                }
+                else if (modeConstant instanceof ModeModel.AnswerNotationType) {
+                    modeModel.setNotationType((ModeModel.AnswerNotationType) modeConstant);
+                    modeConstant.setButton(this);
+                }
+                else if (modeConstant instanceof ModeModel.AnswerRadix) {
+                    modeModel.setAnswerRadix((ModeModel.AnswerRadix) modeConstant);
+                    modeConstant.setButton(this);
+                }
             } else {
                 setBackground(NORMAL_BACKGROUND);
             }
@@ -102,4 +111,5 @@ public class ControlButton extends ToggleButton {
     public static void setModeData(ModeModel modeData) {
         modeModel = modeData;
     }
+
 }

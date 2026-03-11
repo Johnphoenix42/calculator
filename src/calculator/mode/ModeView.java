@@ -35,12 +35,15 @@ public class ModeView implements OverlayView {
         radixLabel.setTextFill(Color.web("#bbb"));
         angleToggleDegrees = new ControlButton("Degrees", ModeModel.TrigMode.DEGREES, 0, 1);
         angleToggleRadians = new ControlButton("Radians", ModeModel.TrigMode.RADIANS, 1, 1);
+        modeData.getAngleMode().setButton(angleToggleDegrees);
         standardNotationToggle = new ControlButton("Dec", ModeModel.AnswerNotationType.STANDARD, 3, 1);
         scientificNotationToggle = new ControlButton("E10", ModeModel.AnswerNotationType.SCIENTIFIC, 4, 1);
+        modeData.getNotationType().setButton(standardNotationToggle);
         radix2Toggle = new ControlButton("2", ModeModel.AnswerRadix.BINARY, 1, 2);
         radix8Toggle = new ControlButton("8", ModeModel.AnswerRadix.OCTAL, 2, 2);
         radix10Toggle = new ControlButton("10", ModeModel.AnswerRadix.DECIMAL, 3, 2);
         radix16Toggle = new ControlButton("16", ModeModel.AnswerRadix.HEXADECIMAL, 4, 2);
+        modeData.getAnswerRadix().setButton(radix10Toggle);
 
         modeButtons.add(angleToggleDegrees);
         modeButtons.add(angleToggleRadians);
@@ -75,15 +78,21 @@ public class ModeView implements OverlayView {
 
         ToggleGroup angleToggleGroup = new ToggleGroup();
         angleToggleGroup.getToggles().addAll(angleToggleDegrees, angleToggleRadians);
-        angleToggleGroup.selectToggle(angleToggleDegrees);
+        ControlButton selectedAngleButton = modeData.getAngleMode().getButton();
+        selectedAngleButton.setBackground(ControlButton.ACCENT_BACKGROUND);
+        angleToggleGroup.selectToggle(selectedAngleButton);
 
         ToggleGroup notationsToggleGroup = new ToggleGroup();
         notationsToggleGroup.getToggles().addAll(standardNotationToggle, scientificNotationToggle);
-        notationsToggleGroup.selectToggle(scientificNotationToggle);
+        ControlButton selectedNotationButton = modeData.getNotationType().getButton();
+        selectedNotationButton.setBackground(ControlButton.ACCENT_BACKGROUND);
+        notationsToggleGroup.selectToggle(selectedNotationButton);
 
         ToggleGroup radixToggleGroup = new ToggleGroup();
         radixToggleGroup.getToggles().addAll(radix2Toggle, radix8Toggle, radix10Toggle, radix16Toggle);
-        radixToggleGroup.selectToggle(radix10Toggle);
+        ControlButton selectedAnswerButton = modeData.getAnswerRadix().getButton();
+        selectedAnswerButton.setBackground(ControlButton.ACCENT_BACKGROUND);
+        radixToggleGroup.selectToggle(selectedAnswerButton);
     }
 
     @Override

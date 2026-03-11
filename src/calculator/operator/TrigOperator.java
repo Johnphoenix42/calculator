@@ -23,32 +23,32 @@ public class TrigOperator extends Operator {
         switch (trigOperatorType) {
             case SIN: {
                 trig.setValue(Math.sin(modeData.getAngleMode() == TrigMode.RADIANS ?
-                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                        nullAdjustedVal : Math.toRadians(nullAdjustedVal)));
                 break;
             }
             case COS: {
                 trig.setValue(Math.cos(modeData.getAngleMode() == TrigMode.RADIANS ?
-                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                        nullAdjustedVal : Math.toRadians(nullAdjustedVal)));
                 break;
             }
             case TAN: {
                 trig.setValue(Math.tan(modeData.getAngleMode() == TrigMode.RADIANS ?
-                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                        nullAdjustedVal : Math.toRadians(nullAdjustedVal)));
                 break;
             }
             case ARC_SIN: {
-                trig.setValue(Math.asin(modeData.getAngleMode() == TrigMode.RADIANS ?
-                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                trig.setValue(modeData.getAngleMode() == TrigMode.RADIANS ?
+                        Math.asin(nullAdjustedVal) : Math.toDegrees(Math.asin(nullAdjustedVal)));
                 break;
             }
             case ARC_COS: {
-                trig.setValue(Math.acos(modeData.getAngleMode() == TrigMode.RADIANS ?
-                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                trig.setValue(modeData.getAngleMode() == TrigMode.RADIANS ?
+                        Math.acos(nullAdjustedVal) : Math.toRadians(Math.acos(nullAdjustedVal)));
                 break;
             }
             case ARC_TAN: {
-                trig.setValue(Math.atan(modeData.getAngleMode() == TrigMode.RADIANS ?
-                        nullAdjustedVal : Math.toDegrees(nullAdjustedVal)));
+                trig.setValue(modeData.getAngleMode() == TrigMode.RADIANS ?
+                        Math.atan(nullAdjustedVal) : Math.toRadians(Math.atan(nullAdjustedVal)));
                 break;
             }
             default: trig.setValue(Double.parseDouble(Double.toHexString(nullAdjustedVal)));
@@ -63,9 +63,9 @@ public class TrigOperator extends Operator {
             case SIN: return "Sin";
             case COS: return "Cos";
             case TAN: return "Tan";
-            case ARC_SIN: return "Sin^-1";
-            case ARC_COS: return "Cos^-1";
-            case ARC_TAN: return "Tan^-1";
+            case ARC_SIN: return "Sin⁻¹";
+            case ARC_COS: return "Cos⁻¹";
+            case ARC_TAN: return "Tan⁻¹";
             default: return "Trig";
         }
     }

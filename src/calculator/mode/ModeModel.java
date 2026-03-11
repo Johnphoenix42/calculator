@@ -1,5 +1,7 @@
 package calculator.mode;
 
+import calculator.buttons.ControlButton;
+
 public class ModeModel {
 
     private TrigMode angleMode;
@@ -38,20 +40,59 @@ public class ModeModel {
 
     public enum TrigMode implements ModeConstant { DEGREES, RADIANS;
 
+        ControlButton selectedButton;
+
         TrigMode() {}
+
+        @Override
+        public ControlButton getButton() {
+            return selectedButton;
+        }
+
+        @Override
+        public void setButton(ControlButton controlButton) {
+            this.selectedButton = controlButton;
+        }
     }
 
     public enum AnswerNotationType implements ModeConstant { STANDARD, SCIENTIFIC;
 
+        ControlButton selectedButton;
+
         AnswerNotationType() {}
 
+        @Override
+        public ControlButton getButton() {
+            return selectedButton;
+        }
+
+        @Override
+        public void setButton(ControlButton controlButton) {
+            this.selectedButton = controlButton;
+        }
     }
 
     public enum AnswerRadix implements ModeConstant { BINARY, DECIMAL, OCTAL, HEXADECIMAL;
 
+        ControlButton selectedButton;
+
         AnswerRadix() {}
 
+        @Override
+        public ControlButton getButton() {
+            return selectedButton;
+        }
+
+        @Override
+        public void setButton(ControlButton controlButton) {
+            this.selectedButton = controlButton;
+        }
     }
 
-    public interface ModeConstant {}
+    public interface ModeConstant {
+
+        ControlButton getButton();
+
+        void setButton(ControlButton controlButton);
+    }
 }

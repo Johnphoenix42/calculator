@@ -1,6 +1,9 @@
 package calculator;
 
 public enum ButtonName {
+    ARC_SIN("Sin⁻¹"),
+    ARC_COS("Cos⁻¹"),
+    ARC_TAN("Tan⁻¹"),
     SIN("Sin"),
     COS("Cos"),
     TAN("Tan"),

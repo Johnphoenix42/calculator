@@ -75,6 +75,16 @@ public class CalculatorApp extends Application {
             FactorialOperator factorial = (FactorialOperator) termsLibrary.getTL().get(ButtonName.FACTORIAL);
             expressionScreen.setText(printOperationQueue(factorial));
         }, termsLibrary.getTL().get(ButtonName.FACTORIAL), 2 + col, row - 1));
+        buttonList.add(new CalculatorButton<>(ButtonName.ARC_SIN.getName(), event -> {
+            TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.ARC_SIN);
+            trigOperator.setModeData(modeData);
+            expressionScreen.setText(printOperationQueue(trigOperator));
+        }, termsLibrary.getTL().get(ButtonName.ARC_SIN), col + 3, row-1));
+        buttonList.add(new CalculatorButton<>(ButtonName.ARC_COS.getName(), event -> {
+            TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.ARC_COS);
+            trigOperator.setModeData(modeData);
+            expressionScreen.setText(printOperationQueue(trigOperator));
+        }, termsLibrary.getTL().get(ButtonName.ARC_COS), col + 4, row-1));
         buttonList.add(new CalculatorButton<>(ButtonName.SIN.getName(), event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.SIN);
             trigOperator.setModeData(modeData);
@@ -98,25 +108,6 @@ public class CalculatorApp extends Application {
         buttonList.add(new CalculatorButton<>(ButtonName.INVERSE.getName(), event -> {
             expressionScreen.setText(printOperationQueue(termsLibrary.getTL().get(ButtonName.INVERSE)));
         }, termsLibrary.getTL().get(ButtonName.INVERSE), col + 1, row));
-        buttonList.add(new CalculatorButton<>("C", event -> {
-            PartialOperand.setStringValue("");
-            expressionScreen.setText("");
-            computeScreen.setText("0");
-            operationQueue.clear();
-        }, null, 3 + col, row - 1));
-        buttonList.add(new CalculatorButton<>("X", event -> {
-            if (!PartialOperand.getStringValue().isEmpty()) {
-                String text = PartialOperand.getStringValue();
-                PartialOperand.setStringValue(text.substring(0, text.length() - 1));
-                computeScreen.setText(PartialOperand.getStringValue().isEmpty() ? "0" : PartialOperand.getStringValue());
-            } else {
-                if(!operationQueue.isEmpty()) {
-                    operationQueue.removeLast();
-                    expressionScreen.setText(printOperationQueue(null));
-                    computeScreen.setText("0");
-                }
-            }
-        }, null, 4 + col, row -1));
 
         buttonList.add(new CalculatorButton<>(ButtonName.SQUARE.getName(), event -> {
             Operator square = (Operator) termsLibrary.getTL().get(ButtonName.SQUARE);
@@ -293,20 +284,41 @@ public class CalculatorApp extends Application {
             overlayPane.addCloseButton();
             rootPane.getChildren().add(overlayPane);
         }, null, 0, 3);
-        /*CalculatorButton<?> memoryStoreButton = new CalculatorButton<>("MS", e -> {
 
-        }, null, 0, 3);
-        CalculatorButton<?> memoryRecallButton = new CalculatorButton<>("MR", e -> {
+        CalculatorButton<?> clearButton = new CalculatorButton<>("C", event -> {
+            PartialOperand.setStringValue("");
+            expressionScreen.setText("");
+            computeScreen.setText("0");
+            operationQueue.clear();
+        }, null, 3, 3);
 
-        }, null, 0, 3);
-        CalculatorButton<?> memoryListButton = new CalculatorButton<>("M⋁", e -> {
+        CalculatorButton<?> backSpaceButton = new CalculatorButton<>("X", event -> {
+            if (!PartialOperand.getStringValue().isEmpty()) {
+                String text = PartialOperand.getStringValue();
+                PartialOperand.setStringValue(text.substring(0, text.length() - 1));
+                computeScreen.setText(PartialOperand.getStringValue().isEmpty() ? "0" : PartialOperand.getStringValue());
+            } else {
+                if(!operationQueue.isEmpty()) {
+                    operationQueue.removeLast();
+                    expressionScreen.setText(printOperationQueue(null));
+                    computeScreen.setText("0");
+                }
+            }
+        }, null, 4, 3);
 
-        }, null, 0, 3);*/
+
+        CalculatorButton<?> button1 = new CalculatorButton<>("Mode", null, null, 1, 3);
+
+        CalculatorButton<?> button2 = new CalculatorButton<>("C", null, null, 2, 3);
+
 
         controlButtons.add(modeButton);
-        /*controlButtons.add(memoryStoreButton);
-        controlButtons.add(memoryRecallButton);
-        controlButtons.add(memoryListButton);*/
+        controlButtons.add(clearButton);
+        controlButtons.add(backSpaceButton);
+
+        //controlButtons.add(button1);
+        //controlButtons.add(button2);
+
         return controlButtons;
     }
 
@@ -342,7 +354,7 @@ public class CalculatorApp extends Application {
 
         LinkedList<CalculatorButton<?>> controlButtons = createControlButton();
         for (int i = 0; i < controlButtons.size(); ++i){
-            gridPane.add(controlButtons.get(i), (i+10)%5, (i+10)/5);
+            gridPane.add(controlButtons.get(i), controlButtons.get(i).getColumn(), (i+10)/5);
         }
 
         for (CalculatorButton<? extends Term> calculatorButton : getCalcButtons(0, 4)) {

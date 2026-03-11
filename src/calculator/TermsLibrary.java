@@ -14,6 +14,8 @@ public class TermsLibrary<T extends Term> {
     }
 
     public void addLibrary(HashMap<ButtonName, T> tl) {
+        tl.put(ButtonName.ARC_SIN, (T) new TrigOperator(TrigOperator.TrigOperatorType.ARC_SIN));
+        tl.put(ButtonName.ARC_COS, (T) new TrigOperator(TrigOperator.TrigOperatorType.ARC_COS));
         tl.put(ButtonName.SIN, (T) new TrigOperator(TrigOperator.TrigOperatorType.SIN));
         tl.put(ButtonName.COS, (T) new TrigOperator(TrigOperator.TrigOperatorType.COS));
         tl.put(ButtonName.TAN, (T) new TrigOperator(TrigOperator.TrigOperatorType.TAN));
