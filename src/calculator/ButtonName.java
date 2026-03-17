@@ -1,6 +1,9 @@
 package calculator;
 
 public enum ButtonName {
+    SINH("Sinh"),
+    COSH("Cosh"),
+    TANH("Tanh"),
     ARC_SIN("Sin⁻¹"),
     ARC_COS("Cos⁻¹"),
     ARC_TAN("Tan⁻¹"),
@@ -37,7 +40,8 @@ public enum ButtonName {
     LOG("log"),
     LN("ln"),
     OPEN_PARENTHESIS("("),
-    CLOSE_PARENTHESIS(")");
+    CLOSE_PARENTHESIS(")"),
+    HYPOTENUSE("Hyp");
 
 
     private String name;

@@ -1,5 +1,5 @@
-# Calculator Application
-This app was built using javafx and compiled using java 1.8 (Java 8).
+# J-Eval: A High-Precision Math Engine (Expression Evaluation Engine)
+A thread-safe Expression Parser using the Shunting-Yard algorithm with $O(n)$ time complexity.
 
 ## Why Calculator
 Calculator applications are quite underestimated in the software engineering field. It's a

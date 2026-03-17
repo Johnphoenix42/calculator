@@ -51,6 +51,21 @@ public class TrigOperator extends Operator {
                         Math.atan(nullAdjustedVal) : Math.toRadians(Math.atan(nullAdjustedVal)));
                 break;
             }
+            case SINH: {
+                trig.setValue(Math.sinh(modeData.getAngleMode() == TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toRadians(nullAdjustedVal)));
+                break;
+            }
+            case COSH: {
+                trig.setValue(Math.cosh(modeData.getAngleMode() == TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toRadians(nullAdjustedVal)));
+                break;
+            }
+            case TANH: {
+                trig.setValue(Math.tanh(modeData.getAngleMode() == TrigMode.RADIANS ?
+                        nullAdjustedVal : Math.toRadians(nullAdjustedVal)));
+                break;
+            }
             default: trig.setValue(Double.parseDouble(Double.toHexString(nullAdjustedVal)));
         }
 
@@ -66,11 +81,14 @@ public class TrigOperator extends Operator {
             case ARC_SIN: return "Sin⁻¹";
             case ARC_COS: return "Cos⁻¹";
             case ARC_TAN: return "Tan⁻¹";
+            case SINH: return "Sinh";
+            case COSH: return "Cosh";
+            case TANH: return "Tanh";
             default: return "Trig";
         }
     }
 
     public enum TrigOperatorType {
-        SIN, COS, TAN, ARC_SIN, ARC_COS, ARC_TAN
+        SIN, COS, TAN, ARC_SIN, ARC_COS, ARC_TAN, SINH, COSH, TANH
     }
 }

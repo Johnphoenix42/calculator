@@ -14,12 +14,17 @@ public class TermsLibrary<T extends Term> {
     }
 
     public void addLibrary(HashMap<ButtonName, T> tl) {
+        tl.put(ButtonName.SINH, (T) new TrigOperator(TrigOperator.TrigOperatorType.SINH));
+        tl.put(ButtonName.COSH, (T) new TrigOperator(TrigOperator.TrigOperatorType.COSH));
+        tl.put(ButtonName.TANH, (T) new TrigOperator(TrigOperator.TrigOperatorType.TANH));
+        tl.put(ButtonName.ARC_TAN, (T) new TrigOperator(TrigOperator.TrigOperatorType.ARC_TAN));
         tl.put(ButtonName.ARC_SIN, (T) new TrigOperator(TrigOperator.TrigOperatorType.ARC_SIN));
         tl.put(ButtonName.ARC_COS, (T) new TrigOperator(TrigOperator.TrigOperatorType.ARC_COS));
         tl.put(ButtonName.SIN, (T) new TrigOperator(TrigOperator.TrigOperatorType.SIN));
         tl.put(ButtonName.COS, (T) new TrigOperator(TrigOperator.TrigOperatorType.COS));
         tl.put(ButtonName.TAN, (T) new TrigOperator(TrigOperator.TrigOperatorType.TAN));
 
+        tl.put(ButtonName.HYPOTENUSE, (T) new HypotenuseOperator());
         tl.put(ButtonName.X_POWER_Y, (T) new ExponentOperator());
         tl.put(ButtonName.INVERSE, (T) new InverseOperator());
         tl.put(ButtonName.FACTORIAL, (T) new FactorialOperator());

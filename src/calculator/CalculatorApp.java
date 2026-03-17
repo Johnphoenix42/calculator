@@ -5,9 +5,13 @@ import calculator.mode.ModeModel;
 import calculator.mode.ModeView;
 import calculator.operator.*;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
@@ -25,7 +29,7 @@ import java.util.NoSuchElementException;
 
 public class CalculatorApp extends Application {
 
-    public static final String APP_NAME = "Jounin Calculator";
+    public static final String APP_NAME = "J Eval";
     public static final Background ROOT_BACKGROUND = new Background(new BackgroundFill(
             new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                     new Stop(0, Color.color(0.1,0.1, 0.1)),
@@ -66,25 +70,50 @@ public class CalculatorApp extends Application {
         buttonList.add(new CalculatorButton<>(ButtonName.OPEN_PARENTHESIS.getName(), event -> {
             ParenthesisOperator parenthesisOperator = (ParenthesisOperator) termsLibrary.getTL().get(ButtonName.OPEN_PARENTHESIS);
             expressionScreen.setText(printOperationQueue(parenthesisOperator));
-        }, termsLibrary.getTL().get(ButtonName.OPEN_PARENTHESIS), col, row - 1));
+        }, termsLibrary.getTL().get(ButtonName.OPEN_PARENTHESIS), col, row - 2));
         buttonList.add(new CalculatorButton<>(ButtonName.CLOSE_PARENTHESIS.getName(), event -> {
             ParenthesisOperator parenthesisOperator = (ParenthesisOperator) termsLibrary.getTL().get(ButtonName.CLOSE_PARENTHESIS);
             expressionScreen.setText(printOperationQueue(parenthesisOperator));
-        }, termsLibrary.getTL().get(ButtonName.CLOSE_PARENTHESIS), col + 1, row - 1));
+        }, termsLibrary.getTL().get(ButtonName.CLOSE_PARENTHESIS), 1 + col, row - 2));
+        buttonList.add(new CalculatorButton<>(ButtonName.SINH.getName(), event -> {
+            TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.SINH);
+            trigOperator.setModeData(modeData);
+            expressionScreen.setText(printOperationQueue(trigOperator));
+        }, termsLibrary.getTL().get(ButtonName.SINH), col + 2, row - 2));
+        buttonList.add(new CalculatorButton<>(ButtonName.COSH.getName(), event -> {
+            TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.COSH);
+            trigOperator.setModeData(modeData);
+            expressionScreen.setText(printOperationQueue(trigOperator));
+        }, termsLibrary.getTL().get(ButtonName.COSH), col + 3, row-2));
+        buttonList.add(new CalculatorButton<>(ButtonName.TANH.getName(), event -> {
+            TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.TANH);
+            trigOperator.setModeData(modeData);
+            expressionScreen.setText(printOperationQueue(trigOperator));
+        }, termsLibrary.getTL().get(ButtonName.TANH), col + 4, row-2));
+
+        buttonList.add(new CalculatorButton<>(ButtonName.HYPOTENUSE.getName(), event -> {
+            HypotenuseOperator hypotenuseOperator = (HypotenuseOperator) termsLibrary.getTL().get(ButtonName.HYPOTENUSE);
+            expressionScreen.setText(printOperationQueue(hypotenuseOperator));
+        }, termsLibrary.getTL().get(ButtonName.HYPOTENUSE), col, row - 1));
         buttonList.add(new CalculatorButton<>(ButtonName.FACTORIAL.getName(), event -> {
             FactorialOperator factorial = (FactorialOperator) termsLibrary.getTL().get(ButtonName.FACTORIAL);
             expressionScreen.setText(printOperationQueue(factorial));
-        }, termsLibrary.getTL().get(ButtonName.FACTORIAL), 2 + col, row - 1));
+        }, termsLibrary.getTL().get(ButtonName.FACTORIAL), col + 1, row - 1));
         buttonList.add(new CalculatorButton<>(ButtonName.ARC_SIN.getName(), event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.ARC_SIN);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printOperationQueue(trigOperator));
-        }, termsLibrary.getTL().get(ButtonName.ARC_SIN), col + 3, row-1));
+        }, termsLibrary.getTL().get(ButtonName.ARC_SIN), col + 2, row-1));
         buttonList.add(new CalculatorButton<>(ButtonName.ARC_COS.getName(), event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.ARC_COS);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printOperationQueue(trigOperator));
-        }, termsLibrary.getTL().get(ButtonName.ARC_COS), col + 4, row-1));
+        }, termsLibrary.getTL().get(ButtonName.ARC_COS), col + 3, row-1));
+        buttonList.add(new CalculatorButton<>(ButtonName.ARC_TAN.getName(), event -> {
+            TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.ARC_TAN);
+            trigOperator.setModeData(modeData);
+            expressionScreen.setText(printOperationQueue(trigOperator));
+        }, termsLibrary.getTL().get(ButtonName.ARC_TAN), 4 + col, row - 1));
         buttonList.add(new CalculatorButton<>(ButtonName.SIN.getName(), event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.SIN);
             trigOperator.setModeData(modeData);
@@ -306,18 +335,9 @@ public class CalculatorApp extends Application {
             }
         }, null, 4, 3);
 
-
-        CalculatorButton<?> button1 = new CalculatorButton<>("Mode", null, null, 1, 3);
-
-        CalculatorButton<?> button2 = new CalculatorButton<>("C", null, null, 2, 3);
-
-
         controlButtons.add(modeButton);
         controlButtons.add(clearButton);
         controlButtons.add(backSpaceButton);
-
-        //controlButtons.add(button1);
-        //controlButtons.add(button2);
 
         return controlButtons;
     }
@@ -332,8 +352,8 @@ public class CalculatorApp extends Application {
             gridPane.getColumnConstraints().add(columnConstraints);
         }
 
-        for(int i = 0; i < 10; ++i) {
-            RowConstraints rowConstraints = new RowConstraints(30, 40, 50);
+        for(int i = 0; i < 11; ++i) {
+            RowConstraints rowConstraints = new RowConstraints(30, 40, 60);
             rowConstraints.setFillHeight(true);
             gridPane.getRowConstraints().add(rowConstraints);
         }
@@ -342,22 +362,32 @@ public class CalculatorApp extends Application {
         expressionScreen.setAlignment(Pos.CENTER_RIGHT);
         expressionScreen.setBackground(new Background(new BackgroundFill(Color.gray(0.7), null, null)));
         gridPane.add(expressionScreen, 0, 0, 5, 1);
+
+        GridPane modeScreenDisplayGrid = new GridPane();
+        modeScreenDisplayGrid.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        Label angleLabel = new Label(modeData.getAngleMode().name().substring(0, 3));
+        angleLabel.setFont(Font.font(10));
+        modeScreenDisplayGrid.add(angleLabel, 0, 0);
+
         computeScreen.setEditable(false);
         computeScreen.setEffect(new Glow(0));
         computeScreen.setFont(new Font("Arial", 18));
         computeScreen.setPrefHeight(40);
         computeScreen.setMaxHeight(60);
-        GridPane.setFillWidth(computeScreen, true);
-        GridPane.setVgrow(computeScreen, Priority.ALWAYS);
         computeScreen.setAlignment(Pos.CENTER_RIGHT);
-        gridPane.add(computeScreen, 0, 1, 5, 1);
+        expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
+
+        VBox computeDisplayScreen = new VBox(modeScreenDisplayGrid, computeScreen);
+        GridPane.setFillHeight(computeDisplayScreen, true);
+        GridPane.setVgrow(computeDisplayScreen, Priority.ALWAYS);
+        gridPane.add(computeDisplayScreen, 0, 1, 5, 1);
 
         LinkedList<CalculatorButton<?>> controlButtons = createControlButton();
         for (int i = 0; i < controlButtons.size(); ++i){
             gridPane.add(controlButtons.get(i), controlButtons.get(i).getColumn(), (i+10)/5);
         }
 
-        for (CalculatorButton<? extends Term> calculatorButton : getCalcButtons(0, 4)) {
+        for (CalculatorButton<? extends Term> calculatorButton : getCalcButtons(0, 5)) {
             gridPane.add(calculatorButton, calculatorButton.getColumn(), calculatorButton.getRow(),
                     calculatorButton.getColSpan(), calculatorButton.getRowSpan());
         }
@@ -371,7 +401,7 @@ public class CalculatorApp extends Application {
         rootPane.setBackground(ROOT_BACKGROUND);
         rootPane.setAlignment(Pos.CENTER);
         rootPane.getChildren().add(setupGrid());
-        Scene mainScene = new Scene(rootPane, 350, 450, Color.GRAY);
+        Scene mainScene = new Scene(rootPane, 350, 480, Color.GRAY);
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle(APP_NAME);
