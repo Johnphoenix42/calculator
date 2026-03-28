@@ -78,7 +78,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.qualibits.jeval.MainApp</mainClass>
+                            <mainClass>com.qualibits.qualeval.MainApp</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>J-eval</jlinkZipName>
                             <jlinkImageName>J-evalImage</jlinkImageName>

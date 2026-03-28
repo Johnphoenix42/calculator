@@ -6,7 +6,7 @@ Calculator applications are quite underestimated in the software engineering fie
 common project idea for beginners, so it's everywhere. I myself made (or attempted) it
 twice before. The first was in my early Java days in swing. All I can say about it is I
 got the UI almost right, ok? Don't ask me about function. But I comforted myself by thinking
-"if I really wanted to make a calculator app, I'd make it. Come on, Is it not com.qualibits.jeval?
+"if I really wanted to make a calculator app, I'd make it. Come on, Is it not com.qualibits.qualeval?
 Simple thing! mtchew!". A few years later, I decided to make it for real as my first project
 after learning JavaScript. One of the reasons calculators feel so easy to make is because of
 the math library functions and methods all programming languages provide. I took advantage
