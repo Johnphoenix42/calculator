@@ -1,7 +1,6 @@
 package com.qualibits.jeval;
 
 import javafx.scene.control.TextField;
-//import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 

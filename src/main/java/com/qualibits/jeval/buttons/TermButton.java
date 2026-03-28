@@ -11,7 +11,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class CalculatorButton<T extends Term> extends Button {
+public class TermButton<T extends Term> extends Button {
 
     private static TextField computeScreen;
     private final String name;
@@ -21,7 +21,7 @@ public class CalculatorButton<T extends Term> extends Button {
     private final int rowSpan;
     private final T t;
 
-    public CalculatorButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row, int colSpan, int rowSpan){
+    public TermButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row, int colSpan, int rowSpan){
         this.name = name;
         this.t = type;
         this.column = column;
@@ -52,13 +52,13 @@ public class CalculatorButton<T extends Term> extends Button {
      * @param column
      * @param row
      */
-    public CalculatorButton(String name, T type, int column, int row) {
+    public TermButton(String name, T type, int column, int row) {
         this(name, e -> {
             type.onHostClickAction(computeScreen);
         }, type, column, row, 1, 1);
     }
 
-    public CalculatorButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row){
+    public TermButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row){
         this(name, eHandler, type, column, row, 1, 1);
     }
 

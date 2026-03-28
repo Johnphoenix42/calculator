@@ -3,7 +3,6 @@ package com.qualibits.jeval.operator;
 import com.qualibits.jeval.Operand;
 import com.qualibits.jeval.OperationType;
 import com.qualibits.jeval.PartialOperand;
-//import com.sun.istack.internal.Nullable;
 import javafx.scene.control.TextField;
 
 import java.util.Optional;
