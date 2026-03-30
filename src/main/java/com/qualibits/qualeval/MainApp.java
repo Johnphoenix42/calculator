@@ -5,12 +5,16 @@ import com.qualibits.qualeval.mode.ModeModel;
 import com.qualibits.qualeval.mode.ModeView;
 import com.qualibits.qualeval.operator.*;
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -19,10 +23,9 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class MainApp extends Application {
 
@@ -35,7 +38,8 @@ public class MainApp extends Application {
             );
     private static final int MAX_EXECUTION_STACK_SIZE = 32; // You could allow the user to set this from a settings menu in the future
 
-    private final StackPane rootPane;
+    private final VBox rootPane;
+    private final StackPane appStackPane;
     private final TextField expressionScreen;
     private final TextField computeScreen;
     private final OverlayPane overlayPane;
@@ -48,7 +52,8 @@ public class MainApp extends Application {
     ModeModel modeData;
 
     public MainApp() {
-        rootPane = new StackPane();
+        rootPane = new VBox();
+        appStackPane = new StackPane();
         computeScreen = new TextField();
         expressionScreen = new TextField();
         expressionScreen.setEditable(false);
@@ -289,7 +294,7 @@ public class MainApp extends Application {
         TermButton<?> modeButton = new TermButton<>("Mode", e -> {
             overlayPane.show();
             overlayPane.addCloseButton();
-            rootPane.getChildren().add(overlayPane);
+            appStackPane.getChildren().add(overlayPane);
         }, null, 0, 3);
 
         TermButton<?> clearButton = new TermButton<>("C", event -> {
@@ -375,11 +380,28 @@ public class MainApp extends Application {
         return gridPane;
     }
 
+    private Menu createMenu(String menuName) {
+        Label label = new Label(menuName);
+        label.setTextFill(Color.WHITE);
+        Menu menu = new Menu("", label);
+        menu.setStyle("-fx-focus-color: green");
+        return menu;
+    }
+
     public void start(Stage primaryStage) {
+        //String css = Objects.requireNonNull(getClass().getResource("/main.css")).toExternalForm();
+        Menu[] appMenu = {createMenu("Settings"), createMenu("About")};
+        MenuBar menuBar = new MenuBar(appMenu);
+        menuBar.setBackground(new Background(new BackgroundFill(
+                new LinearGradient(0, 1, 1, 1, true, CycleMethod.REFLECT,
+                        new Stop(0, Color.NAVY), new Stop(0.5, Color.web("#333"))), null, null)));
+
+        rootPane.getChildren().addAll(menuBar, appStackPane);
         rootPane.setBackground(ROOT_BACKGROUND);
-        rootPane.setAlignment(Pos.CENTER);
-        rootPane.getChildren().add(setupGrid());
-        Scene mainScene = new Scene(rootPane, 350, 480, Color.GRAY);
+        appStackPane.setAlignment(Pos.CENTER);
+        appStackPane.getChildren().add(setupGrid());
+        Scene mainScene = new Scene(rootPane, 350, 500, Color.GRAY);
+        //mainScene.getStylesheets().add(css);
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle(APP_NAME);
