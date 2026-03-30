@@ -13,7 +13,7 @@ public class ExpressionParser {
         this.expressionQueue = expressionQueue;
     }
 
-    public Operand evaluateExpressionQueue() {
+    public Operand evaluateExpressionQueue() throws ArithmeticException, NumberFormatException {
         if (executionStack == null) throw new NullPointerException("Attach an executionMemory store to the parser");
         ListIterator<Term> queueIterator = expressionQueue.listIterator();
 
@@ -26,7 +26,7 @@ public class ExpressionParser {
         return result;
     }
 
-    private Operand computeExpression(Term op, Iterator<Term> queueIterator, Operand result) {
+    private Operand computeExpression(Term op, Iterator<Term> queueIterator, Operand result) throws ArithmeticException, NumberFormatException {
         if (op instanceof Operand) return (Operand) op;
         if (op instanceof ParenthesisOperator pop) {
             if (pop.isOpen()) return evaluateParenthesis(queueIterator.next(), queueIterator, result);
@@ -34,8 +34,9 @@ public class ExpressionParser {
         try {
             Operand param = computeExpression(queueIterator.next(), queueIterator, result);
             return op.compute(null, result, param);
-        } catch (NoSuchElementException | NumberFormatException e) {
+        } catch (NoSuchElementException e) {
             //expressionScreen.setText(e.getMessage());
+            System.out.println(e.getMessage());
             return new Operand(Double.NaN);
         }
     }

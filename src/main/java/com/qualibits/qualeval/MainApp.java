@@ -19,18 +19,21 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class MainApp extends Application {
 
-    public static final String APP_NAME = "J Eval";
+    public static final String APP_NAME = "Qual-Eval";
     public static final Background ROOT_BACKGROUND = new Background(new BackgroundFill(
             new LinearGradient(0, 0, 1, 1, true, CycleMethod.NO_CYCLE,
                     new Stop(0, Color.color(0.1,0.1, 0.1)),
                     new Stop(1, Color.color(0.18, 0.2, 0.18))),
                 null, null)
             );
+    private static final int MAX_EXECUTION_STACK_SIZE = 32; // You could allow the user to set this from a settings menu in the future
 
     private final StackPane rootPane;
     private final TextField expressionScreen;
@@ -211,21 +214,32 @@ public class MainApp extends Application {
 
         buttonList.add(new TermButton<>("=", event -> {
             expressionScreen.setText(printExpressionQueue(null));
-            Operand answer = expressionParser.evaluateExpressionQueue();
-            ModeModel.AnswerRadix radixMode = modeData.getAnswerRadix();
-            String answerString = answer.toString();
-            executionStack.push(new ExecutionStackEntry(expressionQueue, answer));
-            switch (radixMode) {
-                case BINARY: computeScreen.setText(Operand.convertToBinary(answer.getValue(), 6));
-                break;
-                case OCTAL: computeScreen.setText(Operand.convertToOctal(answer.getValue(), 6));
-                    break;
-                case HEXADECIMAL: computeScreen.setText(Operand.convertToHexadecimal(answer.getValue(), 6));
-                break;
-                default: computeScreen.setText(answerString);
+            Operand answer = new Operand(Double.NaN);
+            try {
+                answer = expressionParser.evaluateExpressionQueue();
+                ModeModel.AnswerRadix radixMode = modeData.getAnswerRadix();
+                String answerString = answer.toString();
+                switch (radixMode) {
+                    case BINARY:
+                        computeScreen.setText(Operand.convertToBinary(answer.getValue(), 6));
+                        break;
+                    case OCTAL:
+                        computeScreen.setText(Operand.convertToOctal(answer.getValue(), 6));
+                        break;
+                    case HEXADECIMAL:
+                        computeScreen.setText(Operand.convertToHexadecimal(answer.getValue(), 6));
+                        break;
+                    default:
+                        computeScreen.setText(answerString);
+                }
+            } catch (ArithmeticException ae) {
+                computeScreen.setText("Error: " + ae.getMessage());
+            } catch (NumberFormatException ne) {
+                computeScreen.setText("Error: Incorrect Format");
             }
+            if (executionStack.size() >= MAX_EXECUTION_STACK_SIZE) executionStack.removeFirst();
+            executionStack.push(new ExecutionStackEntry(new LinkedList<Term>(expressionQueue), answer));
             expressionQueue.clear();
-            //executionStack.push(answerString);
         }, null, 4 + col, row + 5));
         return buttonList;
     }

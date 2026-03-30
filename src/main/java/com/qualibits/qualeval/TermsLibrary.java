@@ -41,8 +41,8 @@ public class TermsLibrary<T extends Term> {
         tl.put(ButtonName.OPEN_PARENTHESIS, (T) new ParenthesisOperator(true));
         tl.put(ButtonName.CLOSE_PARENTHESIS, (T) new ParenthesisOperator(false));
 
-        tl.put(ButtonName.PI, (T) new ConstantOperand(Math.PI, "⫪"));
-        tl.put(ButtonName.EULER, (T) new ConstantOperand(Math.E, "e"));
+        tl.put(ButtonName.PI, (T) new Operand(Math.PI, "⫪"));
+        tl.put(ButtonName.EULER, (T) new Operand(Math.E, "e"));
         tl.put(ButtonName.SEVEN, (T) new PartialOperand("7"));
         tl.put(ButtonName.EIGHT, (T) new PartialOperand("8"));
         tl.put(ButtonName.NINE, (T) new PartialOperand("9"));

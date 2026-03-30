@@ -8,6 +8,7 @@ import java.util.function.Function;
 public class Operand implements Term {
 
     private double dVal;
+    private String denotation = null;
     protected ModeModel modeData;
 
     public Operand() {
@@ -20,6 +21,11 @@ public class Operand implements Term {
 
     public Operand(String value) {
         dVal = Double.parseDouble(value);
+    }
+
+    public Operand(double val, String denotation){
+        this(val);
+        this.denotation = denotation;
     }
 
     public void setValue(double v) {
@@ -47,6 +53,10 @@ public class Operand implements Term {
     @Override
     public OperationType getOperationType() {
         return OperationType.NONE;
+    }
+
+    public String getDenotation(){
+        return denotation;
     }
 
     @Override
