@@ -1,11 +1,11 @@
 package com.qualibits.qualeval;
 
+import com.qualibits.qualeval.buttons.BaseButton;
 import com.qualibits.qualeval.buttons.TermButton;
 import com.qualibits.qualeval.mode.ModeModel;
 import com.qualibits.qualeval.mode.ModeView;
 import com.qualibits.qualeval.operator.*;
 import javafx.application.Application;
-import javafx.event.Event;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,7 +14,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.Glow;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -25,7 +24,6 @@ import javafx.stage.Stage;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 
 public class MainApp extends Application {
 
@@ -51,6 +49,8 @@ public class MainApp extends Application {
 
     ModeModel modeData;
 
+    private final TrigOperator sinHOperator, cosHOperator, tanHOperator, atanOperator, asinOperator, acosOperator, sinOperator, cosOperator, tanOperator;
+
     public MainApp() {
         rootPane = new VBox();
         appStackPane = new StackPane();
@@ -68,135 +68,144 @@ public class MainApp extends Application {
         modeData = new ModeModel();
 
         TermButton.setComputeScreen(computeScreen);
+        sinHOperator = new TrigOperator(TrigOperator.TrigOperatorType.SINH);
+        cosHOperator = new TrigOperator(TrigOperator.TrigOperatorType.COSH);
+        tanHOperator = new TrigOperator(TrigOperator.TrigOperatorType.TANH);
+        atanOperator = new TrigOperator(TrigOperator.TrigOperatorType.ARC_TAN);
+        asinOperator = new TrigOperator(TrigOperator.TrigOperatorType.ARC_SIN);
+        acosOperator = new TrigOperator(TrigOperator.TrigOperatorType.ARC_COS);
+        sinOperator = new TrigOperator(TrigOperator.TrigOperatorType.SIN);
+        cosOperator = new TrigOperator(TrigOperator.TrigOperatorType.COS);
+        tanOperator = new TrigOperator(TrigOperator.TrigOperatorType.TAN);
     }
 
     LinkedList<TermButton<? extends Term>> getCalcButtons(int col, int row) {
         LinkedList<TermButton<?>> buttonList = new LinkedList<>();
-        buttonList.add(new TermButton<>(ButtonName.OPEN_PARENTHESIS.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.OPEN_PARENTHESIS, event -> {
             ParenthesisOperator parenthesisOperator = (ParenthesisOperator) termsLibrary.getTL().get(ButtonName.OPEN_PARENTHESIS);
             expressionScreen.setText(printExpressionQueue(parenthesisOperator));
         }, termsLibrary.getTL().get(ButtonName.OPEN_PARENTHESIS), col, row - 2));
-        buttonList.add(new TermButton<>(ButtonName.CLOSE_PARENTHESIS.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.CLOSE_PARENTHESIS, event -> {
             ParenthesisOperator parenthesisOperator = (ParenthesisOperator) termsLibrary.getTL().get(ButtonName.CLOSE_PARENTHESIS);
             expressionScreen.setText(printExpressionQueue(parenthesisOperator));
         }, termsLibrary.getTL().get(ButtonName.CLOSE_PARENTHESIS), 1 + col, row - 2));
-        buttonList.add(new TermButton<>(ButtonName.SINH.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.SINH, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.SINH);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
-        }, termsLibrary.getTL().get(ButtonName.SINH), col + 2, row - 2));
-        buttonList.add(new TermButton<>(ButtonName.COSH.getName(), event -> {
+        }, sinHOperator, col + 2, row - 2));
+        buttonList.add(new TermButton<>(ButtonName.COSH, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.COSH);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.COSH), col + 3, row-2));
-        buttonList.add(new TermButton<>(ButtonName.TANH.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.TANH, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.TANH);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.TANH), col + 4, row-2));
 
-        buttonList.add(new TermButton<>(ButtonName.HYPOTENUSE.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.HYPOTENUSE, event -> {
             HypotenuseOperator hypotenuseOperator = (HypotenuseOperator) termsLibrary.getTL().get(ButtonName.HYPOTENUSE);
             expressionScreen.setText(printExpressionQueue(hypotenuseOperator));
         }, termsLibrary.getTL().get(ButtonName.HYPOTENUSE), col, row - 1));
-        buttonList.add(new TermButton<>(ButtonName.FACTORIAL.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.FACTORIAL, event -> {
             FactorialOperator factorial = (FactorialOperator) termsLibrary.getTL().get(ButtonName.FACTORIAL);
             expressionScreen.setText(printExpressionQueue(factorial));
         }, termsLibrary.getTL().get(ButtonName.FACTORIAL), col + 1, row - 1));
-        buttonList.add(new TermButton<>(ButtonName.ARC_SIN.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.ARC_SIN, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.ARC_SIN);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.ARC_SIN), col + 2, row-1));
-        buttonList.add(new TermButton<>(ButtonName.ARC_COS.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.ARC_COS, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.ARC_COS);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.ARC_COS), col + 3, row-1));
-        buttonList.add(new TermButton<>(ButtonName.ARC_TAN.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.ARC_TAN, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.ARC_TAN);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.ARC_TAN), 4 + col, row - 1));
-        buttonList.add(new TermButton<>(ButtonName.SIN.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.SIN, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.SIN);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
-        }, termsLibrary.getTL().get(ButtonName.SIN), col + 2, row));
-        buttonList.add(new TermButton<>(ButtonName.COS.getName(), event -> {
+        }, sinOperator, col + 2, row));
+        buttonList.add(new TermButton<>(ButtonName.COS, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.COS);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.COS), col + 3, row));
-        buttonList.add(new TermButton<>(ButtonName.TAN.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.TAN, event -> {
             TrigOperator trigOperator = (TrigOperator) termsLibrary.getTL().get(ButtonName.TAN);
             trigOperator.setModeData(modeData);
             expressionScreen.setText(printExpressionQueue(trigOperator));
         }, termsLibrary.getTL().get(ButtonName.TAN), col + 4, row));
 
-        buttonList.add(new TermButton<>(ButtonName.X_POWER_Y.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.X_POWER_Y, event -> {
             ExponentOperator xPowerY = (ExponentOperator) termsLibrary.getTL().get(ButtonName.X_POWER_Y);
             expressionScreen.setText(printExpressionQueue(xPowerY));
         }, termsLibrary.getTL().get(ButtonName.X_POWER_Y), col, row));
-        buttonList.add(new TermButton<>(ButtonName.INVERSE.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.INVERSE, event -> {
             expressionScreen.setText(printExpressionQueue(termsLibrary.getTL().get(ButtonName.INVERSE)));
         }, termsLibrary.getTL().get(ButtonName.INVERSE), col + 1, row));
 
-        buttonList.add(new TermButton<>(ButtonName.SQUARE.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.SQUARE, event -> {
             Operator square = (Operator) termsLibrary.getTL().get(ButtonName.SQUARE);
             expressionScreen.setText(printExpressionQueue(square));
         }, termsLibrary.getTL().get(ButtonName.SQUARE), col, row + 1));
-        buttonList.add(new TermButton<>(ButtonName.PI.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.PI, event -> {
             Operand pi = (Operand) termsLibrary.getTL().get(ButtonName.PI);
             expressionScreen.setText(printExpressionQueue(pi));
             computeScreen.setText(pi.toString());
         }, termsLibrary.getTL().get(ButtonName.PI), col + 1, row + 1));
-        buttonList.add(new TermButton<>(ButtonName.EULER.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.EULER, event -> {
             Operand euler = (Operand) termsLibrary.getTL().get(ButtonName.EULER);
             expressionScreen.setText(printExpressionQueue(euler));
             computeScreen.setText(euler.toString());
         }, termsLibrary.getTL().get(ButtonName.EULER), 2 + col, row + 1));
-        buttonList.add(new TermButton<>(ButtonName.MODULO.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.MODULO, event -> {
             Operator mod = (Operator) termsLibrary.getTL().get(ButtonName.MODULO);
             expressionScreen.setText(printExpressionQueue(mod));
         }, termsLibrary.getTL().get(ButtonName.MODULO), 3 + col, row + 1));
-        buttonList.add(new TermButton<>(ButtonName.DIVISION.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.DIVISION, event -> {
             Operator division = (Operator) termsLibrary.getTL().get(ButtonName.DIVISION);
             expressionScreen.setText(printExpressionQueue(division));
         }, termsLibrary.getTL().get(ButtonName.DIVISION), 4 + col, row + 1));
 
-        buttonList.add(new TermButton<>(ButtonName.SQUARE_ROOT.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.SQUARE_ROOT, event -> {
             Operator sqrt = (Operator) termsLibrary.getTL().get(ButtonName.SQUARE_ROOT);
             expressionScreen.setText(printExpressionQueue(sqrt));
         }, termsLibrary.getTL().get(ButtonName.SQUARE_ROOT), col, row + 2));
-        buttonList.add(new TermButton<>(ButtonName.TEN_POWER_X.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.TEN_POWER_X, event -> {
             Operator tenPowerX = (Operator) termsLibrary.getTL().get(ButtonName.TEN_POWER_X);
             expressionScreen.setText(printExpressionQueue(tenPowerX));
         }, termsLibrary.getTL().get(ButtonName.TEN_POWER_X), col, row + 3));
 
-        buttonList.add(new TermButton<>(ButtonName.LOG.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.LOG, event -> {
             Operator log = (Operator) termsLibrary.getTL().get(ButtonName.LOG);
             expressionScreen.setText(printExpressionQueue(log));
         }, termsLibrary.getTL().get(ButtonName.LOG), col, row + 4));
-        buttonList.add(new TermButton<>(ButtonName.LN.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.LN, event -> {
             Operator ln = (Operator) termsLibrary.getTL().get(ButtonName.LN);
             expressionScreen.setText(printExpressionQueue(ln));
         }, termsLibrary.getTL().get(ButtonName.LN), col, row + 5));
 
 
-        buttonList.add(new TermButton<>(ButtonName.SEVEN.getName(), termsLibrary.getTL().get(ButtonName.SEVEN), 1 + col, row + 2));
-        buttonList.add(new TermButton<>(ButtonName.EIGHT.getName(), termsLibrary.getTL().get(ButtonName.EIGHT), 2 + col, row + 2));
-        buttonList.add(new TermButton<>(ButtonName.NINE.getName(), termsLibrary.getTL().get(ButtonName.NINE), 3 + col, row + 2));
-        buttonList.add(new TermButton<>(ButtonName.FOUR.getName(), termsLibrary.getTL().get(ButtonName.FOUR), 1 + col, row + 3));
-        buttonList.add(new TermButton<>(ButtonName.FIVE.getName(), termsLibrary.getTL().get(ButtonName.FIVE), 2 + col, row + 3));
-        buttonList.add(new TermButton<>(ButtonName.SIX.getName(), termsLibrary.getTL().get(ButtonName.SIX), 3 + col, row + 3));
-        buttonList.add(new TermButton<>(ButtonName.ONE.getName(), termsLibrary.getTL().get(ButtonName.ONE), 1 + col, row + 4));
-        buttonList.add(new TermButton<>(ButtonName.TWO.getName(), termsLibrary.getTL().get(ButtonName.TWO), 2 + col, row + 4));
-        buttonList.add(new TermButton<>(ButtonName.THREE.getName(), termsLibrary.getTL().get(ButtonName.THREE), 3 + col, row + 4));
-        buttonList.add(new TermButton<>(ButtonName.POINT.getName(), termsLibrary.getTL().get(ButtonName.POINT), 1 + col, row + 5));
-        buttonList.add(new TermButton<>(ButtonName.ZERO.getName(), termsLibrary.getTL().get(ButtonName.ZERO), 2 + col, row + 5));
-        buttonList.add(new TermButton<>(ButtonName.ANS.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.SEVEN, termsLibrary.getTL().get(ButtonName.SEVEN), 1 + col, row + 2));
+        buttonList.add(new TermButton<>(ButtonName.EIGHT, termsLibrary.getTL().get(ButtonName.EIGHT), 2 + col, row + 2));
+        buttonList.add(new TermButton<>(ButtonName.NINE, termsLibrary.getTL().get(ButtonName.NINE), 3 + col, row + 2));
+        buttonList.add(new TermButton<>(ButtonName.FOUR, termsLibrary.getTL().get(ButtonName.FOUR), 1 + col, row + 3));
+        buttonList.add(new TermButton<>(ButtonName.FIVE, termsLibrary.getTL().get(ButtonName.FIVE), 2 + col, row + 3));
+        buttonList.add(new TermButton<>(ButtonName.SIX, termsLibrary.getTL().get(ButtonName.SIX), 3 + col, row + 3));
+        buttonList.add(new TermButton<>(ButtonName.ONE, termsLibrary.getTL().get(ButtonName.ONE), 1 + col, row + 4));
+        buttonList.add(new TermButton<>(ButtonName.TWO, termsLibrary.getTL().get(ButtonName.TWO), 2 + col, row + 4));
+        buttonList.add(new TermButton<>(ButtonName.THREE, termsLibrary.getTL().get(ButtonName.THREE), 3 + col, row + 4));
+        buttonList.add(new TermButton<>(ButtonName.POINT, termsLibrary.getTL().get(ButtonName.POINT), 1 + col, row + 5));
+        buttonList.add(new TermButton<>(ButtonName.ZERO, termsLibrary.getTL().get(ButtonName.ZERO), 2 + col, row + 5));
+        buttonList.add(new TermButton<>(ButtonName.ANS, event -> {
             ExecutionStackEntry lastEntry = executionStack.peek();
             if (lastEntry == null) return;
             Operand lastAnsTerm = new Operand(lastEntry.answer().getValue());
@@ -204,20 +213,20 @@ public class MainApp extends Application {
             printExpressionQueue(lastAnsTerm);
         }, termsLibrary.getTL().get(ButtonName.ANS), 3 + col, row + 5));
 
-        buttonList.add(new TermButton<>(ButtonName.MULTIPLICATION.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.MULTIPLICATION, event -> {
             MultiplicationOperator product = (MultiplicationOperator) termsLibrary.getTL().get(ButtonName.MULTIPLICATION);
             expressionScreen.setText(printExpressionQueue(product));
         }, termsLibrary.getTL().get(ButtonName.MULTIPLICATION), 4 + col, row + 2));
-        buttonList.add(new TermButton<>(ButtonName.SUBTRACTION.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.SUBTRACTION, event -> {
             SubtractionOperator minus = (SubtractionOperator) termsLibrary.getTL().get(ButtonName.SUBTRACTION);
             expressionScreen.setText(printExpressionQueue(minus));
         }, termsLibrary.getTL().get(ButtonName.SUBTRACTION), 4 + col, row + 3));
-        buttonList.add(new TermButton<>(ButtonName.ADDITION.getName(), event -> {
+        buttonList.add(new TermButton<>(ButtonName.ADDITION, event -> {
             AdditionOperator add = (AdditionOperator) termsLibrary.getTL().get(ButtonName.ADDITION);
             expressionScreen.setText(printExpressionQueue(add));
         }, termsLibrary.getTL().get(ButtonName.ADDITION), 4 + col, row + 4));
 
-        buttonList.add(new TermButton<>("=", event -> {
+        buttonList.add(new TermButton<>(ButtonName.EQUALS, event -> {
             expressionScreen.setText(printExpressionQueue(null));
             Operand answer = new Operand(Double.NaN);
             try {
@@ -285,26 +294,26 @@ public class MainApp extends Application {
         }
     }
 
-    private LinkedList<TermButton<?>> createControlButton() {
-        LinkedList<TermButton<?>> controlButtons = new LinkedList<>();
+    private LinkedList<BaseButton> createControlButton() {
+        LinkedList<BaseButton> controlButtons = new LinkedList<>();
         ModeView modeView = new ModeView(overlayPane, modeData);
         ModeView.setModeData(modeData);
         overlayPane.setView(modeView);
 
-        TermButton<?> modeButton = new TermButton<>("Mode", e -> {
+        BaseButton modeButton = new BaseButton(ButtonName.MODE, e -> {
             overlayPane.show();
             overlayPane.addCloseButton();
             appStackPane.getChildren().add(overlayPane);
-        }, null, 0, 3);
+        }, 0, 3, 2, 1);
 
-        TermButton<?> clearButton = new TermButton<>("C", event -> {
+        TermButton<?> clearButton = new TermButton<>(ButtonName.CLEAR, event -> {
             PartialOperand.setStringValue("");
             expressionScreen.setText("");
             computeScreen.setText("0");
             expressionQueue.clear();
         }, null, 3, 3);
 
-        TermButton<?> backSpaceButton = new TermButton<>("X", event -> {
+        TermButton<?> backSpaceButton = new TermButton<>(ButtonName.CANCEL, event -> {
             if (!PartialOperand.getStringValue().isEmpty()) {
                 String text = PartialOperand.getStringValue();
                 PartialOperand.setStringValue(text.substring(0, text.length() - 1));
@@ -365,7 +374,7 @@ public class MainApp extends Application {
         GridPane.setVgrow(computeDisplayScreen, Priority.ALWAYS);
         gridPane.add(computeDisplayScreen, 0, 1, 5, 1);
 
-        LinkedList<TermButton<?>> controlButtons = createControlButton();
+        LinkedList<BaseButton> controlButtons = createControlButton();
         for (int i = 0; i < controlButtons.size(); ++i){
             gridPane.add(controlButtons.get(i), controlButtons.get(i).getColumn(), (i+10)/5);
         }

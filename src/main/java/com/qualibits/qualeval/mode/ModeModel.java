@@ -1,6 +1,6 @@
 package com.qualibits.qualeval.mode;
 
-import com.qualibits.qualeval.buttons.ControlButton;
+import com.qualibits.qualeval.buttons.ControlToggleButton;
 
 public class ModeModel {
 
@@ -40,59 +40,59 @@ public class ModeModel {
 
     public enum TrigMode implements ModeConstant { DEGREES, RADIANS;
 
-        ControlButton selectedButton;
+        ControlToggleButton selectedButton;
 
         TrigMode() {}
 
         @Override
-        public ControlButton getButton() {
+        public ControlToggleButton getButton() {
             return selectedButton;
         }
 
         @Override
-        public void setButton(ControlButton controlButton) {
+        public void setButton(ControlToggleButton controlButton) {
             this.selectedButton = controlButton;
         }
     }
 
     public enum AnswerNotationType implements ModeConstant { STANDARD, SCIENTIFIC;
 
-        ControlButton selectedButton;
+        ControlToggleButton selectedButton;
 
         AnswerNotationType() {}
 
         @Override
-        public ControlButton getButton() {
+        public ControlToggleButton getButton() {
             return selectedButton;
         }
 
         @Override
-        public void setButton(ControlButton controlButton) {
-            this.selectedButton = controlButton;
+        public void setButton(ControlToggleButton controlToggleButton) {
+            this.selectedButton = controlToggleButton;
         }
     }
 
     public enum AnswerRadix implements ModeConstant { BINARY, DECIMAL, OCTAL, HEXADECIMAL;
 
-        ControlButton selectedButton;
+        ControlToggleButton selectedButton;
 
         AnswerRadix() {}
 
         @Override
-        public ControlButton getButton() {
+        public ControlToggleButton getButton() {
             return selectedButton;
         }
 
         @Override
-        public void setButton(ControlButton controlButton) {
-            this.selectedButton = controlButton;
+        public void setButton(ControlToggleButton controlToggleButton) {
+            this.selectedButton = controlToggleButton;
         }
     }
 
     public interface ModeConstant {
 
-        ControlButton getButton();
+        ControlToggleButton getButton();
 
-        void setButton(ControlButton controlButton);
+        void setButton(ControlToggleButton controlToggleButton);
     }
 }

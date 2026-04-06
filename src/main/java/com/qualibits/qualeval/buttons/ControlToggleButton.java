@@ -10,7 +10,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class ControlButton extends ToggleButton {
+public class ControlToggleButton extends ToggleButton {
 
     private static final Background NORMAL_BACKGROUND = new Background(
             new BackgroundFill(Color.web("0f0f0f"), null, null));
@@ -27,7 +27,7 @@ public class ControlButton extends ToggleButton {
 
     private static ModeModel modeModel;
 
-    public ControlButton(String name, EventHandler<ActionEvent> eHandler, int column, int row, int colSpan, int rowSpan){
+    public ControlToggleButton(String name, EventHandler<ActionEvent> eHandler, int column, int row, int colSpan, int rowSpan){
         this.name = name;
         this.eHandler = eHandler;
         this.column = column;
@@ -75,7 +75,7 @@ public class ControlButton extends ToggleButton {
      * @param column
      * @param row
      */
-    public ControlButton(String name, ModeModel.ModeConstant constant, int column, int row) {
+    public ControlToggleButton(String name, ModeModel.ModeConstant constant, int column, int row) {
         this(name, e -> {}, column, row, 1, 1);
         this.modeConstant = constant;
     }

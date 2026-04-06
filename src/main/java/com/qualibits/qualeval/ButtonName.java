@@ -41,10 +41,14 @@ public enum ButtonName {
     LN("ln"),
     OPEN_PARENTHESIS("("),
     CLOSE_PARENTHESIS(")"),
-    HYPOTENUSE("Hyp");
+    HYPOTENUSE("Hyp"),
 
+    EQUALS("="),
+    MODE("Mode"),
+    CLEAR("C"),
+    CANCEL("X"); // Delete term
 
-    private String name;
+    private final String name;
 
     ButtonName(String nameString) {
         this.name = nameString;
