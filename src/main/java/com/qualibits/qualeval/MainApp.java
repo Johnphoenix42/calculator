@@ -13,6 +13,7 @@ import com.qualibits.qualeval.term.PartialOperand;
 import com.qualibits.qualeval.term.Term;
 import com.qualibits.qualeval.term.operator.*;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -136,45 +137,18 @@ public class MainApp extends Application {
         LinkedList<BaseButton> buttonList = new LinkedList<>();
         buttonList.add(new TermButton<>(ButtonName.OPEN_PARENTHESIS, event -> expressionScreen.setText(printExpressionQueue(openParenthesis)), openParenthesis, col, row - 2));
         buttonList.add(new TermButton<>(ButtonName.CLOSE_PARENTHESIS, event -> expressionScreen.setText(printExpressionQueue(closeParenthesis)), closeParenthesis, 1 + col, row - 2));
-        buttonList.add(new TermButton<>(ButtonName.SINH, event -> {
-            sinHOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(sinHOperator));
-        }, sinHOperator, col + 2, row - 2));
-        buttonList.add(new TermButton<>(ButtonName.COSH, event -> {
-            cosHOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(cosHOperator));
-        }, cosHOperator, col + 3, row-2));
-        buttonList.add(new TermButton<>(ButtonName.TANH, event -> {
-            tanHOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(tanHOperator));
-        }, tanHOperator, col + 4, row-2));
+        buttonList.add(new TermButton<>(ButtonName.SINH, event -> handleTrigButtonsPressed(sinHOperator), sinHOperator, col + 2, row - 2));
+        buttonList.add(new TermButton<>(ButtonName.COSH, event -> handleTrigButtonsPressed(cosHOperator), cosHOperator, col + 3, row-2));
+        buttonList.add(new TermButton<>(ButtonName.TANH, event -> handleTrigButtonsPressed(tanHOperator), tanHOperator, col + 4, row-2));
 
         buttonList.add(new TermButton<>(ButtonName.HYPOTENUSE, event -> expressionScreen.setText(printExpressionQueue(hypotenuseOperator)), hypotenuseOperator, col, row - 1));
         buttonList.add(new TermButton<>(ButtonName.FACTORIAL, event -> expressionScreen.setText(printExpressionQueue(factorialOperator)), factorialOperator, col + 1, row - 1));
-        buttonList.add(new TermButton<>(ButtonName.ARC_SIN, event -> {
-            asinOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(asinOperator));
-        }, asinOperator, col + 2, row-1));
-        buttonList.add(new TermButton<>(ButtonName.ARC_COS, event -> {
-            acosOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(acosOperator));
-        }, acosOperator, col + 3, row-1));
-        buttonList.add(new TermButton<>(ButtonName.ARC_TAN, event -> {
-            atanOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(atanOperator));
-        }, atanOperator, 4 + col, row - 1));
-        buttonList.add(new TermButton<>(ButtonName.SIN, event -> {
-            sinOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(sinOperator));
-        }, sinOperator, col + 2, row));
-        buttonList.add(new TermButton<>(ButtonName.COS, event -> {
-            cosOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(cosOperator));
-        }, cosOperator, col + 3, row));
-        buttonList.add(new TermButton<>(ButtonName.TAN, event -> {
-            tanOperator.setModeData(modeData);
-            expressionScreen.setText(printExpressionQueue(tanOperator));
-        }, tanOperator, col + 4, row));
+        buttonList.add(new TermButton<>(ButtonName.ARC_SIN, event -> handleTrigButtonsPressed(asinOperator), asinOperator, col + 2, row-1));
+        buttonList.add(new TermButton<>(ButtonName.ARC_COS, event -> handleTrigButtonsPressed(acosOperator), acosOperator, col + 3, row-1));
+        buttonList.add(new TermButton<>(ButtonName.ARC_TAN, event -> handleTrigButtonsPressed(atanOperator), atanOperator, 4 + col, row - 1));
+        buttonList.add(new TermButton<>(ButtonName.SIN, event -> handleTrigButtonsPressed(sinOperator), sinOperator, col + 2, row));
+        buttonList.add(new TermButton<>(ButtonName.COS, event -> handleTrigButtonsPressed(cosOperator), cosOperator, col + 3, row));
+        buttonList.add(new TermButton<>(ButtonName.TAN, event -> handleTrigButtonsPressed(tanOperator), tanOperator, col + 4, row));
 
         buttonList.add(new TermButton<>(ButtonName.X_POWER_Y, event -> expressionScreen.setText(printExpressionQueue(xPowerY)), xPowerY, col, row));
         buttonList.add(new TermButton<>(ButtonName.INVERSE, event -> expressionScreen.setText(printExpressionQueue(inverseOperator)), inverseOperator, col + 1, row));
@@ -196,8 +170,33 @@ public class MainApp extends Application {
 
         buttonList.add(new TermButton<>(ButtonName.LOG, event -> expressionScreen.setText(printExpressionQueue(logarithmicOperator)), logarithmicOperator, col, row + 4));
         buttonList.add(new TermButton<>(ButtonName.LN, event -> expressionScreen.setText(printExpressionQueue(naturalLogOperator)), naturalLogOperator, col, row + 5));
+        buttonList.add(new TermButton<>(ButtonName.POINT, decimalPointOperator, 1 + col, row + 5));
+        addOperandButtons(buttonList, col, row);
 
+        buttonList.add(new BaseButton(ButtonName.ANS, this::handleRecallLastAnswer, 3 + col, row + 5));
 
+        buttonList.add(new TermButton<>(ButtonName.MULTIPLICATION, event -> expressionScreen.setText(printExpressionQueue(multiplicationOperator)), multiplicationOperator, 4 + col, row + 2));
+        buttonList.add(new TermButton<>(ButtonName.SUBTRACTION, event -> expressionScreen.setText(printExpressionQueue(subtractionOperator)), subtractionOperator, 4 + col, row + 3));
+        buttonList.add(new TermButton<>(ButtonName.ADDITION, event -> expressionScreen.setText(printExpressionQueue(additionOperator)), additionOperator, 4 + col, row + 4));
+
+        buttonList.add(new BaseButton(ButtonName.EQUALS, this::handleEqualsPressed, 4 + col, row + 5));
+        return buttonList;
+    }
+
+    private void handleTrigButtonsPressed(TrigOperator trigOperator){
+        trigOperator.setModeData(modeData);
+        expressionScreen.setText(printExpressionQueue(trigOperator));
+    }
+
+    private void handleRecallLastAnswer(ActionEvent event) {
+        ExecutionStackEntry lastEntry = executionStack.peek();
+        if (lastEntry == null) return;
+        Operand lastAnsTerm = new Operand(lastEntry.answer().getValue());
+        computeScreen.setText(lastAnsTerm.toString());
+        printExpressionQueue(lastAnsTerm);
+    }
+
+    private void addOperandButtons(LinkedList<BaseButton> buttonList, int col, int row) {
         buttonList.add(new TermButton<>(ButtonName.SEVEN, sevenOperand, 1 + col, row + 2));
         buttonList.add(new TermButton<>(ButtonName.EIGHT, eightOperand, 2 + col, row + 2));
         buttonList.add(new TermButton<>(ButtonName.NINE, nineOperand, 3 + col, row + 2));
@@ -207,50 +206,37 @@ public class MainApp extends Application {
         buttonList.add(new TermButton<>(ButtonName.ONE, oneOperand, 1 + col, row + 4));
         buttonList.add(new TermButton<>(ButtonName.TWO, twoOperand, 2 + col, row + 4));
         buttonList.add(new TermButton<>(ButtonName.THREE, threeOperand, 3 + col, row + 4));
-        buttonList.add(new TermButton<>(ButtonName.POINT, decimalPointOperator, 1 + col, row + 5));
         buttonList.add(new TermButton<>(ButtonName.ZERO, zeroOperand, 2 + col, row + 5));
-        buttonList.add(new BaseButton(ButtonName.ANS, event -> {
-            ExecutionStackEntry lastEntry = executionStack.peek();
-            if (lastEntry == null) return;
-            Operand lastAnsTerm = new Operand(lastEntry.answer().getValue());
-            computeScreen.setText(lastAnsTerm.toString());
-            printExpressionQueue(lastAnsTerm);
-        }, 3 + col, row + 5));
+    }
 
-        buttonList.add(new TermButton<>(ButtonName.MULTIPLICATION, event -> expressionScreen.setText(printExpressionQueue(multiplicationOperator)), multiplicationOperator, 4 + col, row + 2));
-        buttonList.add(new TermButton<>(ButtonName.SUBTRACTION, event -> expressionScreen.setText(printExpressionQueue(subtractionOperator)), subtractionOperator, 4 + col, row + 3));
-        buttonList.add(new TermButton<>(ButtonName.ADDITION, event -> expressionScreen.setText(printExpressionQueue(additionOperator)), additionOperator, 4 + col, row + 4));
-
-        buttonList.add(new TermButton<>(ButtonName.EQUALS, event -> {
-            expressionScreen.setText(printExpressionQueue(null));
-            Operand answer = new Operand(Double.NaN);
-            try {
-                answer = expressionParser.evaluateExpressionQueue();
-                ModeModel.AnswerRadix radixMode = modeData.getAnswerRadix();
-                String answerString = answer.toString();
-                switch (radixMode) {
-                    case BINARY:
-                        computeScreen.setText(Operand.convertToBinary(answer.getValue(), 6));
-                        break;
-                    case OCTAL:
-                        computeScreen.setText(Operand.convertToOctal(answer.getValue(), 6));
-                        break;
-                    case HEXADECIMAL:
-                        computeScreen.setText(Operand.convertToHexadecimal(answer.getValue(), 6));
-                        break;
-                    default:
-                        computeScreen.setText(answerString);
-                }
-            } catch (ArithmeticException ae) {
-                computeScreen.setText("Error: " + ae.getMessage());
-            } catch (NumberFormatException ne) {
-                computeScreen.setText("Error: Incorrect Format");
+    private void handleEqualsPressed(ActionEvent event){
+        expressionScreen.setText(printExpressionQueue(null));
+        Operand answer = new Operand(Double.NaN);
+        try {
+            answer = expressionParser.evaluateExpressionQueue();
+            ModeModel.AnswerRadix radixMode = modeData.getAnswerRadix();
+            String answerString = answer.toString();
+            switch (radixMode) {
+                case BINARY:
+                    computeScreen.setText(Operand.convertToBinary(answer.getValue(), 6));
+                    break;
+                case OCTAL:
+                    computeScreen.setText(Operand.convertToOctal(answer.getValue(), 6));
+                    break;
+                case HEXADECIMAL:
+                    computeScreen.setText(Operand.convertToHexadecimal(answer.getValue(), 6));
+                    break;
+                default:
+                    computeScreen.setText(answerString);
             }
-            if (executionStack.size() >= MAX_EXECUTION_STACK_SIZE) executionStack.removeFirst();
-            executionStack.push(new ExecutionStackEntry(new LinkedList<>(expressionQueue), answer));
-            expressionQueue.clear();
-        }, null, 4 + col, row + 5));
-        return buttonList;
+        } catch (ArithmeticException ae) {
+            computeScreen.setText("Error: " + ae.getMessage());
+        } catch (NumberFormatException ne) {
+            computeScreen.setText("Error: Incorrect Format");
+        }
+        if (executionStack.size() >= MAX_EXECUTION_STACK_SIZE) executionStack.removeFirst();
+        executionStack.push(new ExecutionStackEntry(new LinkedList<>(expressionQueue), answer));
+        expressionQueue.clear();
     }
 
     /**
@@ -298,17 +284,17 @@ public class MainApp extends Application {
         BaseButton modeButton = new BaseButton(ButtonName.MODE, e -> {
             overlayPane.show();
             overlayPane.addCloseButton();
-            appStackPane.getChildren().add(overlayPane);
+            if (!appStackPane.getChildren().contains(overlayPane)) appStackPane.getChildren().add(overlayPane);
         }, 0, 3, 2, 1);
 
-        TermButton<?> clearButton = new TermButton<>(ButtonName.CLEAR, event -> {
+        BaseButton clearButton = new BaseButton(ButtonName.CLEAR, event -> {
             PartialOperand.setStringValue("");
             expressionScreen.setText("");
             computeScreen.setText("0");
             expressionQueue.clear();
-        }, null, 3, 3);
+        }, 3, 3);
 
-        TermButton<?> backSpaceButton = new TermButton<>(ButtonName.CURTAIL, event -> {
+        BaseButton backSpaceButton = new BaseButton(ButtonName.CURTAIL, event -> {
             if (!PartialOperand.getStringValue().isEmpty()) {
                 String text = PartialOperand.getStringValue();
                 PartialOperand.setStringValue(text.substring(0, text.length() - 1));
@@ -320,7 +306,7 @@ public class MainApp extends Application {
                     computeScreen.setText("0");
                 }
             }
-        }, null, 4, 3);
+        }, 4, 3);
 
         controlButtons.add(modeButton);
         controlButtons.add(clearButton);
@@ -331,42 +317,14 @@ public class MainApp extends Application {
 
     public GridPane setupGrid() {
         GridPane gridPane = new GridPane();
-        ColumnConstraints column1Constraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
-        column1Constraints.setFillWidth(true);
-        for (int i = 0; i < 5; ++i) {
-            ColumnConstraints columnConstraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
-            columnConstraints.setFillWidth(true);
-            gridPane.getColumnConstraints().add(columnConstraints);
-        }
-
-        for(int i = 0; i < 11; ++i) {
-            RowConstraints rowConstraints = new RowConstraints(30, 40, 60, Priority.ALWAYS, VPos.CENTER, true);
-            gridPane.getRowConstraints().add(rowConstraints);
-        }
+        setConstraints(gridPane);
 
         expressionScreen.setMaxWidth(Double.MAX_VALUE);
         expressionScreen.setAlignment(Pos.CENTER_RIGHT);
         expressionScreen.setBackground(new Background(new BackgroundFill(Color.gray(0.7), null, null)));
         gridPane.add(expressionScreen, 0, 0, 5, 1);
 
-        GridPane modeScreenDisplayGrid = new GridPane();
-        modeScreenDisplayGrid.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
-        Label angleLabel = new Label(modeData.getAngleMode().name().substring(0, 3));
-        angleLabel.setFont(Font.font(10));
-        modeScreenDisplayGrid.add(angleLabel, 0, 0);
-
-        computeScreen.setEditable(false);
-        computeScreen.setEffect(new Glow(0));
-        computeScreen.setFont(new Font("Arial", 18));
-        computeScreen.setPrefHeight(40);
-        computeScreen.setMaxHeight(60);
-        computeScreen.setAlignment(Pos.CENTER_RIGHT);
-        expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
-
-        VBox computeDisplayScreen = new VBox(modeScreenDisplayGrid, computeScreen);
-        GridPane.setFillHeight(computeDisplayScreen, true);
-        GridPane.setVgrow(computeDisplayScreen, Priority.ALWAYS);
-        gridPane.add(computeDisplayScreen, 0, 1, 5, 1);
+        gridPane.add(addDisplayScreen(), 0, 1, 5, 1);
 
         LinkedList<BaseButton> controlButtons = createControlButton();
         for (int i = 0; i < controlButtons.size(); ++i){
@@ -378,10 +336,42 @@ public class MainApp extends Application {
                     calculatorButton.getColSpan(), calculatorButton.getRowSpan());
         }
         gridPane.setAlignment(Pos.CENTER);
-        gridPane.setVgap(0);
+        gridPane.setVgap(2);
         gridPane.setHgap(2);
-        gridPane.setGridLinesVisible(true);
         return gridPane;
+    }
+
+    private void setConstraints(GridPane gridPane){
+        for (int i = 0; i < 5; ++i) {
+            ColumnConstraints columnConstraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
+            columnConstraints.setFillWidth(true);
+            gridPane.getColumnConstraints().add(columnConstraints);
+        }
+
+        for(int i = 0; i < 11; ++i) {
+            RowConstraints rowConstraints = new RowConstraints(30, 40, 70, Priority.ALWAYS, VPos.CENTER, true);
+            gridPane.getRowConstraints().add(rowConstraints);
+        }
+        gridPane.getRowConstraints().get(1).setMinHeight(60);
+        gridPane.getRowConstraints().get(1).setPrefHeight(70);
+    }
+
+    private VBox addDisplayScreen(){
+        GridPane modeScreenDisplayGrid = new GridPane();
+        modeScreenDisplayGrid.setBackground(new Background(new BackgroundFill(Color.WHITE, null, null)));
+        Label angleLabel = new Label(modeData.getAngleMode().name().substring(0, 3));
+        angleLabel.setFont(Font.font(10));
+        modeScreenDisplayGrid.add(angleLabel, 0, 0);
+
+        computeScreen.setEditable(false);
+        computeScreen.setEffect(new Glow(0));
+        computeScreen.setFont(new Font("Arial", 18));
+        computeScreen.setPrefHeight(45);
+        computeScreen.setMaxHeight(60);
+        computeScreen.setAlignment(Pos.CENTER_RIGHT);
+        expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
+
+        return new VBox(modeScreenDisplayGrid, computeScreen);
     }
 
     private Menu createMenu(String menuName) {

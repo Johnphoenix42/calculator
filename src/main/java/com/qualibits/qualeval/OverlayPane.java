@@ -3,10 +3,12 @@ package com.qualibits.qualeval;
 import com.qualibits.qualeval.mode.OverlayView;
 import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -15,18 +17,19 @@ import javafx.util.Duration;
 public class OverlayPane extends GridPane {
 
     private final Pane parentPane;
-    private OverlayView overlayView;
+    private OverlayView currentOverlayView;
     private final Button closeButton;
 
     private final FadeTransition fadeInTransition, fadeOutTransition;
     private final TranslateTransition translateInTransition, translateOutTransition;
+    private boolean isTransitioning = false;
 
     public OverlayPane(Pane parentPane){
         super();
         this.parentPane = parentPane;
-        setBackground(MainApp.ROOT_BACKGROUND);
+        setBackground(new Background(new BackgroundFill(Color.color(0.1, 0.1, 0, 0.5), null, null)));
         setPadding(new Insets(10));
-        setMaxHeight(150);
+        setMaxHeight(Double.MAX_VALUE);
         setHgap(5);
         setVgap(5);
         StackPane.setAlignment(this, Pos.BOTTOM_CENTER);
@@ -67,24 +70,37 @@ public class OverlayPane extends GridPane {
     }
 
     public <T extends OverlayView> void setView(T t) {
-        overlayView = t;
+        currentOverlayView = t;
     }
 
     public void show() throws NullPointerException {
-        if (overlayView == null) throw new NullPointerException("Call setView(T t) first before this");
-        overlayView.show();
+        show(currentOverlayView);
+    }
+
+    public void show(OverlayView view) {
+        if (view == null) throw new NullPointerException("view cannot be null");
+        ObservableList<Node> parentChildren = parentPane.getChildren();
+        if (!parentChildren.contains(this)) parentPane.getChildren().add(this);
         fadeInTransition.play();
-        translateInTransition.play();
+        if (currentOverlayView == view) return;
+        currentOverlayView.close();
+        view.show();
+    }
+
+    public void setCurrentOverlayView(OverlayView currentOverlayView) {
+        this.currentOverlayView = currentOverlayView;
     }
 
     public void onClose() {
-        if (overlayView == null) throw new NullPointerException("Call setView(T t) first before this");
-        overlayView.close();
+        // if in the middle of a transition, do nothing;
+        if (isTransitioning) return;
         fadeOutTransition.play();
         translateOutTransition.play();
+        isTransitioning = true;
         fadeOutTransition.setOnFinished(e -> {
             getChildren().clear();
             parentPane.getChildren().remove(this);
+            isTransitioning = false;
         });
     }
 

@@ -17,6 +17,7 @@ public class TermButton<T extends Term> extends BaseButton {
     public TermButton(ButtonName name, EventHandler<ActionEvent> eHandler, T type, int column, int row, int colSpan, int rowSpan){
         super(name, eHandler, column, row, colSpan, rowSpan);
         this.t = type;
+        super.setButtonBackground("#0f0f0f");
     }
 
     /**
