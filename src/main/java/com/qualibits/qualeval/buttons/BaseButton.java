@@ -1,6 +1,5 @@
 package com.qualibits.qualeval.buttons;
 
-import com.qualibits.qualeval.ButtonName;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -12,7 +11,7 @@ import javafx.scene.text.Font;
 
 public class BaseButton extends Button {
 
-    protected final ButtonName name;
+    protected ButtonName name;
     protected final int column;
     protected final int row;
     protected final int colSpan;
@@ -31,12 +30,8 @@ public class BaseButton extends Button {
         setBackground(new Background(
                 new BackgroundFill(Color.web("0f0f0f"), null, null)
         ));
-        setOnMouseEntered(e -> {
-            setEffect(new Glow(1));
-        });
-        setOnMouseExited(e -> {
-            setEffect(new Glow(0));
-        });
+        setOnMouseEntered(e -> setEffect(new Glow(1)));
+        setOnMouseExited(e -> setEffect(new Glow(0)));
         setOnAction(eHandler);
     }
 
@@ -58,9 +53,5 @@ public class BaseButton extends Button {
 
     public int getRowSpan() {
         return rowSpan;
-    }
-
-    public ButtonName getName() {
-        return name;
     }
 }

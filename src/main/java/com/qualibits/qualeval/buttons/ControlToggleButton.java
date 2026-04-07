@@ -100,7 +100,7 @@ public class ControlToggleButton extends ToggleButton {
         return modeConstant;
     }
 
-    public EventHandler<ActionEvent> geteHandler() {
+    public EventHandler<ActionEvent> getEHandler() {
         return eHandler;
     }
 

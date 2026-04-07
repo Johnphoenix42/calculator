@@ -1,7 +1,6 @@
 package com.qualibits.qualeval.buttons;
 
-import com.qualibits.qualeval.ButtonName;
-import com.qualibits.qualeval.Term;
+import com.qualibits.qualeval.term.Term;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
