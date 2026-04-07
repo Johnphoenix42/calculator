@@ -17,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -83,7 +84,7 @@ public class MainApp extends Application {
         expressionScreen = new TextField();
         expressionScreen.setEditable(false);
         expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
-        overlayPane = new OverlayPane(rootPane);
+        overlayPane = new OverlayPane(appStackPane);
         expressionQueue = new LinkedList<>();
         executionStack = new LinkedList<>();
 
@@ -284,7 +285,6 @@ public class MainApp extends Application {
         BaseButton modeButton = new BaseButton(ButtonName.MODE, e -> {
             overlayPane.show();
             overlayPane.addCloseButton();
-            if (!appStackPane.getChildren().contains(overlayPane)) appStackPane.getChildren().add(overlayPane);
         }, 0, 3, 2, 1);
 
         BaseButton clearButton = new BaseButton(ButtonName.CLEAR, event -> {
@@ -325,16 +325,16 @@ public class MainApp extends Application {
         gridPane.add(expressionScreen, 0, 0, 5, 1);
 
         gridPane.add(addDisplayScreen(), 0, 1, 5, 1);
+        for (BaseButton calculatorButton : getCalcButtons(0, 5)) {
+            gridPane.add(calculatorButton, calculatorButton.getColumn(), calculatorButton.getRow(),
+                    calculatorButton.getColSpan(), calculatorButton.getRowSpan());
+        }
 
         LinkedList<BaseButton> controlButtons = createControlButton();
         for (int i = 0; i < controlButtons.size(); ++i){
             gridPane.add(controlButtons.get(i), controlButtons.get(i).getColumn(), (i+10)/5);
         }
 
-        for (BaseButton calculatorButton : getCalcButtons(0, 5)) {
-            gridPane.add(calculatorButton, calculatorButton.getColumn(), calculatorButton.getRow(),
-                    calculatorButton.getColSpan(), calculatorButton.getRowSpan());
-        }
         gridPane.setAlignment(Pos.CENTER);
         gridPane.setVgap(2);
         gridPane.setHgap(2);

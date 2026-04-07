@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 
 import java.util.LinkedList;
 
-public class ModeView implements OverlayView {
+public class ModeView extends GridPane implements OverlayView<GridPane> {
 
     private final GridPane parentPane;
     private final LinkedList<ControlToggleButton> modeButtons;
@@ -54,23 +54,21 @@ public class ModeView implements OverlayView {
     }
 
     @Override
-    public void show() {
-        parentPane.getChildren().clear();
-
+    public GridPane show() {
         ColumnConstraints colConstraints = new ColumnConstraints(40, 50, 60, Priority.ALWAYS, HPos.LEFT, false);
-        parentPane.getColumnConstraints().add(colConstraints);
+        getColumnConstraints().add(colConstraints);
 
-        parentPane.add(angleLabel, 0, 0);
-        parentPane.add(notationLabel, 3, 0);
-        parentPane.add(radixLabel, 0, 2);
-        parentPane.add(angleToggleDegrees, angleToggleDegrees.getColumn(), angleToggleDegrees.getRow());
-        parentPane.add(angleToggleRadians, angleToggleRadians.getColumn(), angleToggleRadians.getRow());
-        parentPane.add(standardNotationToggle, standardNotationToggle.getColumn(), standardNotationToggle.getRow());
-        parentPane.add(scientificNotationToggle, scientificNotationToggle.getColumn(), scientificNotationToggle.getRow());
-        parentPane.add(radix2Toggle, radix2Toggle.getColumn(), radix2Toggle.getRow());
-        parentPane.add(radix8Toggle, radix8Toggle.getColumn(), radix8Toggle.getRow());
-        parentPane.add(radix10Toggle, radix10Toggle.getColumn(), radix10Toggle.getRow());
-        parentPane.add(radix16Toggle, radix16Toggle.getColumn(), radix16Toggle.getRow());
+        add(angleLabel, 0, 0);
+        add(notationLabel, 3, 0);
+        add(radixLabel, 0, 2);
+        add(angleToggleDegrees, angleToggleDegrees.getColumn(), angleToggleDegrees.getRow());
+        add(angleToggleRadians, angleToggleRadians.getColumn(), angleToggleRadians.getRow());
+        add(standardNotationToggle, standardNotationToggle.getColumn(), standardNotationToggle.getRow());
+        add(scientificNotationToggle, scientificNotationToggle.getColumn(), scientificNotationToggle.getRow());
+        add(radix2Toggle, radix2Toggle.getColumn(), radix2Toggle.getRow());
+        add(radix8Toggle, radix8Toggle.getColumn(), radix8Toggle.getRow());
+        add(radix10Toggle, radix10Toggle.getColumn(), radix10Toggle.getRow());
+        add(radix16Toggle, radix16Toggle.getColumn(), radix16Toggle.getRow());
 
         ToggleGroup angleToggleGroup = new ToggleGroup();
         angleToggleGroup.getToggles().addAll(angleToggleDegrees, angleToggleRadians);
@@ -89,10 +87,31 @@ public class ModeView implements OverlayView {
         ControlToggleButton selectedAnswerButton = modeData.getAnswerRadix().getButton();
         selectedAnswerButton.setBackground(ControlToggleButton.ACCENT_BACKGROUND);
         radixToggleGroup.selectToggle(selectedAnswerButton);
+        return this;
     }
 
     @Override
     public void close() {
+    }
+
+    @Override
+    public int getRow() {
+        return 0;
+    }
+
+    @Override
+    public int getCol() {
+        return 0;
+    }
+
+    @Override
+    public int getRowSpan() {
+        return 12;
+    }
+
+    @Override
+    public int getColSpan() {
+        return 1;
     }
 
     public LinkedList<ControlToggleButton> getModeButtons() {

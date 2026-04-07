@@ -17,7 +17,7 @@ import javafx.util.Duration;
 public class OverlayPane extends GridPane {
 
     private final Pane parentPane;
-    private OverlayView currentOverlayView;
+    private OverlayView<? extends Node> currentOverlayView;
     private final Button closeButton;
 
     private final FadeTransition fadeInTransition, fadeOutTransition;
@@ -32,6 +32,10 @@ public class OverlayPane extends GridPane {
         setMaxHeight(Double.MAX_VALUE);
         setHgap(5);
         setVgap(5);
+        for (int i = 0; i < 12; i++) {
+            ColumnConstraints colConstraints = new ColumnConstraints(40, 50, 60, Priority.ALWAYS, HPos.LEFT, false);
+            getColumnConstraints().add(colConstraints);
+        }
         StackPane.setAlignment(this, Pos.BOTTOM_CENTER);
         closeButton = new Button("⋁");
         closeButton.setMaxSize(30, 30);
@@ -61,6 +65,7 @@ public class OverlayPane extends GridPane {
     }
 
     public void addCloseButton() {
+        if (getChildren().contains(closeButton)) return;
         GridPane.setHalignment(closeButton, HPos.CENTER);
         GridPane.setValignment(closeButton, VPos.TOP);
         GridPane.setHgrow(closeButton, Priority.ALWAYS);
@@ -69,26 +74,28 @@ public class OverlayPane extends GridPane {
         add(closeButton, 0, 0, 10, 1);
     }
 
-    public <T extends OverlayView> void setView(T t) {
-        currentOverlayView = t;
+    public void setView(OverlayView<? extends Node> view) {
+        currentOverlayView = view;
+        show();
     }
 
-    public void show() throws NullPointerException {
+    public void show() {
         show(currentOverlayView);
     }
 
-    public void show(OverlayView view) {
+    public <T extends Node> void show(OverlayView<T> view) {
         if (view == null) throw new NullPointerException("view cannot be null");
         ObservableList<Node> parentChildren = parentPane.getChildren();
-        if (!parentChildren.contains(this)) parentPane.getChildren().add(this);
+        if (!parentChildren.contains(this)) parentChildren.add(this);
         fadeInTransition.play();
+        translateInTransition.play();
         if (currentOverlayView == view) return;
-        currentOverlayView.close();
-        view.show();
-    }
-
-    public void setCurrentOverlayView(OverlayView currentOverlayView) {
-        this.currentOverlayView = currentOverlayView;
+        System.out.println("currentOverlayView == view");
+        if (currentOverlayView != null) currentOverlayView.close();
+        T tPane = view.show();
+        if (tPane instanceof Node pane) {
+            add(pane, view.getRow(), view.getCol(), view.getRowSpan(), view.getColSpan());
+        } else throw new ClassCastException("View must be a subclass of Node");
     }
 
     public void onClose() {

@@ -1,7 +1,13 @@
 package com.qualibits.qualeval.mode;
 
-public interface OverlayView {
+import javafx.scene.Node;
 
-    void show();
+public interface OverlayView<T extends Node> {
+
+    T show();
     void close();
+    int getRow();
+    int getCol();
+    int getRowSpan();
+    int getColSpan();
 }
