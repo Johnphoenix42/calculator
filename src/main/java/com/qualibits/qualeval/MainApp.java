@@ -280,10 +280,10 @@ public class MainApp extends Application {
         LinkedList<BaseButton> controlButtons = new LinkedList<>();
         ModeView modeView = new ModeView(overlayPane, modeData);
         ModeView.setModeData(modeData);
-        overlayPane.setView(modeView);
 
         BaseButton modeButton = new BaseButton(ButtonName.MODE, e -> {
-            overlayPane.show();
+            //overlayPane.setView(modeView);
+            overlayPane.show(modeView);
             overlayPane.addCloseButton();
         }, 0, 3, 2, 1);
 
@@ -392,7 +392,7 @@ public class MainApp extends Application {
 
         rootPane.getChildren().addAll(menuBar, appStackPane);
         rootPane.setBackground(ROOT_BACKGROUND);
-        appStackPane.setAlignment(Pos.CENTER);
+        appStackPane.setAlignment(Pos.CENTER_LEFT);
         appStackPane.getChildren().add(setupGrid());
         Scene mainScene = new Scene(rootPane, 350, 500, Color.GRAY);
         //mainScene.getStylesheets().add(css);

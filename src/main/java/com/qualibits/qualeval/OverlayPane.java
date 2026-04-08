@@ -27,17 +27,18 @@ public class OverlayPane extends GridPane {
     public OverlayPane(Pane parentPane){
         super();
         this.parentPane = parentPane;
-        setBackground(new Background(new BackgroundFill(Color.color(0.1, 0.1, 0, 0.5), null, null)));
+        setBackground(new Background(new BackgroundFill(Color.color(.1, .1, 0, 0.8), null, null)));
         setPadding(new Insets(10));
         setMaxHeight(Double.MAX_VALUE);
         setHgap(5);
         setVgap(5);
-        for (int i = 0; i < 12; i++) {
-            ColumnConstraints colConstraints = new ColumnConstraints(40, 50, 60, Priority.ALWAYS, HPos.LEFT, false);
+        for (int i = 0; i < 5; i++) {
+            ColumnConstraints colConstraints = new ColumnConstraints(50, 60, 70, Priority.ALWAYS, HPos.LEFT, false);
             getColumnConstraints().add(colConstraints);
         }
-        StackPane.setAlignment(this, Pos.BOTTOM_CENTER);
+        StackPane.setAlignment(this, Pos.CENTER_RIGHT);
         closeButton = new Button("⋁");
+        closeButton.setPrefSize(30, 30);
         closeButton.setMaxSize(30, 30);
         closeButton.setOnAction(e -> onClose());
 
@@ -62,6 +63,7 @@ public class OverlayPane extends GridPane {
         translateOutTransition.setByY(100);
         translateOutTransition.setCycleCount(1);
 
+        setGridLinesVisible(true);
     }
 
     public void addCloseButton() {
@@ -76,7 +78,6 @@ public class OverlayPane extends GridPane {
 
     public void setView(OverlayView<? extends Node> view) {
         currentOverlayView = view;
-        show();
     }
 
     public void show() {
@@ -90,12 +91,12 @@ public class OverlayPane extends GridPane {
         fadeInTransition.play();
         translateInTransition.play();
         if (currentOverlayView == view) return;
-        System.out.println("currentOverlayView == view");
         if (currentOverlayView != null) currentOverlayView.close();
         T tPane = view.show();
         if (tPane instanceof Node pane) {
-            add(pane, view.getRow(), view.getCol(), view.getRowSpan(), view.getColSpan());
+            add(pane, 0, 0, view.getRowSpan(), view.getColSpan());
         } else throw new ClassCastException("View must be a subclass of Node");
+        currentOverlayView = view;
     }
 
     public void onClose() {
@@ -105,7 +106,6 @@ public class OverlayPane extends GridPane {
         translateOutTransition.play();
         isTransitioning = true;
         fadeOutTransition.setOnFinished(e -> {
-            getChildren().clear();
             parentPane.getChildren().remove(this);
             isTransitioning = false;
         });

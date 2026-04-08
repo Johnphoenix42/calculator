@@ -111,7 +111,7 @@ public class ModeView extends GridPane implements OverlayView<GridPane> {
 
     @Override
     public int getColSpan() {
-        return 1;
+        return 2;
     }
 
     public LinkedList<ControlToggleButton> getModeButtons() {
