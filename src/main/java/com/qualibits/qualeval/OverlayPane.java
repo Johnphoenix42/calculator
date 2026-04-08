@@ -16,6 +16,9 @@ import javafx.util.Duration;
 
 public class OverlayPane extends GridPane {
 
+    private static final int GRID_ROW_PARTITION = 5;
+    private static final int GRID_COL_PARTITION = 5;
+
     private final Pane parentPane;
     private OverlayView<? extends Node> currentOverlayView;
     private final Button closeButton;
@@ -28,12 +31,13 @@ public class OverlayPane extends GridPane {
         super();
         this.parentPane = parentPane;
         setBackground(new Background(new BackgroundFill(Color.color(.1, .1, 0, 0.8), null, null)));
-        setPadding(new Insets(10));
+        setPadding(new Insets(0, 10, 0, 10));
         setMaxHeight(Double.MAX_VALUE);
         setHgap(5);
         setVgap(5);
-        for (int i = 0; i < 5; i++) {
-            ColumnConstraints colConstraints = new ColumnConstraints(50, 60, 70, Priority.ALWAYS, HPos.LEFT, false);
+        for (int i = 0; i < GRID_COL_PARTITION; i++) {
+            ColumnConstraints colConstraints = new ColumnConstraints(50, 70, 70, Priority.NEVER, HPos.LEFT, false);
+            colConstraints.setPercentWidth(50);
             getColumnConstraints().add(colConstraints);
         }
         StackPane.setAlignment(this, Pos.CENTER_RIGHT);
@@ -63,7 +67,6 @@ public class OverlayPane extends GridPane {
         translateOutTransition.setByY(100);
         translateOutTransition.setCycleCount(1);
 
-        setGridLinesVisible(true);
     }
 
     public void addCloseButton() {
@@ -94,7 +97,7 @@ public class OverlayPane extends GridPane {
         if (currentOverlayView != null) currentOverlayView.close();
         T tPane = view.show();
         if (tPane instanceof Node pane) {
-            add(pane, 0, 0, view.getRowSpan(), view.getColSpan());
+            add(pane, view.getRow(), view.getCol(), view.getRowSpan(GRID_ROW_PARTITION), view.getColSpan(GRID_COL_PARTITION));
         } else throw new ClassCastException("View must be a subclass of Node");
         currentOverlayView = view;
     }

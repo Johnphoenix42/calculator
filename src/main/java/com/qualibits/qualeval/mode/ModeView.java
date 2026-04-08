@@ -2,6 +2,7 @@ package com.qualibits.qualeval.mode;
 
 import com.qualibits.qualeval.buttons.ControlToggleButton;
 import javafx.geometry.HPos;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
@@ -11,7 +12,6 @@ import java.util.LinkedList;
 
 public class ModeView extends GridPane implements OverlayView<GridPane> {
 
-    private final GridPane parentPane;
     private final LinkedList<ControlToggleButton> modeButtons;
     private final Label angleLabel, notationLabel, radixLabel;
     private final ControlToggleButton angleToggleDegrees, angleToggleRadians;
@@ -20,8 +20,7 @@ public class ModeView extends GridPane implements OverlayView<GridPane> {
 
     private static ModeModel modeData;
 
-    public ModeView(GridPane pane, ModeModel modeData) {
-        this.parentPane = pane;
+    public ModeView(ModeModel modeData) {
         modeButtons = new LinkedList<>();
         angleLabel = new Label("angle");
         angleLabel.setTextFill(Color.web("#bbb"));
@@ -47,6 +46,10 @@ public class ModeView extends GridPane implements OverlayView<GridPane> {
         modeButtons.add(scientificNotationToggle);
 
         ControlToggleButton.setModeData(modeData);
+        setVgap(2);
+        setPadding(new Insets(10));
+        setMinHeight(400);
+        setBackground(new Background(new BackgroundFill(Color.BLACK, null, null)));
     }
 
     public static void setModeData(ModeModel modeData) {
@@ -105,13 +108,13 @@ public class ModeView extends GridPane implements OverlayView<GridPane> {
     }
 
     @Override
-    public int getRowSpan() {
-        return 12;
+    public int getRowSpan(int max) {
+        return max-1;
     }
 
     @Override
-    public int getColSpan() {
-        return 2;
+    public int getColSpan(int max) {
+        return 1;
     }
 
     public LinkedList<ControlToggleButton> getModeButtons() {

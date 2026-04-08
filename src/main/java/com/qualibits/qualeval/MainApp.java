@@ -278,7 +278,7 @@ public class MainApp extends Application {
 
     private LinkedList<BaseButton> createControlButton() {
         LinkedList<BaseButton> controlButtons = new LinkedList<>();
-        ModeView modeView = new ModeView(overlayPane, modeData);
+        ModeView modeView = new ModeView(modeData);
         ModeView.setModeData(modeData);
 
         BaseButton modeButton = new BaseButton(ButtonName.MODE, e -> {
@@ -368,7 +368,7 @@ public class MainApp extends Application {
         computeScreen.setFont(new Font("Arial", 18));
         computeScreen.setPrefHeight(45);
         computeScreen.setMaxHeight(60);
-        computeScreen.setAlignment(Pos.CENTER_RIGHT);
+        computeScreen.setAlignment(Pos.TOP_CENTER);
         expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
 
         return new VBox(modeScreenDisplayGrid, computeScreen);
@@ -392,7 +392,7 @@ public class MainApp extends Application {
 
         rootPane.getChildren().addAll(menuBar, appStackPane);
         rootPane.setBackground(ROOT_BACKGROUND);
-        appStackPane.setAlignment(Pos.CENTER_LEFT);
+        appStackPane.setAlignment(Pos.CENTER);
         appStackPane.getChildren().add(setupGrid());
         Scene mainScene = new Scene(rootPane, 350, 500, Color.GRAY);
         //mainScene.getStylesheets().add(css);

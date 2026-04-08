@@ -8,6 +8,6 @@ public interface OverlayView<T extends Node> {
     void close();
     int getRow();
     int getCol();
-    int getRowSpan();
-    int getColSpan();
+    int getRowSpan(int max);
+    int getColSpan(int max);
 }
