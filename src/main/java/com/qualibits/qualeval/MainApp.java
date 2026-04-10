@@ -368,7 +368,7 @@ public class MainApp extends Application {
         computeScreen.setFont(new Font("Arial", 18));
         computeScreen.setPrefHeight(45);
         computeScreen.setMaxHeight(60);
-        computeScreen.setAlignment(Pos.TOP_CENTER);
+        computeScreen.setAlignment(Pos.CENTER_RIGHT);
         expressionScreen.setBorder(new Border(new BorderStroke(Color.GREEN, BorderStrokeStyle.NONE, new CornerRadii(5), BorderStroke.DEFAULT_WIDTHS)));
 
         return new VBox(modeScreenDisplayGrid, computeScreen);
