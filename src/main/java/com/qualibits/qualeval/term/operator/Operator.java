@@ -4,14 +4,13 @@ import com.qualibits.qualeval.term.Operand;
 import com.qualibits.qualeval.term.OperationType;
 import com.qualibits.qualeval.term.Term;
 import com.qualibits.qualeval.mode.ModeModel;
-//import com.sun.istack.internal.Nullable;
 import javafx.scene.control.TextField;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class Operator implements Term {
+public abstract class Operator implements Term {
 
     private final OperationType type;
     protected Operand[] tokens;
@@ -26,27 +25,21 @@ public class Operator implements Term {
     }
 
     @Override
-    public Operand compute(Function<Operand[], Operand> computer, Operand... parameter) {
-        Operand sum = new Operand();
-        if (computer != null) {
-            return computer.apply(parameter);
-        }
-        for (Operand term: parameter) {
-            double nullAdjustedVal = Optional.of(term).orElse(new Operand()).getValue();
-            sum.setValue(BigDecimal.valueOf(nullAdjustedVal).add(BigDecimal.valueOf(sum.getValue())).doubleValue());
-        }
+    public abstract Operand compute(Function<Operand[], Operand> computer, Operand... parameter);
 
-        return sum;
+    public static <T extends Operator> boolean firstPrecedesSecond(T firstOperator, T secondOperator){
+        if (firstOperator == null || secondOperator == null) return true;
+        return firstOperator.getPrecedence() <= secondOperator.getPrecedence();
     }
+
+    public abstract int getPrecedence();
 
     public void setModeData(ModeModel mode) {
         this.modeData = mode;
     }
 
     @Override
-    public void onHostClickAction(TextField computeScreen) {
-
-    }
+    public abstract void onHostClickAction(TextField computeScreen);
 
     @Override
     public OperationType getOperationType() {
@@ -54,8 +47,6 @@ public class Operator implements Term {
     }
 
     @Override
-    public String toString() {
-        return "GEN";
-    }
+    public abstract String toString();
 
 }

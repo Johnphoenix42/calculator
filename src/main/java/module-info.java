@@ -6,6 +6,7 @@ module com.qualibits.qualeval{
 
     opens com.qualibits.qualeval to javafx.graphics, javafx.fxml;
     exports com.qualibits.qualeval;
+    exports com.qualibits.qualeval.term.operator;
     exports com.qualibits.qualeval.term;
     opens com.qualibits.qualeval.term to javafx.fxml, javafx.graphics;
     exports com.qualibits.qualeval.buttons;

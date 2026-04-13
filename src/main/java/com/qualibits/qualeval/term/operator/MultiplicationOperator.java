@@ -2,6 +2,7 @@ package com.qualibits.qualeval.term.operator;
 
 import com.qualibits.qualeval.term.Operand;
 import com.qualibits.qualeval.term.OperationType;
+import javafx.scene.control.TextField;
 //import com.sun.istack.internal.Nullable;
 
 import java.math.BigDecimal;
@@ -27,6 +28,16 @@ public class MultiplicationOperator extends Operator {
         double nullAdjustedParam2 = Optional.of(param[1]).orElse(new Operand(IDENTITY)).getValue();
         multiplication.setValue(BigDecimal.valueOf(nullAdjustedParam1).multiply(BigDecimal.valueOf(nullAdjustedParam2)).doubleValue());
         return multiplication;
+    }
+
+    @Override
+    public int getPrecedence() {
+        return 3;
+    }
+
+    @Override
+    public void onHostClickAction(TextField computeScreen) {
+
     }
 
     @Override

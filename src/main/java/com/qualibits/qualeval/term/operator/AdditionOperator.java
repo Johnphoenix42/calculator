@@ -28,6 +28,11 @@ public class AdditionOperator extends Operator{
     }
 
     @Override
+    public int getPrecedence() {
+        return 5;
+    }
+
+    @Override
     public void onHostClickAction(TextField computeScreen) {
         computeScreen.setText(toString());
     }

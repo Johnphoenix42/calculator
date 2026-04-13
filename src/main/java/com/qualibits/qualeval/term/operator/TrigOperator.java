@@ -3,6 +3,7 @@ package com.qualibits.qualeval.term.operator;
 import com.qualibits.qualeval.term.Operand;
 import com.qualibits.qualeval.term.OperationType;
 import com.qualibits.qualeval.mode.ModeModel.TrigMode;
+import javafx.scene.control.TextField;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -73,19 +74,28 @@ public class TrigOperator extends Operator {
     }
 
     @Override
+    public int getPrecedence() {
+        return 1;
+    }
+
+    @Override
+    public void onHostClickAction(TextField computeScreen) {
+
+    }
+
+    @Override
     public String toString() {
-        switch (trigOperatorType) {
-            case SIN: return "Sin";
-            case COS: return "Cos";
-            case TAN: return "Tan";
-            case ARC_SIN: return "Sin⁻¹";
-            case ARC_COS: return "Cos⁻¹";
-            case ARC_TAN: return "Tan⁻¹";
-            case SINH: return "Sinh";
-            case COSH: return "Cosh";
-            case TANH: return "Tanh";
-            default: return "Trig";
-        }
+        return switch (trigOperatorType) {
+            case SIN -> "Sin";
+            case COS -> "Cos";
+            case TAN -> "Tan";
+            case ARC_SIN -> "Sin⁻¹";
+            case ARC_COS -> "Cos⁻¹";
+            case ARC_TAN -> "Tan⁻¹";
+            case SINH -> "Sinh";
+            case COSH -> "Cosh";
+            case TANH -> "Tanh";
+        };
     }
 
     public enum TrigOperatorType {

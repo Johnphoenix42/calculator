@@ -1,21 +1,29 @@
-package com.qualibits.qualeval.term.operator;
+package com.qualibits.qualeval.term;
 
-import com.qualibits.qualeval.term.Operand;
-import com.qualibits.qualeval.term.OperationType;
+import javafx.scene.control.TextField;
 
 import java.util.function.Function;
 
-public class ParenthesisOperator extends Operator{
+public class Parenthesis implements Term {
 
     private final boolean isOpen;
 
-    public ParenthesisOperator(boolean isOpen) {
-        super(OperationType.BINARY);
+    public Parenthesis(boolean isOpen) {
         this.isOpen = isOpen;
     }
 
     @Override
     public Operand compute(Function<Operand[], Operand> computer, Operand... parameter) {
+        return null;
+    }
+
+    @Override
+    public void onHostClickAction(TextField computeScreen) {
+
+    }
+
+    @Override
+    public OperationType getOperationType() {
         return null;
     }
 

@@ -21,6 +21,11 @@ public class DecimalPointOperator extends Operator{
     }
 
     @Override
+    public int getPrecedence() {
+        return 0;
+    }
+
+    @Override
     public void onHostClickAction(TextField computeScreen) {
         String decimalValue = PartialOperand.getStringValue() + this;
         PartialOperand.setStringValue(decimalValue);

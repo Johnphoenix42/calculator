@@ -7,17 +7,13 @@ import com.qualibits.qualeval.exec.ExecutionStackEntry;
 import com.qualibits.qualeval.exec.ExpressionParser;
 import com.qualibits.qualeval.mode.ModeModel;
 import com.qualibits.qualeval.mode.ModeView;
-import com.qualibits.qualeval.term.Operand;
-import com.qualibits.qualeval.term.OperationType;
-import com.qualibits.qualeval.term.PartialOperand;
-import com.qualibits.qualeval.term.Term;
+import com.qualibits.qualeval.term.*;
 import com.qualibits.qualeval.term.operator.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -72,7 +68,7 @@ public class MainApp extends Application {
     private final SubtractionOperator subtractionOperator;
     private final LogarithmOperator logarithmicOperator;
     private final NaturalLogOperator naturalLogOperator;
-    private final ParenthesisOperator openParenthesis, closeParenthesis;
+    private final Parenthesis openParenthesis, closeParenthesis;
     private final Operand piOperand, eulerOperand;
     private final PartialOperand sevenOperand, eightOperand, nineOperand, fourOperand, fiveOperand, sixOperand, oneOperand, twoOperand, threeOperand, zeroOperand;
     private final DecimalPointOperator decimalPointOperator;
@@ -116,8 +112,8 @@ public class MainApp extends Application {
         subtractionOperator = new SubtractionOperator();
         logarithmicOperator = new LogarithmOperator(10);
         naturalLogOperator = new NaturalLogOperator();
-        openParenthesis = new ParenthesisOperator(true);
-        closeParenthesis = new ParenthesisOperator(false);
+        openParenthesis = new Parenthesis(true);
+        closeParenthesis = new Parenthesis(false);
 
         piOperand = new Operand(Math.PI, "⫪");
         eulerOperand = new Operand(Math.E, "e");
@@ -266,13 +262,14 @@ public class MainApp extends Application {
     private void normalizeExpression(Term token){
         try {
             Term lastOperation = expressionQueue.getLast();
-            if (lastOperation == null) return;
-            boolean shouldAppendProductOperator = (lastOperation instanceof Operand
-                    || (lastOperation instanceof ParenthesisOperator && !((ParenthesisOperator) lastOperation).isOpen()))
-                    && token.getOperationType() != OperationType.BINARY;
-            if (shouldAppendProductOperator) expressionQueue.addLast(new MultiplicationOperator());
+            if (lastOperation == null || lastOperation instanceof Operator) return;
+            boolean shouldAppendProductOperator = false;/*(lastOperation instanceof Operand
+                    || (lastOperation instanceof Parenthesis && !((Parenthesis) lastOperation).isOpen()))
+                    && token.getOperationType() != OperationType.BINARY;*/
+            if (!(lastOperation instanceof Parenthesis p && p.isOpen()) &&
+                    (token instanceof Operand || token instanceof Parenthesis p && p.isOpen())) expressionQueue.addLast(new MultiplicationOperator());
         }catch (NoSuchElementException ne) {
-            System.err.println(ne.getMessage());
+            System.err.println("normalizeExpression >> "+ne.getMessage());
         }
     }
 

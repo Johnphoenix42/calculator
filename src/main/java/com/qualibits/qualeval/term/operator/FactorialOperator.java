@@ -29,6 +29,11 @@ public class FactorialOperator extends MultiplicationOperator{
     }
 
     @Override
+    public int getPrecedence() {
+        return 2;
+    }
+
+    @Override
     public String toString() {
         return "Fac";
     }

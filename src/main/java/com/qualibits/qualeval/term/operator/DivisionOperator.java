@@ -2,6 +2,7 @@ package com.qualibits.qualeval.term.operator;
 
 import com.qualibits.qualeval.term.Operand;
 import com.qualibits.qualeval.term.OperationType;
+import javafx.scene.control.TextField;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -27,6 +28,16 @@ public class DivisionOperator extends Operator {
         double nullAdjustedDenominator = Optional.of(param[1]).orElse(new Operand(IDENTITY)).getValue();
         division.setValue(BigDecimal.valueOf(nullAdjustedNumerator).divide(BigDecimal.valueOf(nullAdjustedDenominator), MathContext.DECIMAL64).doubleValue());
         return division;
+    }
+
+    @Override
+    public int getPrecedence() {
+        return 4;
+    }
+
+    @Override
+    public void onHostClickAction(TextField computeScreen) {
+
     }
 
     @Override

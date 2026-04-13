@@ -2,6 +2,7 @@ package com.qualibits.qualeval.term.operator;
 
 import com.qualibits.qualeval.term.Operand;
 import com.qualibits.qualeval.term.OperationType;
+import javafx.scene.control.TextField;
 
 import java.util.Optional;
 import java.util.function.Function;
@@ -27,6 +28,16 @@ public class ExponentOperator extends Operator {
         double nullAdjustedExponent = Optional.of(param[1]).orElse(new Operand()).getValue();
         exponent.setValue(Math.pow(nullAdjustedBase, nullAdjustedExponent));
         return exponent;
+    }
+
+    @Override
+    public int getPrecedence() {
+        return 2;
+    }
+
+    @Override
+    public void onHostClickAction(TextField computeScreen) {
+
     }
 
     @Override

@@ -17,6 +17,11 @@ public class HypotenuseOperator extends AdditionOperator{
     }
 
     @Override
+    public int getPrecedence() {
+        return 2;
+    }
+
+    @Override
     public String toString() {
         return "Hyp";
     }

@@ -23,6 +23,11 @@ public class InverseOperator extends DivisionOperator{
     }
 
     @Override
+    public int getPrecedence() {
+        return 1;
+    }
+
+    @Override
     public String toString() {
         return "INV";
     }
