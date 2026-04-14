@@ -8,7 +8,7 @@ import java.math.MathContext;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class InverseOperator extends DivisionOperator{
+public class InverseOperator extends DivisionOperator implements Functions{
 
     public InverseOperator(){
         super(OperationType.UNARY);

@@ -76,11 +76,8 @@ public class ExpressionParser {
             if (pointer + 1 < expressionQueue.size()) nextTerm = expressionQueue.get(pointer + 1);
             nextTerm = nextTerm instanceof Parenthesis ? null : nextTerm;
 
-            System.out.println(prevTerm + ", " + nextTerm);
-            if ((prevTerm == null || prevTerm instanceof Operator) && (nextTerm == null || nextTerm instanceof Operator)) {
-                Operand nextOperand = computeNextOperand((Operator) prevTerm, operand, (Operator) nextTerm);
-                System.out.println(nextOperand);
-                return nextOperand;
+            if ((prevTerm == null || prevTerm instanceof Operator) && (nextTerm == null || nextTerm instanceof Operator)){
+                return computeNextOperand((Operator) prevTerm, operand, (Operator) nextTerm);
             } else throw new ExpressionFormatException();
         } else if (op instanceof Parenthesis pop) {
             if (pop.isOpen()) return evaluateParenthesis(expressionQueue.get(++pointer), result);
@@ -91,7 +88,8 @@ public class ExpressionParser {
             return op.compute(null, result, param);
         } catch (NoSuchElementException e) {
             //expressionScreen.setText(e.getMessage());
-            System.out.println(e.getMessage());
+            return new Operand(Double.NaN);
+        } catch (IndexOutOfBoundsException e) {
             return new Operand(Double.NaN);
         }
     }

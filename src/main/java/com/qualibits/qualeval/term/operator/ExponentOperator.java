@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class ExponentOperator extends Operator {
+public class ExponentOperator extends Operator implements Functions {
 
     protected double base = 0;
 

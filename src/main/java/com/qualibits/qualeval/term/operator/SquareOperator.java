@@ -5,7 +5,7 @@ import com.qualibits.qualeval.term.OperationType;
 
 import java.util.function.Function;
 
-public class SquareOperator extends MultiplicationOperator{
+public class SquareOperator extends MultiplicationOperator implements Functions {
 
     public SquareOperator(){
         super(OperationType.UNARY);

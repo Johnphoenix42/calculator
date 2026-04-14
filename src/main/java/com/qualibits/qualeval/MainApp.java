@@ -15,10 +15,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -72,6 +69,8 @@ public class MainApp extends Application {
     private final Operand piOperand, eulerOperand;
     private final PartialOperand sevenOperand, eightOperand, nineOperand, fourOperand, fiveOperand, sixOperand, oneOperand, twoOperand, threeOperand, zeroOperand;
     private final DecimalPointOperator decimalPointOperator;
+
+    private boolean shouldCloseParenthesis = false;
 
     public MainApp() {
         rootPane = new VBox();
@@ -246,12 +245,17 @@ public class MainApp extends Application {
             Operand operand = new Operand(PartialOperand.getStringValue());
             normalizeExpression(operand);
             expressionQueue.addLast(operand);
+            if (shouldCloseParenthesis) expressionQueue.addLast(new Parenthesis(false));
+            shouldCloseParenthesis = false;
         }
 
         if (token != null) {
             normalizeExpression(token);
             expressionQueue.addLast(token);
+            if (shouldCloseParenthesis) expressionQueue.addLast(new Parenthesis(false));
+            shouldCloseParenthesis = false;
         }
+
         for (Term term : expressionQueue){
             expressionString.append(term.toString());
         }
@@ -261,13 +265,19 @@ public class MainApp extends Application {
 
     private void normalizeExpression(Term token){
         try {
-            Term lastOperation = expressionQueue.getLast();
-            if (lastOperation == null || lastOperation instanceof Operator) return;
-            boolean shouldAppendProductOperator = false;/*(lastOperation instanceof Operand
-                    || (lastOperation instanceof Parenthesis && !((Parenthesis) lastOperation).isOpen()))
-                    && token.getOperationType() != OperationType.BINARY;*/
-            if (!(lastOperation instanceof Parenthesis p && p.isOpen()) &&
-                    (token instanceof Operand || token instanceof Parenthesis p && p.isOpen())) expressionQueue.addLast(new MultiplicationOperator());
+            Term lastToken = expressionQueue.getLast();
+            if (lastToken instanceof Operator && !(lastToken instanceof Functions)) return;
+            // if the last token is not an open parenthesis, and token is of either type Operand,
+            // open parenthesis or function operator
+            if (!(lastToken instanceof Parenthesis p && p.isOpen()) && !(lastToken instanceof Functions) &&
+                    ((token instanceof Operand || token instanceof Parenthesis p && p.isOpen()) ||
+                    token instanceof Functions)) {
+                expressionQueue.addLast(new MultiplicationOperator());
+            }
+            if (token instanceof Operand && lastToken instanceof Functions) {
+                expressionQueue.addLast(new Parenthesis(true));
+                shouldCloseParenthesis = true;
+            }
         }catch (NoSuchElementException ne) {
             System.err.println("normalizeExpression >> "+ne.getMessage());
         }
@@ -381,7 +391,17 @@ public class MainApp extends Application {
 
     public void start(Stage primaryStage) {
         //String css = Objects.requireNonNull(getClass().getResource("/main.css")).toExternalForm();
-        Menu[] appMenu = {createMenu("Settings"), createMenu("About")};
+        Menu createMenu = createMenu("Create");
+        createMenu.getItems().add(new MenuItem("Constants"));
+        Menu helpMenu = createMenu("Help");
+        MenuItem aboutMenuItem = new MenuItem("About");
+        aboutMenuItem.setOnAction(e -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION,
+                    "Qual-Eval v1.1.2\nOpen source calculator\nContributors\nJohn Ibiwoye",  ButtonType.CLOSE);
+            alert.showAndWait();
+        });
+        helpMenu.getItems().add(aboutMenuItem);
+        Menu[] appMenu = {createMenu, createMenu("Settings"), helpMenu};
         MenuBar menuBar = new MenuBar(appMenu);
         menuBar.setBackground(new Background(new BackgroundFill(
                 new LinearGradient(0, 1, 1, 1, true, CycleMethod.REFLECT,

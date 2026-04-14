@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class NaturalLogOperator extends Operator{
+public class NaturalLogOperator extends Operator implements Functions {
 
     public NaturalLogOperator() {
         super(OperationType.UNARY);

@@ -6,7 +6,7 @@ import com.qualibits.qualeval.term.OperationType;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class FactorialOperator extends MultiplicationOperator{
+public class FactorialOperator extends MultiplicationOperator implements Functions{
 
     public FactorialOperator(){
         super(OperationType.UNARY);

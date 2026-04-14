@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class TrigOperator extends Operator {
+public class TrigOperator extends Operator implements Functions {
 
     private final TrigOperatorType trigOperatorType;
 

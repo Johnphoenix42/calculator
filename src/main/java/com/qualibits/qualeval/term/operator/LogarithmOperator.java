@@ -7,7 +7,7 @@ import javafx.scene.control.TextField;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class LogarithmOperator extends Operator {
+public class LogarithmOperator extends Operator implements Functions {
 
     private double param;
 

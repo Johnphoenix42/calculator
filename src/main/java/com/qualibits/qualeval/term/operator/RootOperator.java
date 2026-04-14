@@ -8,7 +8,7 @@ import java.math.MathContext;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class RootOperator extends ExponentOperator{
+public class RootOperator extends ExponentOperator implements Functions {
 
     private double param;
 

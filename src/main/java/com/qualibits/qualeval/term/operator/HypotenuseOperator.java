@@ -5,7 +5,7 @@ import com.qualibits.qualeval.term.Operand;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class HypotenuseOperator extends AdditionOperator{
+public class HypotenuseOperator extends AdditionOperator implements Functions{
 
     @Override
     public Operand compute(Function<Operand[], Operand> computer, Operand... param) {
