@@ -263,6 +263,15 @@ public class MainApp extends Application {
         return expressionString.toString();
     }
 
+    /**
+     * In the context of this app, normalizations refer to the adjustments made to the input to convert
+     * inconsistent or undecipherable expressions in the computing system input and making it
+     * decipherable so that the app can execute it safely without triggering errors based on certain
+     * assumptions
+     * The user should be able to opt out of the normalization
+     * @param token the term just entered. The adjustment will be made before adding it to the
+     *              expressionQueue
+     */
     private void normalizeExpression(Term token){
         try {
             Term lastToken = expressionQueue.getLast();

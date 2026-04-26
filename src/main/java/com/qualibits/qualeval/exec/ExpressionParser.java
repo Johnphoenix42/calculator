@@ -11,9 +11,8 @@ import java.util.*;
 public class ExpressionParser {
 
     private final LinkedList<Term> expressionQueue;
-    private ListIterator<Term> queueIterator;
     private static LinkedList<ExecutionStackEntry> executionStack;
-    int pointer = 0;
+    int pointer = 0; // a pointer for our current position in the expressionQueue
 
     public ExpressionParser(LinkedList<Term> expressionQueue){
         this.expressionQueue = expressionQueue;
@@ -21,7 +20,6 @@ public class ExpressionParser {
 
     public Operand evaluateExpressionQueue() throws ArithmeticException, NumberFormatException {
         if (executionStack == null) throw new NullPointerException("Attach an executionMemory store to the parser");
-        queueIterator = expressionQueue.listIterator();
 
         ExecutionStackEntry lastEntry = executionStack.peek();
         Operand result = new Operand(lastEntry == null ? 0 : lastEntry.answer().getValue());
@@ -42,29 +40,8 @@ public class ExpressionParser {
             return computeExpression(operator, operand);
         else {
             --pointer;
-            return computeNextExpression(new MultiplicationOperator(), operand);
+            return computeExpression(new MultiplicationOperator(), operand);
         }
-    }
-
-    /**
-     * Computes an operand from
-     * @param operator the associating operator
-     * @param leftOperand the base or initial value like in an accumulator
-     * @return an operand
-     */
-    private Operand computeNextExpression (Operator operator, Operand leftOperand) {
-        Term nextTerm = expressionQueue.get(++pointer);
-        if (nextTerm instanceof Operand operand) {
-            Term nextForwardPeek = null;
-            if (pointer + 1 < expressionQueue.size()) nextForwardPeek = expressionQueue.get(pointer + 1);
-            if (nextForwardPeek instanceof Operator nextOperatorPeek) {
-                Operand rightOperand = computeNextOperand(operator, operand, nextOperatorPeek);
-                return operator.compute(null, rightOperand, leftOperand);
-            }
-        } else if (nextTerm instanceof Parenthesis parenthesis) {
-            if (parenthesis.isOpen()) return evaluateParenthesis(expressionQueue.get(++pointer), leftOperand);
-        }
-        throw new ExpressionFormatException("computeNextException: expression not properly formed");
     }
 
     private Operand computeExpression(Term op, Operand result) throws ArithmeticException, NumberFormatException {
@@ -97,7 +74,9 @@ public class ExpressionParser {
     private Operand evaluateParenthesis(Term op, Operand result) {
         if (op instanceof Parenthesis parenthesis && !parenthesis.isOpen()) return result;
         Operand param = computeExpression(op, result);
-        return evaluateParenthesis(expressionQueue.get(++pointer), param);
+        if (pointer + 1 < expressionQueue.size()) {
+            return evaluateParenthesis(expressionQueue.get(++pointer), param);
+        } else return result;
     }
 
     public static void setExecutionMemory(LinkedList<ExecutionStackEntry> executionMemory) {
