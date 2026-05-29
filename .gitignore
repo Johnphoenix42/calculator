@@ -31,3 +31,4 @@ bin/
 
 /src/main/java/**/Ruler.java
 ./Post.md
+target

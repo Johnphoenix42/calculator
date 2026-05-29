@@ -11,6 +11,7 @@ import com.qualibits.qualeval.term.*;
 import com.qualibits.qualeval.term.operator.*;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -25,6 +26,7 @@ import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
@@ -398,10 +400,35 @@ public class MainApp extends Application {
         return menu;
     }
 
+    /**
+     * This method adds a MenuItem to the menu tree. The menu is modeled as a tree with menuItems as
+     * external nodes and menus as internal nodes. The ancestor of each MenuItem that is to be added
+     * is specified in parent in order of decreasing depth, i.e., immediate parent along the path
+     * is specified first and the root (if present), last.
+     * @param menuItemName The name of the MenuItem to be created
+     * @param handler The ActionEvent handler that is to be bound to it.
+     * @param parent The ancestor menu(s) that it should be added under.
+     * @return the MenuItem created
+     */
+    private MenuItem addMenuItem(String menuItemName, EventHandler<ActionEvent> handler, Menu... parent){
+        MenuItem menuItem = new MenuItem(menuItemName);
+        menuItem.setOnAction(handler);
+        for (int i = 1; i < parent.length; ++i) {
+            if (!parent[i].getItems().contains(parent[i - 1]))
+                parent[i].getItems().add(parent[i - 1]);
+        }
+        parent[0].getItems().add(menuItem);
+        return menuItem;
+    }
+
     public void start(Stage primaryStage) {
         //String css = Objects.requireNonNull(getClass().getResource("/main.css")).toExternalForm();
         Menu createMenu = createMenu("Create");
-        createMenu.getItems().add(new MenuItem("Constants"));
+        Menu createMenuItem = new Menu("Constants");
+        addMenuItem("Whatever", event -> {
+
+        }, createMenuItem, createMenu);
+
         Menu helpMenu = createMenu("Help");
         MenuItem aboutMenuItem = new MenuItem("About");
         aboutMenuItem.setOnAction(e -> {
