@@ -24,6 +24,7 @@ import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.util.Arrays;
@@ -361,7 +362,7 @@ public class MainApp extends Application {
 
     private void setConstraints(GridPane gridPane){
         for (int i = 0; i < 5; ++i) {
-            ColumnConstraints columnConstraints = new ColumnConstraints(30, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
+            ColumnConstraints columnConstraints = new ColumnConstraints(45, 45, 60, Priority.ALWAYS, HPos.LEFT, false);
             columnConstraints.setFillWidth(true);
             gridPane.getColumnConstraints().add(columnConstraints);
         }
@@ -423,10 +424,25 @@ public class MainApp extends Application {
 
     public void start(Stage primaryStage) {
         //String css = Objects.requireNonNull(getClass().getResource("/main.css")).toExternalForm();
+        GridPane mainSetupGrid = setupGrid();
         Menu createMenu = createMenu("Create");
-        Menu createMenuItem = new Menu("Constants");
-        addMenuItem("Whatever", event -> {
-
+        Menu createMenuItem = createMenu("User Operands");
+        addMenuItem("As Buttons", event -> {
+            CreateConstantGridPane constantGridPane = new CreateConstantGridPane();
+            ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+            Dialog<UserConstant> dialog = new Dialog<>();
+            dialog.setTitle("Create User Operand");
+            dialog.getDialogPane().setContent(constantGridPane);
+            dialog.getDialogPane().getButtonTypes().add(createButtonType);
+            ((Button) dialog.getDialogPane().lookupButton(createButtonType)).setBackground(ROOT_BACKGROUND);
+            dialog.setResultConverter((resultButtonType) -> new UserConstant(constantGridPane.nameField.getText(),
+                    constantGridPane.valueField.getValue()));
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.showAndWait().filter(constant-> !constant.name().isEmpty() && !constant.value().isNaN())
+                    .ifPresent(constant -> {
+                        TermButton<Operand> userCreatedButton = new TermButton<>(constant.name(), new Operand( constant.value(), constant.name()), 7, 2);
+                        mainSetupGrid.add(userCreatedButton, userCreatedButton.getColumn(), userCreatedButton.getRow());
+                    });
         }, createMenuItem, createMenu);
 
         Menu helpMenu = createMenu("Help");
@@ -446,7 +462,7 @@ public class MainApp extends Application {
         rootPane.getChildren().addAll(menuBar, appStackPane);
         rootPane.setBackground(ROOT_BACKGROUND);
         appStackPane.setAlignment(Pos.CENTER);
-        appStackPane.getChildren().add(setupGrid());
+        appStackPane.getChildren().add(mainSetupGrid);
         Scene mainScene = new Scene(rootPane, 350, 500, Color.GRAY);
         //mainScene.getStylesheets().add(css);
 
@@ -461,5 +477,30 @@ public class MainApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    static class CreateConstantGridPane extends GridPane {
+
+        private final TextField nameField;
+        private final Spinner<Double> valueField;
+
+        CreateConstantGridPane(){
+            super();
+            ColumnConstraints columnConstraints = new ColumnConstraints(40, 50, 60, Priority.ALWAYS, HPos.CENTER, true);
+            getColumnConstraints().add(columnConstraints);
+            for (int i = 0; i < 2; ++i) {
+                getRowConstraints().add(new RowConstraints(40, 50, 60, Priority.ALWAYS, VPos.CENTER, true));
+            }
+            nameField = new TextField();
+            valueField = new Spinner<>(Double.MIN_VALUE, Double.MAX_VALUE, 0, 0.1);
+            add(new Label("Name"), 0, 0);
+            add(nameField, 1, 0);
+            add(new Label("Value"), 0, 1);
+            add(valueField, 1, 1);
+
+            valueField.setEditable(true);
+        }
+    }
+
+    private record UserConstant(String name, Double value){}
 
 }

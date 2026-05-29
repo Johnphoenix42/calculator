@@ -41,6 +41,21 @@ public class BaseButton extends Button {
         this(name, eHandler, column, row, 1, 1);
     }
 
+    public BaseButton(String name, EventHandler<ActionEvent> eHandler, int column, int row, int colSpan, int rowSpan) {
+        this.column = column;
+        this.row = row;
+        this.colSpan = colSpan;
+        this.rowSpan = rowSpan;
+        setText(name);
+        setTextFill(Color.GRAY);
+        setFont(Font.font(15));
+        setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        setButtonBackground("#091009");
+        setOnMouseEntered(e -> setEffect(new Glow(1)));
+        setOnMouseExited(e -> setEffect(new Glow(0)));
+        setOnAction(eHandler);
+    }
+
     protected void setButtonBackground(String hexColor) {
         setBackground(new Background(
                 new BackgroundFill(Color.web(hexColor), null, null)

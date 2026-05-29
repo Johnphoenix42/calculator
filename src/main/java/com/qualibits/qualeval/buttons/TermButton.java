@@ -29,13 +29,16 @@ public class TermButton<T extends Term> extends BaseButton {
      * @param row row where this button can be found
      */
     public TermButton(ButtonName name, T type, int column, int row) {
-        this(name, e -> {
-            type.onHostClickAction(computeScreen);
-        }, type, column, row, 1, 1);
+        this(name, e -> type.onHostClickAction(computeScreen), type, column, row, 1, 1);
     }
 
     public TermButton(ButtonName name, EventHandler<ActionEvent> eHandler, T type, int column, int row){
         this(name, eHandler, type, column, row, 1, 1);
+    }
+
+    public TermButton(String name, T type, int column, int row) {
+        super(name, e -> type.onHostClickAction(computeScreen), column, row, 1, 1);
+        this.t = type;
     }
 
     public static void setComputeScreen(TextField screen) {
