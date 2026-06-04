@@ -36,8 +36,8 @@ public class TermButton<T extends Term> extends BaseButton {
         this(name, eHandler, type, column, row, 1, 1);
     }
 
-    public TermButton(String name, T type, int column, int row) {
-        super(name, e -> type.onHostClickAction(computeScreen), column, row, 1, 1);
+    public TermButton(String name, EventHandler<ActionEvent> eHandler, T type, int column, int row) {
+        super(name, eHandler, column, row, 1, 1);
         this.t = type;
     }
 

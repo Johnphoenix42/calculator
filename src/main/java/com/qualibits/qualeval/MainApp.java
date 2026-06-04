@@ -42,6 +42,11 @@ public class MainApp extends Application {
             );
     private static final int MAX_EXECUTION_STACK_SIZE = 32; // You could allow the user to set this from a settings menu in the future
 
+    private static final int USER_OPERAND_BUTTON_ROW_START = 2;
+    private static final int USER_OPERAND_BUTTON_COLUMN_START = 7;
+    private static final int USER_OPERAND_BUTTON_ROW_COUNT = 3;
+    private static final int USER_OPERAND_BUTTON_COLUMN_COUNT = 3;
+
     private final VBox rootPane;
     private final StackPane appStackPane;
     private final TextField expressionScreen;
@@ -74,6 +79,7 @@ public class MainApp extends Application {
     private final DecimalPointOperator decimalPointOperator;
 
     private boolean shouldCloseParenthesis = false;
+    private int userCreatedButtonIndex = 0;;
 
     public MainApp() {
         rootPane = new VBox();
@@ -415,8 +421,9 @@ public class MainApp extends Application {
         MenuItem menuItem = new MenuItem(menuItemName);
         menuItem.setOnAction(handler);
         for (int i = 1; i < parent.length; ++i) {
-            if (!parent[i].getItems().contains(parent[i - 1]))
+            if (!parent[i].getItems().contains(parent[i - 1])) {
                 parent[i].getItems().add(parent[i - 1]);
+            }
         }
         parent[0].getItems().add(menuItem);
         return menuItem;
@@ -440,8 +447,15 @@ public class MainApp extends Application {
             dialog.initModality(Modality.APPLICATION_MODAL);
             dialog.showAndWait().filter(constant-> !constant.name().isEmpty() && !constant.value().isNaN())
                     .ifPresent(constant -> {
-                        TermButton<Operand> userCreatedButton = new TermButton<>(constant.name(), new Operand( constant.value(), constant.name()), 7, 2);
+                        var userCreatedOperand = new Operand( constant.value(), constant.name());
+                        TermButton<Operand> userCreatedButton = new TermButton<>(constant.name(), buttonEvent -> {
+                            expressionScreen.setText(printExpressionQueue(userCreatedOperand));
+                            computeScreen.setText(userCreatedOperand.toString());
+                        }, userCreatedOperand,
+                                USER_OPERAND_BUTTON_COLUMN_START + (userCreatedButtonIndex % USER_OPERAND_BUTTON_COLUMN_COUNT),
+                                USER_OPERAND_BUTTON_ROW_START + (userCreatedButtonIndex / USER_OPERAND_BUTTON_ROW_COUNT));
                         mainSetupGrid.add(userCreatedButton, userCreatedButton.getColumn(), userCreatedButton.getRow());
+                        userCreatedButtonIndex++;
                     });
         }, createMenuItem, createMenu);
 
