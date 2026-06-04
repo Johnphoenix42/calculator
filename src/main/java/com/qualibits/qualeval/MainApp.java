@@ -19,10 +19,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.Glow;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
+import javafx.scene.paint.*;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -407,6 +404,14 @@ public class MainApp extends Application {
         return menu;
     }
 
+    private Menu createMenu(String menuName, Paint color) {
+        Label label = new Label(menuName);
+        label.setTextFill(color);
+        Menu menu = new Menu("", label);
+        menu.setStyle("-fx-focus-color: green");
+        return menu;
+    }
+
     /**
      * This method adds a MenuItem to the menu tree. The menu is modeled as a tree with menuItems as
      * external nodes and menus as internal nodes. The ancestor of each MenuItem that is to be added
@@ -415,25 +420,24 @@ public class MainApp extends Application {
      * @param menuItemName The name of the MenuItem to be created
      * @param handler The ActionEvent handler that is to be bound to it.
      * @param parent The ancestor menu(s) that it should be added under.
-     * @return the MenuItem created
      */
-    private MenuItem addMenuItem(String menuItemName, EventHandler<ActionEvent> handler, Menu... parent){
+    private void addMenuItem(String menuItemName, EventHandler<ActionEvent> handler, Menu... parent){
         MenuItem menuItem = new MenuItem(menuItemName);
         menuItem.setOnAction(handler);
         for (int i = 1; i < parent.length; ++i) {
             if (!parent[i].getItems().contains(parent[i - 1])) {
                 parent[i].getItems().add(parent[i - 1]);
+                parent[i].setStyle("fx-background-color: black");
             }
         }
         parent[0].getItems().add(menuItem);
-        return menuItem;
     }
 
     public void start(Stage primaryStage) {
         //String css = Objects.requireNonNull(getClass().getResource("/main.css")).toExternalForm();
         GridPane mainSetupGrid = setupGrid();
         Menu createMenu = createMenu("Create");
-        Menu createMenuItem = createMenu("User Operands");
+        Menu createMenuItem = createMenu("User Operands", Color.BLACK);
         addMenuItem("As Buttons", event -> {
             CreateConstantGridPane constantGridPane = new CreateConstantGridPane();
             ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
@@ -459,6 +463,11 @@ public class MainApp extends Application {
                     });
         }, createMenuItem, createMenu);
 
+        Menu displayMenu = createMenu("Display");
+        addMenuItem("Show Operands As Variables", opAsVarEvent -> {
+
+        }, displayMenu);
+
         Menu helpMenu = createMenu("Help");
         MenuItem aboutMenuItem = new MenuItem("About");
         aboutMenuItem.setOnAction(e -> {
@@ -467,7 +476,7 @@ public class MainApp extends Application {
             alert.showAndWait();
         });
         helpMenu.getItems().add(aboutMenuItem);
-        Menu[] appMenu = {createMenu, createMenu("Settings"), helpMenu};
+        Menu[] appMenu = {createMenu, displayMenu, createMenu("Settings"), helpMenu};
         MenuBar menuBar = new MenuBar(appMenu);
         menuBar.setBackground(new Background(new BackgroundFill(
                 new LinearGradient(0, 1, 1, 1, true, CycleMethod.REFLECT,
