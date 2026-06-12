@@ -445,7 +445,7 @@ public class MainApp extends Application {
      * external nodes and menus as internal nodes. The ancestor of each MenuItem that is to be added
      * is specified in parent in order of decreasing depth, i.e., immediate parent along the path
      * is specified first and the root (if present), last.
-     * @param menuItemName The name of the MenuItem to be created
+     * @param menuItemName The name of the CheckMenuItem to be created
      * @param handler The ActionEvent handler that is to be bound to it.
      * @param parent The ancestor menu(s) that it should be added under.
      */
@@ -499,12 +499,23 @@ public class MainApp extends Application {
             boolean isChecked = menuItem.isSelected();
             appSetting.getScreenSettings().setUseVariableName(isChecked);
         }, displayMenu);
+        Menu turnoffNormalization = createMenu("Turn off Normalization");
+        addMenuItem("Display only", false, opAsVarEvent -> {
+            CheckMenuItem menuItem = (CheckMenuItem) opAsVarEvent.getSource();
+            boolean isChecked = menuItem.isSelected();
+            appSetting.getScreenSettings().setTurnOffNormalizationForDisplay(isChecked);
+        }, turnoffNormalization, displayMenu);
+        addMenuItem("Completely", false, opAsVarEvent -> {
+            CheckMenuItem menuItem = (CheckMenuItem) opAsVarEvent.getSource();
+            boolean isChecked = menuItem.isSelected();
+            appSetting.getScreenSettings().setTurnOffNormalizationCompletely(isChecked);
+        }, turnoffNormalization, displayMenu);
 
         Menu helpMenu = createMenu("Help");
         MenuItem aboutMenuItem = new MenuItem("About");
         aboutMenuItem.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION,
-                    "Qual-Eval v1.1.2\nOpen source calculator\nContributors\nJohn Ibiwoye",  ButtonType.CLOSE);
+                    "Qual-Eval v1.1.3\nOpen source calculator\nContributors\nJohn Ibiwoye",  ButtonType.CLOSE);
             alert.showAndWait();
         });
         helpMenu.getItems().add(aboutMenuItem);

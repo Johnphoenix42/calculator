@@ -16,9 +16,12 @@ public class AppSetting {
     public static class ScreenSettings {
 
         private boolean useVariableName;
+        private boolean shouldTurnOffNormalizationCompletely, shouldTurnOffNormalizationForDisplay;
 
         private ScreenSettings() {
             useVariableName = false;
+            shouldTurnOffNormalizationForDisplay = false;
+            shouldTurnOffNormalizationCompletely = false;
         }
 
         public boolean shouldUseVariableName() {
@@ -27,6 +30,14 @@ public class AppSetting {
 
         public void setUseVariableName(boolean useVariableName) {
             this.useVariableName = useVariableName;
+        }
+
+        public void setTurnOffNormalizationCompletely(boolean shouldTurnOff) {
+            this.shouldTurnOffNormalizationCompletely = shouldTurnOff;
+        }
+
+        public void setTurnOffNormalizationForDisplay(boolean shouldTurnOff) {
+            this.shouldTurnOffNormalizationForDisplay = shouldTurnOff;
         }
     }
 }
