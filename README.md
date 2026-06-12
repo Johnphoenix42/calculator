@@ -50,4 +50,4 @@ Error State: Triggered if compute() fails (e.g., Syntax Error).
 Fig 3-4		State machine diagram of the Calculator System
 
 ## Downloads
-For window 64-bits, [Download here](https://github.com/Johnphoenix42/calculator/tree/main/target/dist/Qual-Eval-1.1.3.exe)
+For window 64-bits, [Download here](https://github.com/Johnphoenix42/calculator/raw/refs/heads/main/Qual-Eval-1.1.3.exe)
