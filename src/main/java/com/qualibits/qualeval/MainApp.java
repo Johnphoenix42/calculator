@@ -24,7 +24,6 @@ import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
@@ -54,7 +53,8 @@ public class MainApp extends Application {
     private final LinkedList<Term> expressionQueue;
     private final LinkedList<ExecutionStackEntry> executionStack;
 
-    ModeModel modeData;
+    private AppSetting appSetting;
+    private ModeModel modeData;
 
     private final TrigOperator sinHOperator, cosHOperator, tanHOperator, atanOperator, asinOperator, acosOperator, sinOperator, cosOperator, tanOperator;
     private final HypotenuseOperator hypotenuseOperator;
@@ -76,7 +76,7 @@ public class MainApp extends Application {
     private final DecimalPointOperator decimalPointOperator;
 
     private boolean shouldCloseParenthesis = false;
-    private int userCreatedButtonIndex = 0;;
+    private int userCreatedButtonIndex = 0;
 
     public MainApp() {
         rootPane = new VBox();
@@ -89,6 +89,7 @@ public class MainApp extends Application {
         expressionQueue = new LinkedList<>();
         executionStack = new LinkedList<>();
 
+        appSetting = AppSetting.getSettings();
         expressionParser = new ExpressionParser(expressionQueue);
         ExpressionParser.setExecutionMemory(executionStack);
         modeData = new ModeModel();
@@ -248,7 +249,7 @@ public class MainApp extends Application {
     private String printExpressionQueue(Term token) {
         StringBuilder expressionString = new StringBuilder();
         if (!PartialOperand.getStringValue().isEmpty()) {
-            Operand operand = new Operand(PartialOperand.getStringValue());
+            Operand operand = new Operand(Double.parseDouble(PartialOperand.getStringValue()), PartialOperand.getStringValue());
             normalizeExpression(operand);
             expressionQueue.addLast(operand);
             if (shouldCloseParenthesis) expressionQueue.addLast(new Parenthesis(false));
@@ -262,8 +263,14 @@ public class MainApp extends Application {
             shouldCloseParenthesis = false;
         }
 
-        for (Term term : expressionQueue){
-            expressionString.append(term.toString());
+        for (Term term : expressionQueue) {
+            String shownString = term.toString();
+            // if term is an instance of Operand and operand alone, not PartialOperand
+            if (term instanceof Operand && !(term instanceof PartialOperand)) {
+                boolean shouldUseVariableName = appSetting.getScreenSettings().shouldUseVariableName();
+                shownString = shouldUseVariableName ? ((Operand) term).getDenotation() : shownString;
+            }
+            expressionString.append(shownString);
         }
         PartialOperand.setStringValue("");
         return expressionString.toString();
@@ -433,6 +440,28 @@ public class MainApp extends Application {
         parent[0].getItems().add(menuItem);
     }
 
+    /**
+     * This method adds a CheckMenuItem to the menu tree. The menu is modeled as a tree with menuItems as
+     * external nodes and menus as internal nodes. The ancestor of each MenuItem that is to be added
+     * is specified in parent in order of decreasing depth, i.e., immediate parent along the path
+     * is specified first and the root (if present), last.
+     * @param menuItemName The name of the MenuItem to be created
+     * @param handler The ActionEvent handler that is to be bound to it.
+     * @param parent The ancestor menu(s) that it should be added under.
+     */
+    private void addMenuItem(String menuItemName, boolean checked, EventHandler<ActionEvent> handler, Menu... parent){
+        CheckMenuItem menuItem = new CheckMenuItem(menuItemName);
+        menuItem.setSelected(checked);
+        menuItem.setOnAction(handler);
+        for (int i = 1; i < parent.length; ++i) {
+            if (!parent[i].getItems().contains(parent[i - 1])) {
+                parent[i].getItems().add(parent[i - 1]);
+                parent[i].setStyle("fx-background-color: black");
+            }
+        }
+        parent[0].getItems().add(menuItem);
+    }
+
     public void start(Stage primaryStage) {
         //String css = Objects.requireNonNull(getClass().getResource("/main.css")).toExternalForm();
         GridPane mainSetupGrid = setupGrid();
@@ -453,8 +482,9 @@ public class MainApp extends Application {
                     .ifPresent(constant -> {
                         var userCreatedOperand = new Operand( constant.value(), constant.name());
                         TermButton<Operand> userCreatedButton = new TermButton<>(constant.name(), buttonEvent -> {
+                            boolean shouldUseVariableName = appSetting.getScreenSettings().shouldUseVariableName();
                             expressionScreen.setText(printExpressionQueue(userCreatedOperand));
-                            computeScreen.setText(userCreatedOperand.toString());
+                            computeScreen.setText(shouldUseVariableName ? userCreatedOperand.getDenotation() : userCreatedOperand.toString());
                         }, userCreatedOperand,
                                 USER_OPERAND_BUTTON_COLUMN_START + (userCreatedButtonIndex % USER_OPERAND_BUTTON_COLUMN_COUNT),
                                 USER_OPERAND_BUTTON_ROW_START + (userCreatedButtonIndex / USER_OPERAND_BUTTON_ROW_COUNT));
@@ -464,8 +494,10 @@ public class MainApp extends Application {
         }, createMenuItem, createMenu);
 
         Menu displayMenu = createMenu("Display");
-        addMenuItem("Show Operands As Variables", opAsVarEvent -> {
-
+        addMenuItem("Show User Operands As Variables", false, opAsVarEvent -> {
+            CheckMenuItem menuItem = (CheckMenuItem) opAsVarEvent.getSource();
+            boolean isChecked = menuItem.isSelected();
+            appSetting.getScreenSettings().setUseVariableName(isChecked);
         }, displayMenu);
 
         Menu helpMenu = createMenu("Help");

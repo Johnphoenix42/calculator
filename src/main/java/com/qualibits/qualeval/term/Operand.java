@@ -63,7 +63,7 @@ public class Operand implements Term {
 
     /**
      * Gets the string value that refers to this constant
-     * @return the mathematical name for this operand/constant eg. i, e (euler)
+     * @return the mathematical name for this operand/constant e.g. i, e (euler)
      */
     public String getDenotation(){
         return denotation;

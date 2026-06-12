@@ -1,5 +1,6 @@
 ### IntelliJ IDEA ###
-out/
+out
+/target/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
@@ -31,4 +32,3 @@ bin/
 
 /src/main/java/**/Ruler.java
 ./Post.md
-target
