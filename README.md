@@ -1,6 +1,20 @@
 # Qual-Eval: A High-Precision Math Engine (Expression Evaluation Engine)
 A thread-safe Expression Parser using my own version of Recursive Descent algorithm with $O(n)$ time complexity.
 
+## My Environment 
+This project uses Apache Maven 3.9.12 as a build tool,
+Java 21, Javafx 21, Intellij Idea
+### To run from source
+After making sure you are running Apache Maven 3.9.12 or any other compatible version,
+1. Clone this repository
+2. Cd to the root in a terminal
+3. run mvn javafx:run
+   [!NOTE]
+> I may later swap out maven (mvn) for maven wrapper (mvnw) in the future to make running from source less stressful.
+
+## Downloads
+For window 64-bits, [Download here](https://github.com/Johnphoenix42/calculator/raw/refs/heads/main/Qual-Eval-1.1.3.exe)
+
 ## Overview
 The system developed in this project seeks to implement a high-performance Expression Entry model using JavaFX. While many modern apps (like the Windows (10/11) "Standard" calculator) still rely on immediate execution for simplicity, this project prioritizes accuracy through a Recursive Descent approach.
 By leveraging Java's object-oriented capabilities, the proposed system treats every input as a Term within a Queue (More on this in chapter 3). This allows the system to not only handle standard operator precedence but also to solve nested parentheses of arbitrary depth—a feature often missing in basic calculator implementations.
@@ -48,6 +62,3 @@ Result State: Displaying the final Operand.
 Error State: Triggered if compute() fails (e.g., Syntax Error).
 
 Fig 3-4		State machine diagram of the Calculator System
-
-## Downloads
-For window 64-bits, [Download here](https://github.com/Johnphoenix42/calculator/raw/refs/heads/main/Qual-Eval-1.1.3.exe)

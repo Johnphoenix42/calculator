@@ -1,6 +1,6 @@
 package com.qualibits.qualeval;
 
-import dialoglayout.ConstantCreationGridPane;
+import com.qualibits.qualeval.dialoglayout.ConstantCreationGridPane;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;

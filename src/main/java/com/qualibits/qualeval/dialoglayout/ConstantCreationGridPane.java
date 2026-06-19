@@ -1,4 +1,4 @@
-package dialoglayout;
+package com.qualibits.qualeval.dialoglayout;
 
 import com.qualibits.qualeval.AppSetting;
 import com.qualibits.qualeval.buttons.TermButton;
@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
 
+import java.math.BigDecimal;
 import java.util.function.Consumer;
 
 public class ConstantCreationGridPane extends GridPane {
@@ -31,7 +32,7 @@ public class ConstantCreationGridPane extends GridPane {
             getRowConstraints().add(new RowConstraints(40, 50, 60, Priority.ALWAYS, VPos.CENTER, true));
         }
         nameField = new TextField();
-        valueField = new Spinner<>(Double.MIN_VALUE, Double.MAX_VALUE, 0, 0.1);
+        valueField = new Spinner<>(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, 0, 0.1);
         add(new Label("Name"), 0, 0);
         add(nameField, 1, 0);
         add(new Label("Value"), 0, 1);
@@ -50,7 +51,7 @@ public class ConstantCreationGridPane extends GridPane {
 
     public static class UserDefinedButtonOkAction implements Consumer<UserConstant> {
 
-        private static final int USER_OPERAND_BUTTON_ROW_START = 2;
+        private static final int USER_OPERAND_BUTTON_ROW_START = 3;
         private static final int USER_OPERAND_BUTTON_COLUMN_START = 7;
         private static final int USER_OPERAND_BUTTON_ROW_COUNT = 3;
         private static final int USER_OPERAND_BUTTON_COLUMN_COUNT = 3;
@@ -69,7 +70,7 @@ public class ConstantCreationGridPane extends GridPane {
 
         @Override
         public void accept(UserConstant constant) {
-            var userCreatedOperand = new Operand( constant.value(), constant.name());
+            var userCreatedOperand = new Operand(BigDecimal.valueOf(constant.value()).doubleValue(), constant.name());
             createUserButton(userCreatedOperand, constant);
             userCreatedButtonIndex++;
         }
