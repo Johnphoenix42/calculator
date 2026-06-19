@@ -14,4 +14,6 @@ module com.qualibits.qualeval{
     exports com.qualibits.qualeval.mode;
     exports com.qualibits.qualeval.exec;
     opens com.qualibits.qualeval.exec to javafx.fxml, javafx.graphics;
+    exports dialoglayout;
+    opens dialoglayout to javafx.fxml, javafx.graphics;
 }

@@ -1,9 +1,13 @@
 package com.qualibits.qualeval;
 
+import com.qualibits.qualeval.exec.ExpressionParser;
+
 public class AppSetting {
 
     private final static AppSetting APP_SETTING = new AppSetting();
     private final static ScreenSettings SCREEN_SETTINGS = new ScreenSettings();
+
+    private ExpressionParser expressionParser;
 
     public static AppSetting getSettings() {
         return APP_SETTING;
@@ -11,6 +15,14 @@ public class AppSetting {
 
     public ScreenSettings getScreenSettings() {
         return SCREEN_SETTINGS;
+    }
+
+    public void setParser(ExpressionParser expressionParser) {
+        this.expressionParser = expressionParser;
+    }
+
+    public ExpressionParser getParser() {
+        return expressionParser;
     }
 
     public static class ScreenSettings {
