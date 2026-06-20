@@ -1,15 +1,18 @@
 package com.qualibits.qualeval;
 
+import com.qualibits.qualeval.buttons.TermButton;
 import com.qualibits.qualeval.dialoglayout.ConstantCreationGridPane;
+import com.qualibits.qualeval.dialogs.UserButtonCreationDialog;
+import com.qualibits.qualeval.term.Operand;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
-import javafx.stage.Modality;
 
+import java.util.HashMap;
 
-public class AppMenu extends MenuBar {
+public class AppMenuBar extends MenuBar {
 
     AppSetting appSetting;
     Menu createMenu;
@@ -19,14 +22,16 @@ public class AppMenu extends MenuBar {
 
     private GridPane mainSetupGrid;
     private TextField computeScreen, expressionScreen;
+    private HashMap<String, TermButton<Operand>> userCreatedButtonsMap;
 
-    AppMenu() {
+    public AppMenuBar() {
         super();
-
+        userCreatedButtonsMap = new HashMap<>();
         appSetting = AppSetting.getSettings();
-        createMenu = createMenu("Create");
+        createMenu = createMenu("Customize");
         settingsMenu = createMenu("Settings");
-
+        displayMenu = createMenu("Display");
+        helpMenu = createMenu("Help");
 
         setBackground(new Background(new BackgroundFill(
                 new LinearGradient(0, 1, 1, 1, true, CycleMethod.REFLECT,
@@ -35,27 +40,29 @@ public class AppMenu extends MenuBar {
     }
 
     public void populate() {
-        ConstantCreationGridPane.UserDefinedButtonOkAction constantCreationOkAction = new ConstantCreationGridPane.UserDefinedButtonOkAction(appSetting);
-        constantCreationOkAction.setComputeScreen(computeScreen);
-        constantCreationOkAction.setExpressionScreen(expressionScreen);
-        constantCreationOkAction.setMainSetupGrid(mainSetupGrid);
-        Menu createMenuItem = createMenu("User Operands", Color.BLACK);
-        addMenuItem("As Buttons", event -> {
+        Menu userOperands = createMenu("User Operands", Color.BLACK);
+        addMenuItem("Create", event -> {
             ConstantCreationGridPane constantGridPane = new ConstantCreationGridPane();
-            ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
-            Dialog<ConstantCreationGridPane.UserConstant> dialog = new Dialog<>();
-            dialog.setTitle("Create User Operand");
-            dialog.getDialogPane().setContent(constantGridPane);
-            dialog.getDialogPane().getButtonTypes().add(createButtonType);
-            ((Button) dialog.getDialogPane().lookupButton(createButtonType)).setBackground(MainApp.ROOT_BACKGROUND);
-            dialog.setResultConverter((resultButtonType) -> new ConstantCreationGridPane.UserConstant(constantGridPane.getNameField().getText(),
-                    constantGridPane.getValueField().getValue()));
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.showAndWait().filter(constant-> !constant.name().isEmpty() && !constant.value().isNaN())
-                    .ifPresent(constantCreationOkAction);
-        }, createMenuItem, createMenu);
+            UserButtonCreationDialog userButtonCreationDialog = new UserButtonCreationDialog(constantGridPane);
+            userButtonCreationDialog.getUserDefinedButtonOkAction().setExpressionScreen(expressionScreen);
+            userButtonCreationDialog.getUserDefinedButtonOkAction().setComputeScreen(computeScreen);
+            userButtonCreationDialog.getUserDefinedButtonOkAction().setMainSetupGrid(mainSetupGrid);
+            userButtonCreationDialog.setUserCreatedButtonsMap(userCreatedButtonsMap);
+            userButtonCreationDialog.show();
+        }, userOperands, createMenu);
+        addMenuItem("Remove", event -> {
+            ListView<String> listView = new ListView<>();
+            listView.setPrefSize(60, 100);
+            userCreatedButtonsMap.forEach((buttonName, button) -> listView.getItems().add(buttonName));
+            Dialog<String> buttonsSelectionDialog = new Dialog<>();
+            ButtonType deleteButton = new ButtonType("Delete");
+            DialogPane dialogPane = buttonsSelectionDialog.getDialogPane();
+            dialogPane.getButtonTypes().add(deleteButton);
+            buttonsSelectionDialog.setTitle("Delete User Created Buttons");
+            dialogPane.setContent(listView);
+            buttonsSelectionDialog.show();
+        }, userOperands);
 
-        displayMenu = createMenu("Display");
         addMenuItem("Show User Operands As Variables", false, opAsVarEvent -> {
             CheckMenuItem menuItem = (CheckMenuItem) opAsVarEvent.getSource();
             boolean isChecked = menuItem.isSelected();
@@ -73,7 +80,6 @@ public class AppMenu extends MenuBar {
             appSetting.getScreenSettings().setTurnOffNormalizationCompletely(isChecked);
         }, turnoffNormalization, displayMenu);
 
-        helpMenu = createMenu("Help");
         MenuItem aboutMenuItem = new MenuItem("About");
         aboutMenuItem.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION,
@@ -81,6 +87,7 @@ public class AppMenu extends MenuBar {
             alert.showAndWait();
         });
         helpMenu.getItems().add(aboutMenuItem);
+
         Menu[] appMenu = {createMenu, displayMenu, settingsMenu, helpMenu};
         getMenus().addAll(appMenu);
     }
@@ -144,6 +151,10 @@ public class AppMenu extends MenuBar {
         parent[0].getItems().add(menuItem);
     }
 
+    public void setExpressionScreen(TextField expressionScreen) {
+        this.expressionScreen = expressionScreen;
+    }
+
     public void setMainSetupGrid(GridPane mainSetupGrid) {
         this.mainSetupGrid = mainSetupGrid;
     }
@@ -152,8 +163,7 @@ public class AppMenu extends MenuBar {
         this.computeScreen = computeScreen;
     }
 
-    public void setExpressionScreen(TextField expressionScreen) {
-        this.expressionScreen = expressionScreen;
+    public void setUserCreatedButtonsMap(HashMap<String, TermButton<Operand>> userCreatedButtonsMap) {
+        this.userCreatedButtonsMap = userCreatedButtonsMap;
     }
-
 }

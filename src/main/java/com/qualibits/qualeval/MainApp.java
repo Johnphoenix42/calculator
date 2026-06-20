@@ -3,6 +3,7 @@ package com.qualibits.qualeval;
 import com.qualibits.qualeval.buttons.BaseButton;
 import com.qualibits.qualeval.buttons.ButtonName;
 import com.qualibits.qualeval.buttons.TermButton;
+import com.qualibits.qualeval.dialogs.UserButtonCreationDialog;
 import com.qualibits.qualeval.exec.ExecutionStackEntry;
 import com.qualibits.qualeval.exec.ExpressionParser;
 import com.qualibits.qualeval.mode.ModeModel;
@@ -21,9 +22,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 
 public class MainApp extends Application {
 
@@ -45,6 +47,7 @@ public class MainApp extends Application {
     private final ExpressionParser expressionParser;
     private final LinkedList<Term> expressionQueue;
     private final LinkedList<ExecutionStackEntry> executionStack;
+    private final HashMap<String, TermButton<Operand>> userCreatedButtonsMap;
 
     private AppSetting appSetting;
     private final ModeModel modeData;
@@ -79,6 +82,7 @@ public class MainApp extends Application {
         overlayPane = new OverlayPane(appStackPane);
         expressionQueue = new LinkedList<>();
         executionStack = new LinkedList<>();
+        userCreatedButtonsMap = new HashMap<>();
 
         appSetting = AppSetting.getSettings();
         expressionParser = new ExpressionParser(expressionQueue);
@@ -335,10 +339,11 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         //String css = Objects.requireNonNull(getClass().getResource("/main.css")).toExternalForm();
         GridPane mainSetupGrid = setupGrid();
-        AppMenu menuBar = new AppMenu();
+        AppMenuBar menuBar = new AppMenuBar();
         menuBar.setMainSetupGrid(mainSetupGrid);
         menuBar.setComputeScreen(computeScreen);
         menuBar.setExpressionScreen(expressionScreen);
+        menuBar.setUserCreatedButtonsMap(userCreatedButtonsMap);
         menuBar.populate();
 
         rootPane.getChildren().addAll(menuBar, appStackPane);
@@ -350,8 +355,7 @@ public class MainApp extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle(APP_NAME);
-        primaryStage.setX(0);
-        primaryStage.setY(0);
+        primaryStage.initStyle(StageStyle.UTILITY);
         primaryStage.toFront();
         primaryStage.show();
     }
