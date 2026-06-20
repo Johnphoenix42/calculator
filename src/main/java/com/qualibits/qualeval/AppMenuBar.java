@@ -4,8 +4,12 @@ import com.qualibits.qualeval.buttons.TermButton;
 import com.qualibits.qualeval.dialoglayout.ConstantCreationGridPane;
 import com.qualibits.qualeval.dialogs.UserButtonCreationDialog;
 import com.qualibits.qualeval.term.Operand;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
@@ -50,8 +54,9 @@ public class AppMenuBar extends MenuBar {
             userButtonCreationDialog.setUserCreatedButtonsMap(userCreatedButtonsMap);
             userButtonCreationDialog.show();
         }, userOperands, createMenu);
-        addMenuItem("Remove", event -> {
+        addMenuItem("Edit", event -> {
             ListView<String> listView = new ListView<>();
+            listView.setOrientation(Orientation.HORIZONTAL);
             listView.setPrefSize(60, 100);
             userCreatedButtonsMap.forEach((buttonName, button) -> listView.getItems().add(buttonName));
             Dialog<String> buttonsSelectionDialog = new Dialog<>();
@@ -59,7 +64,7 @@ public class AppMenuBar extends MenuBar {
             DialogPane dialogPane = buttonsSelectionDialog.getDialogPane();
             dialogPane.getButtonTypes().add(deleteButton);
             buttonsSelectionDialog.setTitle("Delete User Created Buttons");
-            dialogPane.setContent(listView);
+            dialogPane.setContent(createSplitPane());
             buttonsSelectionDialog.show();
         }, userOperands);
 
@@ -149,6 +154,21 @@ public class AppMenuBar extends MenuBar {
             }
         }
         parent[0].getItems().add(menuItem);
+    }
+
+    public SplitPane createSplitPane() {
+        ObservableList<String> obString = FXCollections.observableArrayList("Mango", "Apple", "Orange", "Banana");
+        ListView<String> nameListView = new ListView<>(obString);
+        ObservableList<Double> obDouble = FXCollections.observableArrayList(0.1, 2.4, 1.6, 6.8);
+        ListView<Double> valueListView = new ListView<>(obDouble);
+        System.out.println(valueListView.getSelectionModel().getSelectedItem());
+        VBox vBox = new VBox(8, new Button("New"), new Button("Edit"), new Button("Delete"));
+        vBox.setMinWidth(60);
+        vBox.setMaxWidth(60);
+        vBox.setAlignment(Pos.CENTER);
+        SplitPane splitPane = new SplitPane(nameListView, valueListView, vBox);
+        SplitPane.setResizableWithParent(vBox, false);
+        return splitPane;
     }
 
     public void setExpressionScreen(TextField expressionScreen) {

@@ -355,7 +355,6 @@ public class MainApp extends Application {
 
         primaryStage.setScene(mainScene);
         primaryStage.setTitle(APP_NAME);
-        primaryStage.initStyle(StageStyle.UTILITY);
         primaryStage.toFront();
         primaryStage.show();
     }
