@@ -162,13 +162,25 @@ public class AppMenuBar extends MenuBar {
         ObservableList<Double> obDouble = FXCollections.observableArrayList(0.1, 2.4, 1.6, 6.8);
         ListView<Double> valueListView = new ListView<>(obDouble);
         System.out.println(valueListView.getSelectionModel().getSelectedItem());
-        VBox vBox = new VBox(8, new Button("New"), new Button("Edit"), new Button("Delete"));
+        Button newConstantButton = createNewConstant(nameListView, valueListView);
+        Button editConstantButton = new Button("Edit");
+        Button deleteConstantButton = new Button("Delete");
+        VBox vBox = new VBox(8, newConstantButton, editConstantButton, deleteConstantButton);
         vBox.setMinWidth(60);
         vBox.setMaxWidth(60);
         vBox.setAlignment(Pos.CENTER);
         SplitPane splitPane = new SplitPane(nameListView, valueListView, vBox);
         SplitPane.setResizableWithParent(vBox, false);
         return splitPane;
+    }
+
+    public Button createNewConstant(ListView<String> nameListView, ListView<Double> valueListView) {
+        Button newConstantButton = new Button("New");
+        newConstantButton.setOnAction(e -> {
+            nameListView.getItems().add("");
+            valueListView.getItems().add(0D);
+        });
+        return newConstantButton;
     }
 
     public void setExpressionScreen(TextField expressionScreen) {
