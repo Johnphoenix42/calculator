@@ -11,8 +11,11 @@ import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.TextFieldListCell;
 import javafx.scene.layout.*;
 import javafx.scene.paint.*;
+import javafx.util.StringConverter;
+import javafx.util.converter.DoubleStringConverter;
 
 import java.util.HashMap;
 
@@ -159,11 +162,18 @@ public class AppMenuBar extends MenuBar {
     public SplitPane createSplitPane() {
         ObservableList<String> obString = FXCollections.observableArrayList("Mango", "Apple", "Orange", "Banana");
         ListView<String> nameListView = new ListView<>(obString);
+        nameListView.setEditable(true);
+        nameListView.setCellFactory(TextFieldListCell.forListView());
+        nameListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ObservableList<Double> obDouble = FXCollections.observableArrayList(0.1, 2.4, 1.6, 6.8);
         ListView<Double> valueListView = new ListView<>(obDouble);
-        System.out.println(valueListView.getSelectionModel().getSelectedItem());
+        valueListView.setEditable(true);
+        valueListView.setCellFactory(TextFieldListCell.forListView(new DoubleStringConverter()));
+        valueListView.setOnEditCommit(event -> {
+            valueListView.getItems().set(event.getIndex(), event.getNewValue());
+        });
         Button newConstantButton = createNewConstant(nameListView, valueListView);
-        Button editConstantButton = new Button("Edit");
+        Button editConstantButton = createEditConstant(nameListView, valueListView);
         Button deleteConstantButton = new Button("Delete");
         VBox vBox = new VBox(8, newConstantButton, editConstantButton, deleteConstantButton);
         vBox.setMinWidth(60);
@@ -179,6 +189,14 @@ public class AppMenuBar extends MenuBar {
         newConstantButton.setOnAction(e -> {
             nameListView.getItems().add("");
             valueListView.getItems().add(0D);
+        });
+        return newConstantButton;
+    }
+
+    public Button createEditConstant(ListView<String> nameListView, ListView<Double> valueListView) {
+        Button newConstantButton = new Button("Edit");
+        newConstantButton.setOnAction(e -> {
+            valueListView.edit(valueListView.getFocusModel().getFocusedIndex());
         });
         return newConstantButton;
     }
